@@ -1,16 +1,25 @@
 package com.model;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.gui.Frame;
+import com.gui.MainMenu;
 
 
 public class BubbleShooter implements ApplicationListener {
-
+	private boolean isInitialized = false;
+	
+	/** the visible frame **/
+	private Frame frame;
+	
 	@Override
 	public void create() {
-		// TODO Auto-generated method stub
-		
+		if (!isInitialized) {
+			frame = new MainMenu(Gdx.app);
+			isInitialized = true;
+		}
 	}
 
 	@Override
@@ -27,8 +36,10 @@ public class BubbleShooter implements ApplicationListener {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);		
+		Application app = Gdx.app;
+		
+		frame.update(app);
+		frame.render(app);
 	}
 
 	@Override
