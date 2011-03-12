@@ -12,5 +12,4 @@ public class MainActivity extends AndroidApplication {
         super.onCreate(savedInstanceState);
         initialize(new BubbleShooter(), false);
     }
-    //
 }
