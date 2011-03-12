@@ -10,5 +10,4 @@ public class Program {
 	public static void main(String[] args) {
 		new JoglApplication(new BubbleShooter(), "Bubble Shooter", 480, 800, false);
 	}
-
 }
