@@ -37,7 +37,6 @@ public class BubbleShooter implements ApplicationListener {
 	@Override
 	public void render() {
 		Application app = Gdx.app;
-		
 		frame.update(app);
 		frame.render(app);
 	}
