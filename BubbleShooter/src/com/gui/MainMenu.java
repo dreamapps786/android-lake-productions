@@ -22,6 +22,7 @@ public class MainMenu implements Frame {
 	/** view & transform matrix **/
 	private final Matrix4 viewMatrix = new Matrix4();
 	private final Matrix4 transformMatrix = new Matrix4();
+	private int c = 0;
 
 	public MainMenu (Application app) {
 		spriteBatch = new SpriteBatch();
@@ -45,7 +46,8 @@ public class MainMenu implements Frame {
 	public void update(Application app) {
 		if (app.getInput().isTouched()) {
 			if (app.getInput().getX() > 375 && app.getInput().getX() < 472 && app.getInput().getY() > 265 && app.getInput().getY() < 310) {
-				System.out.println("Start");
+				c++;
+				System.out.println("Start: " + c);
 			}
 		}
 	}
