@@ -2,7 +2,6 @@ package com.bubbleshooter;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.surfaceview.FillResolutionStrategy;
-import com.badlogic.gdx.backends.android.surfaceview.ResolutionStrategy;
 import com.model.BubbleShooter;
 
 import android.content.pm.ActivityInfo;
@@ -16,4 +15,5 @@ public class MainActivity extends AndroidApplication {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initialize(new BubbleShooter(), false, new FillResolutionStrategy(),20);
     }
+    
 }
