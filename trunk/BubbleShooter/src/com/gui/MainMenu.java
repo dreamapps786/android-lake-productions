@@ -2,11 +2,11 @@ package com.gui;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
@@ -15,40 +15,46 @@ public class MainMenu implements Frame {
 	private final SpriteBatch spriteBatch;
 	private final Texture background;
 	private final Texture title;
-	private final Texture start;
+	private final Texture play;
+	private final BitmapFont font;
 
 	/** is done flag **/
 	private boolean isDisposable = false;
 	/** view & transform matrix **/
 	private final Matrix4 viewMatrix = new Matrix4();
 	private final Matrix4 transformMatrix = new Matrix4();
-	private int c = 0;
 
 	public MainMenu(Application app) {
 		spriteBatch = new SpriteBatch();
-		background = new Texture(Gdx.files.internal("res/sky.png"));
+		background = new Texture(
+				Gdx.files.internal("res/background_portrait.png"));
 		background.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		title = new Texture(Gdx.files.internal("res/title.png"));
 		title.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		start = new Texture(Gdx.files.internal("res/start01.png"));
-		start.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		play = new Texture(Gdx.files.internal("res/btn_play.png"));
+		play.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+		font = new BitmapFont();
+		font.setColor(Color.RED);
 	}
 
 	@Override
-	public void dispose() {
+	public void dispose()  {
 		spriteBatch.dispose();
 		background.dispose();
 		title.dispose();
+		play.dispose();
 	}
 
 	@Override
 	public void update(Application app) {
 		if (app.getInput().isTouched()) {
+			System.out.println(app.getInput().getX());
+			System.out.println(app.getInput().getY());
 			if (app.getInput().getX() > 375 && app.getInput().getX() < 472
 					&& app.getInput().getY() > 265
 					&& app.getInput().getY() < 310) {
-				c++;
-				System.out.println("Start: " + c);
+
 			}
 		}
 	}
@@ -57,22 +63,36 @@ public class MainMenu implements Frame {
 	public void render(Application app) {
 		int centerX = Gdx.graphics.getWidth() / 2;
 		int centerY = Gdx.graphics.getHeight() / 2;
+		// app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT |
+		// GL10.GL_DEPTH_BUFFER_BIT);
+		app.getGraphics()
+				.getGL10()
+				.glViewport(0, 0, Gdx.graphics.getWidth(),
+						Gdx.graphics.getHeight());
 
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
-		viewMatrix.setToOrtho2D(0,0, 480, 800);
+		viewMatrix.setToOrtho2D(0, 0, Gdx.graphics.getWidth(),
+				Gdx.graphics.getHeight());
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.setTransformMatrix(transformMatrix);
 		spriteBatch.begin();
-		 spriteBatch.disableBlending();
+		spriteBatch.disableBlending();
 		spriteBatch.setColor(Color.WHITE);
-		spriteBatch.draw(background, centerX-background.getWidth()/2, centerY-background.getHeight()/2, 0, 0, 512, 512);
+		spriteBatch.draw(background, centerX - background.getWidth() / 2,
+				centerY - background.getHeight() / 2, 0, 0, 1024, 1024);
 		spriteBatch.enableBlending();
-		spriteBatch.draw(title, 120, 215, 250, 128, 0, 0, 256, 256, false,
+		spriteBatch.draw(title, 120, 256, 256, 256, 0, 0, 256, 256, false,
 				false);
-		spriteBatch.draw(start, 200, 100, 64, 64, 0, 0, start.getWidth(),
-				start.getHeight(), false, false);
+		spriteBatch
+				.draw(play, centerX-play.getWidth()/2, 300, 0, 0, play.getWidth(), play.getHeight());
+		font.draw(spriteBatch, "W: " + Gdx.graphics.getWidth() + " H: "
+				+ Gdx.graphics.getHeight(), 200, 300);
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		spriteBatch.end();
+	}
+
+	public void resize(int width, int height) {
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 
 	@Override
