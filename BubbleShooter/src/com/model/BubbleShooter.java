@@ -4,12 +4,14 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gui.Frame;
 import com.gui.MainMenu;
 
 
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
+	private SpriteBatch spriteBatch;
 	
 	/** the visible frame **/
 	private Frame frame;
@@ -17,6 +19,7 @@ public class BubbleShooter implements ApplicationListener {
 	@Override
 	public void create() {
 		if (!isInitialized) {
+			spriteBatch = new SpriteBatch();
 			frame = new MainMenu(Gdx.app);
 			isInitialized = true;
 		}
@@ -42,9 +45,8 @@ public class BubbleShooter implements ApplicationListener {
 	}
 
 	@Override
-	public void resize(int arg0, int arg1) {
-		// TODO Auto-generated method stub
-		
+	public void resize(int width, int height) {
+		spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 	}
 
 	@Override
