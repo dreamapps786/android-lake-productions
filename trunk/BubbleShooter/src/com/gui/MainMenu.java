@@ -39,19 +39,6 @@ public class MainMenu implements Frame {
 
 		font = new BitmapFont();
 		font.setColor(Color.RED);
-		
-		float graphicsHeight = (float) Gdx.graphics.getHeight();
-		float graphicsWidth = (float) Gdx.graphics.getWidth();
-		float graphicsRatio = graphicsHeight/graphicsWidth;
-		float theHeight = 32*graphicsRatio;
-		if (graphicsRatio < 1.5f){
-			theHeight = 48;
-		}
-		camera = new OrthographicCamera(32, theHeight);
-		camera.translate(32 / 2, theHeight / 2, 0);
-		camera.update();
-		spriteBatch.getProjectionMatrix().set(camera.projection);
-		spriteBatch.getTransformMatrix().set(camera.view);
 	}
 
 	@Override
@@ -76,7 +63,7 @@ public class MainMenu implements Frame {
 	}
 
 	@Override
-	public void render(Application app) {
+	public void render(Application app) {		
 		int centerX = Gdx.graphics.getWidth() / 2;
 		int centerY = Gdx.graphics.getHeight() / 2;
 		 app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT |
@@ -84,8 +71,8 @@ public class MainMenu implements Frame {
 		app.getGraphics().getGL10().glViewport(0, 0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		viewMatrix.setToOrtho2D(0, 0, Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
-//		spriteBatch.setProjectionMatrix(viewMatrix);
-//		spriteBatch.setTransformMatrix(transformMatrix);
+		spriteBatch.setProjectionMatrix(viewMatrix);
+		spriteBatch.setTransformMatrix(transformMatrix);
 		spriteBatch.begin();
 		spriteBatch.disableBlending();
 //		spriteBatch.setColor(Color.BLACK);
@@ -99,6 +86,20 @@ public class MainMenu implements Frame {
 		font.draw(spriteBatch, "W: " + Gdx.graphics.getWidth() + " H: "
 				+ Gdx.graphics.getHeight(), 200, 300);
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		
+		
+//		float graphicsHeight = (float) Gdx.graphics.getHeight();
+//		float graphicsWidth = (float) Gdx.graphics.getWidth();
+//		float graphicsRatio = graphicsHeight/graphicsWidth;
+//		float theHeight = 16*graphicsRatio;
+//		if (graphicsRatio < 1.5f){
+//			theHeight = 48;
+//		}
+//		camera = new OrthographicCamera(10, theHeight);
+//		camera.translate(32 / 2, theHeight / 2, 0);
+//		camera.update();
+//		spriteBatch.getProjectionMatrix().set(camera.projection);
+		
 		spriteBatch.end();
 	}
 
