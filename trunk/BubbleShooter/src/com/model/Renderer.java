@@ -38,8 +38,8 @@ public class Renderer {
 		title.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		play = new Texture(Gdx.files.internal("res/btn_play.png"));
 		play.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-
 		font = new BitmapFont();
+		font.setScale(2, 2);
 		font.setColor(Color.RED);
 
 		// playAnimation = new Texture(
@@ -128,15 +128,22 @@ public class Renderer {
 		// gl.glPopMatrix();
 		// gl.glDisable(GL10.GL_BLEND);
 		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
 
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		spriteBatch.draw(animSprite, animSprite.getX(), animSprite.getY());
+//		font.draw(spriteBatch, "HEJ HEJ", 100, 100);
 		spriteBatch.disableBlending();
 		spriteBatch.end();
-
+	}
+	
+	public void draw(String text){
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		font.draw(spriteBatch, text, 10, 100);
+		spriteBatch.disableBlending();
+		spriteBatch.end();
 	}
 
 	public void dispose() {
