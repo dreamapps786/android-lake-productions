@@ -7,16 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gui.Frame;
 import com.gui.MainMenu;
 
-
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
 	private SpriteBatch spriteBatch;
-	private final float TICK = 1f/30f;
-	private float accumulator = 0;
-	
+
 	/** the visible frame **/
 	private Frame frame;
-	
+
 	@Override
 	public void create() {
 		if (!isInitialized) {
@@ -29,24 +26,20 @@ public class BubbleShooter implements ApplicationListener {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void render() {
 		Application app = Gdx.app;
-		accumulator += app.getGraphics().getDeltaTime();
-		if (accumulator > TICK) {
-			accumulator -= TICK;
-			frame.update(app);
-		}
-		frame.render(app);			
+		frame.update(app);
+		frame.render(app);
 	}
 
 	@Override
@@ -57,8 +50,7 @@ public class BubbleShooter implements ApplicationListener {
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 }
