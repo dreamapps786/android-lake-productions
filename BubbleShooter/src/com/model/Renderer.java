@@ -6,9 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -47,33 +45,33 @@ public class Renderer {
 		// playAnimation = new Texture(
 		// Gdx.files.internal("res/anim_btn_play_white.png"), true);
 		// playAnimation.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		playMesh = new Mesh(true, 6 * 4, 0, new VertexAttribute(Usage.Position,
-				2, "a_position"), new VertexAttribute(Usage.TextureCoordinates,
-				2, "a_texCoord"));
-		float[] vertices = new float[16 * 6];
-		int idx = 0;
-		for (int row = 0; row < 6; row++) {
-			vertices[idx++] = 1;
-			vertices[idx++] = 1;
-			vertices[idx++] = 0.60f;
-			vertices[idx++] = 0 + row * 0.16f;
-
-			vertices[idx++] = -1;
-			vertices[idx++] = 1;
-			vertices[idx++] = 0;
-			vertices[idx++] = 0 + row * 0.16f;
-
-			vertices[idx++] = -1;
-			vertices[idx++] = -1;
-			vertices[idx++] = 0f;
-			vertices[idx++] = 0.16f + row * 0.16f;
-
-			vertices[idx++] = 1;
-			vertices[idx++] = -1;
-			vertices[idx++] = 0.60f;
-			vertices[idx++] = 0.16f + row * 0.16f;
-		}
-		playMesh.setVertices(vertices);
+//		playMesh = new Mesh(true, 6 * 4, 0, new VertexAttribute(Usage.Position,
+//				2, "a_position"), new VertexAttribute(Usage.TextureCoordinates,
+//				2, "a_texCoord"));
+//		float[] vertices = new float[16 * 6];
+//		int idx = 0;
+//		for (int row = 0; row < 6; row++) {
+//			vertices[idx++] = 1;
+//			vertices[idx++] = 1;
+//			vertices[idx++] = 0.60f;
+//			vertices[idx++] = 0 + row * 0.16f;
+//
+//			vertices[idx++] = -1;
+//			vertices[idx++] = 1;
+//			vertices[idx++] = 0;
+//			vertices[idx++] = 0 + row * 0.16f;
+//
+//			vertices[idx++] = -1;
+//			vertices[idx++] = -1;
+//			vertices[idx++] = 0f;
+//			vertices[idx++] = 0.16f + row * 0.16f;
+//
+//			vertices[idx++] = 1;
+//			vertices[idx++] = -1;
+//			vertices[idx++] = 0.60f;
+//			vertices[idx++] = 0.16f + row * 0.16f;
+//		}
+//		playMesh.setVertices(vertices);
 	}
 
 	public void render(Application app, Simulation simulation) {
@@ -82,7 +80,7 @@ public class Renderer {
 		renderBackground(gl);
 		renderButtons(gl);
 		if (!showButton) {
-			renderButtonAnimations(gl, simulation.button2);
+			renderButtonAnimations(gl, simulation.button);
 		}
 	}
 
@@ -129,14 +127,13 @@ public class Renderer {
 		// Button.ANIMATION_LIVE_TIME) * 15) * 4, 4);
 		// gl.glPopMatrix();
 		// gl.glDisable(GL10.GL_BLEND);
+		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 
-		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		spriteBatch.draw(animSprite, animSprite.getX(), animSprite.getY());
-		// //TODO position
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 

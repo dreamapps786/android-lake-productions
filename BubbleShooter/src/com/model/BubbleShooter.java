@@ -11,6 +11,8 @@ import com.gui.MainMenu;
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
 	private SpriteBatch spriteBatch;
+	private final float TICK = 1f/30f;
+	private float accumulator = 0;
 	
 	/** the visible frame **/
 	private Frame frame;
@@ -39,8 +41,12 @@ public class BubbleShooter implements ApplicationListener {
 	@Override
 	public void render() {
 		Application app = Gdx.app;
-		frame.update(app);
-		frame.render(app);
+		accumulator += app.getGraphics().getDeltaTime();
+		if (accumulator > TICK) {
+			accumulator -= TICK;
+			frame.update(app);
+		}
+		frame.render(app);			
 	}
 
 	@Override

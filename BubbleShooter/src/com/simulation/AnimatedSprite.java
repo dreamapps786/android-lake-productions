@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AnimatedSprite extends Sprite {
 	protected int mRowCount;
 	protected int mColumnCount;
-	protected float mAnimationRateInSeconds = 1f;
+	protected float mAnimationRateInSeconds = 0.02f;
 	protected boolean mIsPlay = false;
 	protected int mCurRow;
 	protected int mCurColumn;
@@ -34,16 +34,11 @@ public class AnimatedSprite extends Sprite {
 	public void addFrames(Texture texture){
 		for (int column = 0; column < mColumnCount; column++) {
 			for (int row = 0; row < mRowCount; row++) {
-				System.out.println("X: "+mStartX + row * (int) getWidth());
-				System.out.println("Y: "+mStartY+ column * (int) getHeight());
-				System.out.println("Width: "+getWidth());
-				System.out.println("Height: "+getHeight());
-				frameRegions.add(new TextureRegion(texture, mStartX + row * (int) getWidth(), mStartY
-						+ column * (int) getHeight(), (int) getWidth(),
+				frameRegions.add(new TextureRegion(texture, mStartX + column * (int) getWidth(), mStartY
+						+ row * (int) getHeight(), (int) getWidth(),
 						(int) getHeight()));
 			}			
-		}
-		
+		}	
 	}
 
 	public void setAnimationRate(final float pAnimationRateInSeconds) {
@@ -59,15 +54,12 @@ public class AnimatedSprite extends Sprite {
 		mIsPlay = false;
 		mFrameTimeCounter = 0;
 	}
-
-	public void goToFrame1(int pFrameRow, int pFrameColumn) {
-		setRegion(mStartX + pFrameRow * (int) getWidth(), mStartY
-				+ pFrameColumn * (int) getHeight(), (int) getWidth(),
-				(int) getHeight());
-	}
 	
 	public void goToFrame(int pFrameRow, int pFrameColumn){
 		setRegion(frameRegions.get(pFrameColumn));
+		if (pFrameColumn == mRowCount-1) {
+			pause();
+		}
 	}
 
 	public void update(final float pSecondsElapsed) {
