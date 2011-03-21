@@ -64,9 +64,9 @@ public class MainMenu implements Frame, SimulationListener {
 					&& app.getInput().getY() > 200
 					&& app.getInput().getY() < 282) {
 				simulation.button = new Button(new Vector2(-16,306));
-				simulation.button1.play();
+				simulation.button2.play();
 //				simulation.test.play();
-				renderer.renderButtonAnimations(Gdx.gl10, simulation.button1);
+				renderer.renderButtonAnimations(Gdx.gl10, simulation.button2);
 //				renderer.renderButtonAnimations(Gdx.gl10, simulation.test);
 			}
 		}
