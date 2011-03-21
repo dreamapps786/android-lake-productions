@@ -138,10 +138,10 @@ public class Renderer {
 		spriteBatch.end();
 	}
 	
-	public void draw(String text){
+	public void draw(String text, int x, int y){
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
-		font.draw(spriteBatch, text, 10, 100);
+		font.draw(spriteBatch, text, x, y);
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}

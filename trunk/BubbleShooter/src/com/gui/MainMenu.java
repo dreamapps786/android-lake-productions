@@ -12,6 +12,8 @@ public class MainMenu implements Frame, SimulationListener {
 	private final Simulation simulation;
 	private final Renderer renderer;
 	private boolean isDisposable = false;
+	private float buttonXrel2Screen = 0.18125f;
+	private float buttonYrel2Screen = 0.24625f;
 
 	public MainMenu(Application app) {
 		simulation = new Simulation();
@@ -31,16 +33,13 @@ public class MainMenu implements Frame, SimulationListener {
 		if (app.getInput().isTouched()) {
 			float inputX = app.getInput().getX();
 			float inputY = app.getInput().getY();
-			float buttonX = simulation.button.getX();
-			float buttonY = simulation.button.getY();
-			float buttonW = simulation.button.getWidth();
-			float buttonH = simulation.button.getHeight();
+			float buttonX = app.getGraphics().getWidth() * buttonXrel2Screen;
+			float buttonY = app.getGraphics().getHeight() * buttonYrel2Screen;
+			float buttonW = (app.getGraphics().getWidth() / 480f) * simulation.button.getWidth();
+			float buttonH = (app.getGraphics().getHeight() / 800f) * simulation.button.getHeight();
 			
-			System.out.println("bX: " + buttonX + " bY: " + (buttonY-(buttonY-(app.getGraphics().getHeight()/2))*2) + "x: "
-					+ inputX + " y: " + inputY);
-			
-			if (inputX > buttonX && inputX < buttonX + buttonW
-					&& inputY < buttonY-(buttonY-(app.getGraphics().getHeight()/2))*2 && inputY > buttonY-(buttonY-(app.getGraphics().getHeight()/2))*2 - buttonH) {
+			if (inputX > buttonX && inputX < buttonX+buttonW
+					&& inputY > buttonY && inputY < buttonY+buttonH) {
 				
 				simulation.button.play();
 				renderer.renderButtonAnimations(Gdx.gl10, simulation.button);
@@ -57,15 +56,6 @@ public class MainMenu implements Frame, SimulationListener {
 	public void render(Application app) {
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render(app, simulation);
-		
-		float inputX = app.getInput().getX();
-		float inputY = app.getInput().getY();
-		float buttonX = ((app.getGraphics().getWidth()-512)/2)+103;
-		float buttonY = ((app.getGraphics().getWidth()-512)/2)+103+306;
-		float buttonW = simulation.button.getWidth();
-		float buttonH = simulation.button.getHeight();
-		renderer.draw("bX: " + buttonX + " bY: " + (buttonY-(buttonY-(app.getGraphics().getHeight()/2))*2) + "x: "
-				+ inputX + " y: " + inputY);
 	}
 
 	@Override
