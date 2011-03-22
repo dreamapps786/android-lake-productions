@@ -7,73 +7,90 @@ import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class AnimatedSprite extends Sprite {
-	protected int mRowCount;
-	protected int mColumnCount;
-	protected float mAnimationRateInSeconds = 0.02f;
-	protected boolean mIsPlay = false;
-	protected int mCurRow;
-	protected int mCurColumn;
-	protected int mStartX;
-	protected int mStartY;
-	protected float mFrameTimeCounter;
+public class AnimatedSprite extends Sprite implements ITouchable {
+	protected int rowCount;
+	protected int columnCount;
+	protected float animationRateInSeconds = 0.02f;
+	protected boolean isPlay = false;
+	protected int curRow;
+	protected int curColumn;
+	protected int startX;
+	protected int startY;
+	protected float frameTimeCounter;
+	private float xRel2Screen;
+	private float yRel2Screen;
 	private List<TextureRegion> frameRegions;
 
-	public AnimatedSprite(final Texture pTexture, final int pSrcX,
-			final int pScrY, final int pTileWidth, final int pTileHeight,
-			final int pRowCount, final int pColumnCount) {
-		super(pTexture, pSrcX, pScrY, pTileWidth, pTileHeight);
-		frameRegions = new ArrayList<TextureRegion>();
-		mRowCount = pRowCount;
-		mColumnCount = pColumnCount;
-		mStartX = pSrcX;
-		mStartY = pScrY;
-		addFrames(pTexture);
+	public AnimatedSprite(final Texture texture, final int srcX,
+			final int scrY, final int tileWidth, final int tileHeight,
+			final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
+		super(texture, srcX, scrY, tileWidth, tileHeight);
+		this.frameRegions = new ArrayList<TextureRegion>();
+		this.rowCount = rowCount;
+		this.columnCount = columnCount;
+		this.startX = srcX;
+		this.startY = scrY;
+		this.xRel2Screen = xRel2Screen;
+		this.yRel2Screen = yRel2Screen;
+		addFrames(texture);
 	}
-	
-	public void addFrames(Texture texture){
-		for (int column = 0; column < mColumnCount; column++) {
-			for (int row = 0; row < mRowCount; row++) {
-				frameRegions.add(new TextureRegion(texture, mStartX + column * (int) getWidth(), mStartY
-						+ row * (int) getHeight(), (int) getWidth(),
-						(int) getHeight()));
-			}			
-		}	
+
+	public void addFrames(Texture texture) {
+		for (int column = 0; column < columnCount; column++) {
+			for (int row = 0; row < rowCount; row++) {
+				frameRegions.add(new TextureRegion(texture, startX + column
+						* (int) getWidth(), startY + row * (int) getHeight(),
+						(int) getWidth(), (int) getHeight()));
+			}
+		}
 	}
 
 	public void setAnimationRate(final float pAnimationRateInSeconds) {
-		mAnimationRateInSeconds = pAnimationRateInSeconds;
+		animationRateInSeconds = pAnimationRateInSeconds;
 	}
 
 	public void play() {
-		mIsPlay = true;
-		mFrameTimeCounter = 0;
+		isPlay = true;
+		frameTimeCounter = 0;
 	}
 
 	public void pause() {
-		mIsPlay = false;
-		mFrameTimeCounter = 0;
+		isPlay = false;
+		frameTimeCounter = 0;
 	}
-	
-	public void goToFrame(int pFrameRow, int pFrameColumn){
+
+	public void goToFrame(int pFrameRow, int pFrameColumn) {
 		setRegion(frameRegions.get(pFrameColumn));
-		if (pFrameColumn == mRowCount-1) {
+		if (pFrameColumn == rowCount - 1) {
 			pause();
 		}
 	}
 
-	public void update(final float pSecondsElapsed) {
-		if (mIsPlay) {
-			mFrameTimeCounter += pSecondsElapsed;
-			if (mFrameTimeCounter > mAnimationRateInSeconds) {
-				mFrameTimeCounter = 0;
-				++mCurColumn;
-				if (mCurColumn == mColumnCount) {
-					mCurRow = ++mCurRow % mRowCount;
+	public void update(final float secondsElapsed) {
+		if (isPlay) {
+			this.frameTimeCounter += secondsElapsed;
+			if (frameTimeCounter > animationRateInSeconds) {
+				frameTimeCounter = 0;
+				++curColumn;
+				if (curColumn == columnCount) {
+					curRow = ++curRow % rowCount;
 				}
-				mCurColumn = mCurColumn % mColumnCount;
-				goToFrame(mCurColumn, mCurRow);
+				curColumn = curColumn % columnCount;
+				goToFrame(curColumn, curRow);
 			}
 		}
+	}
+
+	@Override
+	public void isTouched() {
+		play();
+	}
+
+	public float getXrel2Screen() {
+		return xRel2Screen;
+	}
+
+	public float getYrel2Screen() {
+		return yRel2Screen;
 	}
 }
