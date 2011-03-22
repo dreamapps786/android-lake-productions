@@ -3,9 +3,12 @@ package com.model;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gui.Frame;
 import com.gui.MainMenu;
+import com.simulation.MainInputProcessor;
+import com.simulation.Simulation;
 
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
@@ -13,7 +16,7 @@ public class BubbleShooter implements ApplicationListener {
 
 	/** the visible frame **/
 	private Frame frame;
-
+	
 	@Override
 	public void create() {
 		if (!isInitialized) {
@@ -25,7 +28,6 @@ public class BubbleShooter implements ApplicationListener {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 
 	}
 
