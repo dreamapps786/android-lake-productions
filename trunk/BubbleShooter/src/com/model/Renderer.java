@@ -102,7 +102,7 @@ public class Renderer {
 		int i = 0;
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 2; col++) {
-				spriteBatch.draw(background.getRegions().get(i).getTexture(), 0+col*256, 544-row*256, 256, 256, 0, 0, 256,256, false, false);
+				spriteBatch.draw(background.getRegions().get(i).getTexture(), 0+col*256, (800-256)-row*256, 256, 256, 0, 0, 256,256, false, false);
 					i++;
 			}
 		}
