@@ -30,7 +30,7 @@ public class MainMenu implements Frame {
 	public void render(Application app) {
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render(app, simulation);
-		Renderer.draw(""+Gdx.graphics.getFramesPerSecond(), 150, 150);
+		Renderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150);
 	}
 
 	@Override
