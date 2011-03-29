@@ -3,12 +3,9 @@ package com.model;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gui.Frame;
-import com.gui.MainMenu;
-import com.simulation.MainInputProcessor;
-import com.simulation.Simulation;
+import com.gui.*;
 
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
@@ -42,6 +39,19 @@ public class BubbleShooter implements ApplicationListener {
 		Application app = Gdx.app;
 		frame.update(app);
 		frame.render(app);
+		
+		if (frame.isDisposable()) {
+			frame.dispose();
+			
+			if (frame instanceof MainMenu) {
+				//If the screen is currently showing MainMenu switch to GameLoop
+				frame = new GameLoop(app);				
+			}
+			else if (frame instanceof GameLoop) {
+				//Switch to GameOver
+			}
+			
+		}
 	}
 
 	@Override
