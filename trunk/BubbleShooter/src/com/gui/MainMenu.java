@@ -10,10 +10,19 @@ public class MainMenu implements Frame {
 	private final Simulation simulation;
 	private final Renderer renderer;
 	private boolean isDisposable = false;
+	private static MainMenu mainMenu;
 
-	public MainMenu(Application app) {
+	private MainMenu() {
 		simulation = new Simulation();
-		renderer = new Renderer(app);
+		renderer = new Renderer(Gdx.app);
+		
+	}
+	
+	public static MainMenu getInstance(){
+		if (mainMenu == null) {
+			mainMenu = new MainMenu();
+		}
+		return mainMenu;
 	}
 
 	@Override
@@ -36,5 +45,9 @@ public class MainMenu implements Frame {
 	@Override
 	public boolean isDisposable() {
 		return isDisposable;
+	}
+	
+	public void setDisposable(boolean disposable){
+		this.isDisposable = disposable;
 	}
 }

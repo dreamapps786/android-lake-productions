@@ -167,6 +167,5 @@ public class Renderer {
 		background.dispose();
 		title.dispose();
 		play.dispose();
-		playMesh.dispose();
 	}
 }
