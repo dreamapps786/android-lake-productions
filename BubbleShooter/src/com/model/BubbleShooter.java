@@ -18,7 +18,7 @@ public class BubbleShooter implements ApplicationListener {
 	public void create() {
 		if (!isInitialized) {
 			spriteBatch = new SpriteBatch();
-			frame = new MainMenu(Gdx.app);
+			frame = MainMenu.getInstance();
 			isInitialized = true;
 		}
 	}
@@ -45,7 +45,8 @@ public class BubbleShooter implements ApplicationListener {
 			
 			if (frame instanceof MainMenu) {
 				//If the screen is currently showing MainMenu switch to GameLoop
-				frame = new GameLoop(app);				
+				frame = new GameLoop(app);
+				System.out.println("Change frame");
 			}
 			else if (frame instanceof GameLoop) {
 				//Switch to GameOver

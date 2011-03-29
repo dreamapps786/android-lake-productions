@@ -8,12 +8,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AnimatedSprite extends Sprite implements ITouchable {
+	private String name;
 	protected int rowCount;
 	protected int columnCount;
 	protected float animationRateInSeconds = 0.02f;
 	protected boolean isPlay = false;
-	protected int curRow;
-	protected int curColumn;
+	protected int curFrameIndex;
 	protected int startX;
 	protected int startY;
 	protected float frameTimeCounter;
@@ -21,10 +21,11 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	private float yRel2Screen;
 	private List<TextureRegion> frameRegions;
 
-	public AnimatedSprite(final Texture texture, final int srcX,
+	public AnimatedSprite(String name,final Texture texture, final int srcX,
 			final int scrY, final int tileWidth, final int tileHeight,
 			final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
 		super(texture, srcX, scrY, tileWidth, tileHeight);
+		this.name = name;
 		this.frameRegions = new ArrayList<TextureRegion>();
 		this.rowCount = rowCount;
 		this.columnCount = columnCount;
@@ -45,8 +46,8 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 		}
 	}
 
-	public void setAnimationRate(final float pAnimationRateInSeconds) {
-		animationRateInSeconds = pAnimationRateInSeconds;
+	public void setAnimationRate(final float animationRateInSeconds) {
+		this.animationRateInSeconds = animationRateInSeconds;
 	}
 
 	public void play() {
@@ -59,11 +60,8 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 		frameTimeCounter = 0;
 	}
 
-	public void goToFrame(int pFrameRow, int pFrameColumn) {
-		setRegion(frameRegions.get(pFrameColumn));
-//		if (pFrameColumn == rowCount - 1) {
-//			pause();
-//		}
+	public void goToFrame(int frameIndex) {
+		setRegion(frameRegions.get(frameIndex));
 	}
 
 	public void update(final float secondsElapsed) {
@@ -71,12 +69,11 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 			this.frameTimeCounter += secondsElapsed;
 			if (frameTimeCounter > animationRateInSeconds) {
 				frameTimeCounter = 0;
-				++curColumn;
-				if (curColumn == columnCount) {
-					curRow = ++curRow % rowCount;
+					curFrameIndex = ++curFrameIndex % rowCount; //Sørger for at animationen starter forfra
+				goToFrame(curFrameIndex);
+				if (curFrameIndex == rowCount -1) {
+					pause();
 				}
-				curColumn = curColumn % columnCount;
-				goToFrame(curColumn, curRow);
 			}
 		}
 	}
@@ -92,5 +89,9 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 
 	public float getYrel2Screen() {
 		return yRel2Screen;
+	}
+
+	public String getName() {
+		return name;
 	}
 }
