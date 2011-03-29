@@ -54,11 +54,11 @@ public class MainInputProcessor extends InputAdapter {
 			float buttonY = Gdx.graphics.getHeight() * s.getYrel2Screen();
 			float buttonW = (Gdx.graphics.getWidth() / 480f) * s.getWidth();
 			float buttonH = (Gdx.graphics.getHeight() / 800f) * s.getHeight();
-
 			if (x > buttonX && x < buttonX + buttonW && y > buttonY
 					&& y < buttonY + buttonH) {
 				s.isTouched();
 				Renderer.renderButtonAnimations(Gdx.gl10, s);
+				touched = true;
 			}
 			i++;
 		}

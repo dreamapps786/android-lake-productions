@@ -87,6 +87,11 @@ public class Renderer {
 		renderButtons(gl);
 		if (!showButton) {
 			renderButtonAnimations(gl, simulation.button);
+			renderButtonAnimations(gl, simulation.button1);
+			renderButtonAnimations(gl, simulation.button2);
+			renderButtonAnimations(gl, simulation.button3);
+			renderButtonAnimations(gl, simulation.button4);
+			renderButtonAnimations(gl, simulation.button5);
 		}
 	}
 
