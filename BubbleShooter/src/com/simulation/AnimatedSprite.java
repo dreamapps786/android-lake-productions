@@ -61,9 +61,9 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 
 	public void goToFrame(int pFrameRow, int pFrameColumn) {
 		setRegion(frameRegions.get(pFrameColumn));
-		if (pFrameColumn == rowCount - 1) {
-			pause();
-		}
+//		if (pFrameColumn == rowCount - 1) {
+//			pause();
+//		}
 	}
 
 	public void update(final float secondsElapsed) {
