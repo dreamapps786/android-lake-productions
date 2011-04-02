@@ -102,8 +102,6 @@ public class Renderer {
 		spriteBatch.begin();
 		spriteBatch.disableBlending();
 		spriteBatch.setColor(Color.WHITE);
-		// We want to place it in the upper left corner and subtract the
-		// whitespace, so it doesn't show
 		int i = 0;
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 2; col++) {
