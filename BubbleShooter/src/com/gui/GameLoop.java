@@ -4,19 +4,19 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.model.Renderer;
+import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
 public class GameLoop implements Frame {
 	private final Simulation simulation;
-	private final Renderer renderer;
+	private final GameLoopRenderer renderer;
 	private boolean isDisposable = false;
 
 
 	public GameLoop(Application app){
 		simulation = new Simulation(this);
-		renderer = new Renderer(app);
+		renderer = new GameLoopRenderer(app);
 	}
 	
 	@Override
