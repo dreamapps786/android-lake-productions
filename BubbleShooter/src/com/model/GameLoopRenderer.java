@@ -54,16 +54,16 @@ public class GameLoopRenderer {
 		// bruges igen
 		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderBackground();
-		renderShooter(shooter);
+		renderShooter();
 	}
 
 	public void populate() {
 		shooterAnimation = new Texture(Gdx.files.internal("res/shooter.png"),
 				true);
 		shooterAnimation.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		shooter = new AnimatedSprite("shooter", shooterAnimation, 0, 0, 64,
-				64, 1, 1, 0, 0);
-		shooter.setPosition((480 - 64) / 2, 0);		
+		shooter = new AnimatedSprite("shooter", shooterAnimation, 0, 0, 64, 64,
+				1, 1, 0, 0);
+		shooter.setPosition((480 - 64) / 2, 0);
 		gameloop.setShooter(shooter);
 	}
 
@@ -86,11 +86,12 @@ public class GameLoopRenderer {
 		spriteBatch.end();
 	}
 
-	private void renderShooter(AnimatedSprite animSprite) {
+	private void renderShooter() {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(animSprite, animSprite.getX(), animSprite.getY());
+		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32,
+				32, shooter.getWidth(), shooter.getHeight(), 1, 1, shooter.getRotation());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
