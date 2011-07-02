@@ -151,6 +151,7 @@ public class MainMenu implements Frame {
 		if (!animSprite.isPlay()) {
 			if (animSprite.getName().equals("play")) {
 				setDisposable(true);
+				showButton = true;
 			}
 		}
 	}

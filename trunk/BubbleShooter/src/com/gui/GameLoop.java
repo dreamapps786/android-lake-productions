@@ -57,4 +57,10 @@ public class GameLoop implements Frame {
 		
 	}
 
+	@Override
+	public void setDisposable(boolean disposable) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

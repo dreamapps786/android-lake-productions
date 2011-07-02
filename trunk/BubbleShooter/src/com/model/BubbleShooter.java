@@ -25,7 +25,6 @@ public class BubbleShooter implements ApplicationListener {
 
 	@Override
 	public void dispose() {
-
 	}
 
 	@Override
@@ -41,6 +40,7 @@ public class BubbleShooter implements ApplicationListener {
 		frame.render(app);
 		
 		if (frame.isDisposable()) {
+			frame.setDisposable(false);
 			frame.dispose();
 			
 			if (frame instanceof MainMenu) {
@@ -61,7 +61,9 @@ public class BubbleShooter implements ApplicationListener {
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
+//		spriteBatch = new SpriteBatch();
+		frame = MainMenu.getInstance();
+		
 
 	}
 
