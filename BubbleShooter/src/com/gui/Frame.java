@@ -25,6 +25,7 @@ public interface Frame {
 	 * @return true when the screen is ready to be disposed, false otherwise
 	 */
 	public boolean isDisposable ();
+	public void setDisposable(boolean disposable);
 
 	/**
 	 * Cleans up all resources of the screen, e.g. meshes, textures etc.
