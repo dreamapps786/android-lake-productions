@@ -12,14 +12,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.simulation.Simulation;
 
-public class Renderer {
+public class GameLoopRenderer {
 	private final Matrix4 viewMatrix = new Matrix4();
 	private final TextureAtlas background;
 	private final Matrix4 transformMatrix = new Matrix4();
 	private static SpriteBatch spriteBatch;
 	
-	
-	public Renderer(Application app) {
+	/**
+	 * Bruges til at adskille renderer metoderne fra GameLoop
+	 * @param app
+	 */
+	public GameLoopRenderer(Application app) {
 		background = new TextureAtlas();
 		for (int i = 1; i <= 8; i++) {
 			Texture backgroundPart = new Texture(

@@ -15,7 +15,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
-import com.model.Renderer;
+import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
