@@ -62,8 +62,9 @@ public class GameLoop implements Frame {
 	
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		
-		return false;
+		shooter.rotate(45);
+		System.out.println(shooter.getRotation());
+		return true;
 	}
 
 	@Override
