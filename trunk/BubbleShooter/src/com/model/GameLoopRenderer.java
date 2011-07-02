@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +18,7 @@ public class GameLoopRenderer {
 	private final TextureAtlas background;
 	private final Matrix4 transformMatrix = new Matrix4();
 	private static SpriteBatch spriteBatch;
+	private static BitmapFont font;
 	
 	/**
 	 * Bruges til at adskille renderer metoderne fra GameLoop
@@ -34,6 +36,8 @@ public class GameLoopRenderer {
 			background.addRegion(i + "", r);
 			spriteBatch = new SpriteBatch();
 		}
+		font = new BitmapFont();
+		font.setScale(2, 2);
 	}
 
 	public void render(Application app, Simulation simulation) {
@@ -61,13 +65,14 @@ public class GameLoopRenderer {
 		spriteBatch.end();
 	}
 
-//	public static void draw(String text, int x, int y) {
-//		spriteBatch.begin();
-//		spriteBatch.enableBlending();
-//		font.draw(spriteBatch, text, x, y);
-//		spriteBatch.disableBlending();
-//		spriteBatch.end();
-//	}
+	public static void draw(String text, int x, int y, Color color) {
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		font.setColor(color); //Vil nok unødigt sænke performance
+		font.draw(spriteBatch, text, x, y);
+		spriteBatch.disableBlending();
+		spriteBatch.end();
+	}
 
 	public void dispose() {
 		

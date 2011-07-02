@@ -1,6 +1,8 @@
 package com.gui;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
@@ -26,7 +28,7 @@ public class GameLoop implements Frame {
 	public void render(Application app) {
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render(app, simulation);
-//		Renderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150);
+		GameLoopRenderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150, Color.RED);
 	}
 
 	@Override
