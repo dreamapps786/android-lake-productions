@@ -1,7 +1,5 @@
 package com.gui;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -17,7 +15,7 @@ public class GameLoop implements Frame {
 	private boolean isDisposable = false;
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
-	private ArrayList<AnimatedSprite> sprites;
+	private AnimatedSprite shooter;
 
 
 	public GameLoop(Application app){
@@ -26,7 +24,6 @@ public class GameLoop implements Frame {
 
 	@Override
 	public void initialize() {
-		this.sprites = new ArrayList<AnimatedSprite>();
 		simulation = new Simulation(this);
 		renderer = new GameLoopRenderer(this);
 		inputProcessor = new MainInputProcessor(this);	
@@ -61,18 +58,18 @@ public class GameLoop implements Frame {
 	
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	public void addSprite(AnimatedSprite sprite) {
-		sprites.add(sprite);
+//		sprites.add(sprite);
 	}
 
 	@Override
 	public void removeSprite(AnimatedSprite sprite) {
-		sprites.remove(sprite);
+//		sprites.remove(sprite);
 	}
 
 	@Override
