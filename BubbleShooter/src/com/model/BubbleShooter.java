@@ -46,7 +46,6 @@ public class BubbleShooter implements ApplicationListener {
 			if (frame instanceof MainMenu) {
 				//If the screen is currently showing MainMenu switch to GameLoop
 				frame = new GameLoop(app);
-				System.out.println("Change frame");
 			}
 			else if (frame instanceof GameLoop) {
 				//Switch to GameOver
