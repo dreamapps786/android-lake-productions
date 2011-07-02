@@ -56,6 +56,10 @@ public class GameLoop implements Frame {
 		renderer.dispose();
 	}
 	
+	public void setShooter(AnimatedSprite shooter) {
+		this.shooter = shooter;
+	}
+	
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		
@@ -75,6 +79,5 @@ public class GameLoop implements Frame {
 	@Override
 	public void setDisposable(boolean disposable) {
 		// TODO Auto-generated method stub
-		
 	}
 }
