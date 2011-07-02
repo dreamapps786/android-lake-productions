@@ -64,7 +64,7 @@ public class GameLoopRenderer {
 		shooter = new AnimatedSprite("shooter", shooterAnimation, 0, 0, 64,
 				64, 1, 1, 0, 0);
 		shooter.setPosition((480 - 64) / 2, 0);		
-		gameloop.addSprite(shooter);
+		gameloop.setShooter(shooter);
 	}
 
 	private void renderBackground() {
