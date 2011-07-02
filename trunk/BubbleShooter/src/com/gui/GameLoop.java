@@ -2,8 +2,10 @@ package com.gui;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.model.Renderer;
+import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
 public class GameLoop implements Frame {
@@ -13,7 +15,7 @@ public class GameLoop implements Frame {
 
 
 	public GameLoop(Application app){
-		simulation = new Simulation();
+		simulation = new Simulation(this);
 		renderer = new Renderer(app);
 	}
 	
@@ -26,7 +28,7 @@ public class GameLoop implements Frame {
 	public void render(Application app) {
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render(app, simulation);
-		Renderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150);
+//		Renderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150);
 	}
 
 	@Override
@@ -37,6 +39,27 @@ public class GameLoop implements Frame {
 	@Override
 	public void dispose() {
 		renderer.dispose();
+	}
+	
+
+	
+
+	@Override
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void addSprite(AnimatedSprite sprite) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeSprite(AnimatedSprite sprite) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

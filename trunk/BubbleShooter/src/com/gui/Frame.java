@@ -1,6 +1,8 @@
 package com.gui;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.graphics.GL10;
+import com.simulation.AnimatedSprite;
 
 public interface Frame {
 	/**
@@ -15,7 +17,7 @@ public interface Frame {
 	 * @param app
 	 */
 	public void render (Application app);
-
+	
 	/**
 	 * Called by BubbleShooter to check if the screen is still in use or it can be disposed.
 	 * When disposed another frame will be shown instead.
@@ -28,4 +30,10 @@ public interface Frame {
 	 * Cleans up all resources of the screen, e.g. meshes, textures etc.
 	 */
 	public void dispose ();
+	
+	public boolean touchUp(int x, int y, int pointer, int button);
+	
+	public void addSprite(AnimatedSprite sprite);
+	
+	public void removeSprite(AnimatedSprite sprite);
 }
