@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
-import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -129,7 +128,7 @@ public class MainMenu implements Frame {
 		}
 	}
 
-	public static void renderButtonAnimations(GL10 gl, Sprite animSprite) {
+	public void renderButtonAnimations(GL10 gl, AnimatedSprite animSprite) {
 		showButton = false;
 		// playAnimation.bind();
 		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -149,6 +148,11 @@ public class MainMenu implements Frame {
 		spriteBatch.draw(animSprite, animSprite.getX(), animSprite.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
+		if (!animSprite.isPlay()) {
+			if (animSprite.getName().equals("play")) {
+				setDisposable(true);
+			}
+		}
 	}
 	
 	public static void draw(String text, int x, int y) {
@@ -174,9 +178,6 @@ public class MainMenu implements Frame {
 					&& y < buttonY + buttonH) {
 				s.isTouched();
 				renderButtonAnimations(Gdx.gl10, s);
-				if (s.getName().equals("play")) {
-					MainMenu.getInstance().setDisposable(true);
-				}
 			}
 			i++;
 		}

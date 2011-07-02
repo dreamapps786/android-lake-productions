@@ -1,8 +1,6 @@
 package com.gui;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
@@ -41,9 +39,6 @@ public class GameLoop implements Frame {
 		renderer.dispose();
 	}
 	
-
-	
-
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		// TODO Auto-generated method stub

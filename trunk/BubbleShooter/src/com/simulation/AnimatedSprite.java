@@ -94,4 +94,8 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	public String getName() {
 		return name;
 	}
+
+	public boolean isPlay() {
+		return isPlay;
+	}
 }
