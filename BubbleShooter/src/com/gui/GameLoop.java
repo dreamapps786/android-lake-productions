@@ -1,23 +1,36 @@
 package com.gui;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
+import com.simulation.MainInputProcessor;
 import com.simulation.Simulation;
 
 public class GameLoop implements Frame {
-	private final Simulation simulation;
-	private final GameLoopRenderer renderer;
+	private Simulation simulation;
+	private GameLoopRenderer renderer;
 	private boolean isDisposable = false;
+	@SuppressWarnings("unused")
+	private MainInputProcessor inputProcessor;
+	private ArrayList<AnimatedSprite> sprites;
 
 
 	public GameLoop(Application app){
-		simulation = new Simulation(this);
-		renderer = new GameLoopRenderer(app);
+		initialize();
 	}
+
+	@Override
+	public void initialize() {
+		this.sprites = new ArrayList<AnimatedSprite>();
+		simulation = new Simulation(this);
+		renderer = new GameLoopRenderer(this);
+		inputProcessor = new MainInputProcessor(this);	
+	}	
 	
 	@Override
 	public void update(Application app) {
@@ -29,6 +42,11 @@ public class GameLoop implements Frame {
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render(app, simulation);
 		GameLoopRenderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150, Color.RED);
+	}
+	
+	@Override
+	public void populate() {
+		renderer.populate();
 	}
 
 	@Override
@@ -49,14 +67,12 @@ public class GameLoop implements Frame {
 
 	@Override
 	public void addSprite(AnimatedSprite sprite) {
-		// TODO Auto-generated method stub
-		
+		sprites.add(sprite);
 	}
 
 	@Override
 	public void removeSprite(AnimatedSprite sprite) {
-		// TODO Auto-generated method stub
-		
+		sprites.remove(sprite);
 	}
 
 	@Override
@@ -64,5 +80,4 @@ public class GameLoop implements Frame {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

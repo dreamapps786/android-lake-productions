@@ -5,7 +5,8 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gui.Frame;
-import com.gui.*;
+import com.gui.GameLoop;
+import com.gui.MainMenu;
 
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
@@ -29,7 +30,7 @@ public class BubbleShooter implements ApplicationListener {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
+		frame.setDisposable(true);
 
 	}
 
@@ -63,6 +64,8 @@ public class BubbleShooter implements ApplicationListener {
 	public void resume() {
 //		spriteBatch = new SpriteBatch();
 		frame = MainMenu.getInstance();
+		frame.setDisposable(false);
+		frame.initialize();
 		
 
 	}

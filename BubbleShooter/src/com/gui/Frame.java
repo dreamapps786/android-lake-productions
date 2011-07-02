@@ -1,7 +1,6 @@
 package com.gui;
 
 import com.badlogic.gdx.Application;
-import com.badlogic.gdx.graphics.GL10;
 import com.simulation.AnimatedSprite;
 
 public interface Frame {
@@ -37,4 +36,8 @@ public interface Frame {
 	public void addSprite(AnimatedSprite sprite);
 	
 	public void removeSprite(AnimatedSprite sprite);
+	
+	public void initialize();
+	
+	public void populate();
 }

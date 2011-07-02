@@ -6,37 +6,41 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.simulation.AnimatedSprite;
-import com.simulation.Simulation;
+import com.simulation.MainInputProcessor;
 
 public class MainMenu implements Frame {
 	private boolean isDisposable = false;
 	private static MainMenu mainMenu;
 	private static SpriteBatch spriteBatch;
-	private final Simulation simulation;
-	private final TextureAtlas background;
-	private final Texture title;
-	private final Texture play;
+	private TextureAtlas background;
+	private Texture title;
+	private Texture play;
 	private static BitmapFont font;
 	private static boolean showButton = true;
-	private Mesh playMesh;
 	private final Matrix4 viewMatrix = new Matrix4();
 	private final Matrix4 transformMatrix = new Matrix4();
+	@SuppressWarnings("unused")
+	private MainInputProcessor inputProcessor;
 	private ArrayList<AnimatedSprite> sprites;
+	public AnimatedSprite button;
+	private Texture playAnimation;
 
 	private MainMenu() {
 		this.sprites = new ArrayList<AnimatedSprite>();
-		simulation = new Simulation(this);
 		spriteBatch = new SpriteBatch();
+		initialize();
+	}
+	
+	@Override
+	public void initialize() {
 		background = new TextureAtlas();
 		for (int i = 1; i <= 8; i++) {
 			Texture backgroundPart = new Texture(
@@ -54,8 +58,11 @@ public class MainMenu implements Frame {
 		font = new BitmapFont();
 		font.setScale(2, 2);
 		font.setColor(Color.RED);
-		
+		inputProcessor = new MainInputProcessor(this);
+		populate();
 	}
+	
+	
 	
 	public static MainMenu getInstance(){
 		if (mainMenu == null) {
@@ -74,26 +81,21 @@ public class MainMenu implements Frame {
 
 	@Override
 	public void update(Application app) {
-		simulation.update(app.getGraphics().getDeltaTime());
+		button.update(app.getGraphics().getDeltaTime());
 	}
 
 	@Override
 	public void render(Application app) {
-		GL10 gl = app.getGraphics().getGL10();
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		renderBackground(gl);
-		renderButtons(gl);
+//		GL10 gl = app.getGraphics().getGL10();  // Skal kaldes hvis GL skal bruges igen
+//		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		renderBackground();
+		renderButtons();
 		if (!showButton) {
-			renderButtonAnimations(gl, simulation.button);
+			renderButtonAnimations(button);
 		}
-
-		//----------------------------------------------------------------
-//		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
-//		renderer.render(app, simulation);
-//		Renderer.draw("FPS: "+Gdx.graphics.getFramesPerSecond(), 150, 150);
 	}
 
-	private void renderBackground(GL10 gl) {
+	private void renderBackground() {
 		viewMatrix.setToOrtho2D(0, 0, 480, 800);
 		spriteBatch.setProjectionMatrix(viewMatrix);
 		spriteBatch.setTransformMatrix(transformMatrix);
@@ -107,11 +109,10 @@ public class MainMenu implements Frame {
 					i++;
 			}
 		}
-//		spriteBatch.draw(background.getRegions().get(i), 0 - 272, 0 - 112, 1024, 1024, 0, 0, 1024,1024, false, false);	
 		spriteBatch.end();
 	}
 
-	private void renderButtons(GL10 gl) {
+	private void renderButtons() {
 		if (showButton) {
 			spriteBatch.begin();
 			spriteBatch.enableBlending();
@@ -128,20 +129,8 @@ public class MainMenu implements Frame {
 		}
 	}
 
-	public void renderButtonAnimations(GL10 gl, AnimatedSprite animSprite) {
+	public void renderButtonAnimations(AnimatedSprite animSprite) {
 		showButton = false;
-		// playAnimation.bind();
-		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		// Gdx.graphics.getGL10().glEnable(GL10.GL_TEXTURE_2D);
-		// gl.glPushMatrix();
-		// gl.glTranslatef(button.position.x, button.position.y,0);
-		// System.out.println("ButtonX: "+button.position.x);
-		// playMesh.render(GL10.GL_TRIANGLES,(int)((button.aliveTime /
-		// Button.ANIMATION_LIVE_TIME) * 15) * 4, 4);
-		// gl.glPopMatrix();
-		// gl.glDisable(GL10.GL_BLEND);
-		// Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
@@ -178,11 +167,22 @@ public class MainMenu implements Frame {
 			if (x > buttonX && x < buttonX + buttonW && y > buttonY
 					&& y < buttonY + buttonH) {
 				s.isTouched();
-				renderButtonAnimations(Gdx.gl10, s);
+				renderButtonAnimations(s);
 			}
 			i++;
 		}
 		return false;
+	}
+	
+	@Override
+	public void populate() {
+		playAnimation = new Texture(
+				Gdx.files.internal("res/anim_btn_play_none.png"), true);
+		playAnimation.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		button = new AnimatedSprite("play",playAnimation, 0, 0, 305, 82, 6, 1,
+				0.18125f, 0.24625f);
+		button.setPosition((480 - 305) / 2, 522);
+		addSprite(button);
 	}
 	
 	@Override
