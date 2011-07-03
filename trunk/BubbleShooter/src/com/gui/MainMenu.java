@@ -29,12 +29,12 @@ public class MainMenu implements Frame {
 	private final Matrix4 transformMatrix = new Matrix4();
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
-	private ArrayList<AnimatedSprite> sprites;
+//	private ArrayList<AnimatedSprite> sprites;
 	public AnimatedSprite button;
 	private Texture playAnimation;
 
 	private MainMenu() {
-		this.sprites = new ArrayList<AnimatedSprite>();
+//		this.sprites = new ArrayList<AnimatedSprite>();
 		spriteBatch = new SpriteBatch();
 		initialize();
 	}
@@ -155,21 +155,62 @@ public class MainMenu implements Frame {
 	
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		boolean touched = false;
-		int i = 0;
-		while (!touched && i < sprites.size()) {
-			AnimatedSprite s = sprites.get(i);
-			float buttonX = Gdx.graphics.getWidth() * s.getXrel2Screen();
-			float buttonY = Gdx.graphics.getHeight() * s.getYrel2Screen();
-			float buttonW = (Gdx.graphics.getWidth() / 480f) * s.getWidth();
-			float buttonH = (Gdx.graphics.getHeight() / 800f) * s.getHeight();
-
-			if (x > buttonX && x < buttonX + buttonW && y > buttonY
-					&& y < buttonY + buttonH) {
-				s.isTouched();
-				renderButtonAnimations(s);
+		//----Gammel kode:----
+//		boolean touched = false;
+//		int i = 0;
+//		while (!touched 
+//				&& i < sprites.size()
+//				) {
+//			AnimatedSprite s = sprites.get(i);
+//			
+//			float buttonX = Gdx.graphics.getWidth() * this.button.getXrel2Screen();
+//			float buttonY = Gdx.graphics.getHeight() * this.button.getYrel2Screen();
+//			float buttonW = (Gdx.graphics.getWidth() / 480f) * this.button.getWidth();
+//			float buttonH = (Gdx.graphics.getHeight() / 800f) * this.button.getHeight();
+		//--------END---------
+		
+			if (animatedSpriteIsTouched(this.button, x, y)) {
+				this.button.isTouched();
+				renderButtonAnimations(this.button);
 			}
-			i++;
+			//XXX Jeg tænkte vi skulle bruge else if - i stedet for while loops:
+//			else if (animatedSpriteIsTouched(anotherButton, x, y)) {
+//				anotherButton.isTouched();
+//				renderButtonAnimations(anotherButton);
+//			}
+			
+		//----Gammel kode:----
+//			i++;
+//		}
+		//--------END---------
+		return false;
+	}
+	
+	/*
+	 * FIXME Denne dokumentation (og java-doc'en nedenfor) må du gerne fjerne
+	 * når du har læst alt den nye kode der er lavet her i klassen.
+	 * - denne metode er primært lavet for ikke at skulle lave if sætninger inde i if-sætninger
+	 * og for at formindske koden i ovenstående if-else sætninger
+	 * - Metoden skal nok flyttes ind på selve AnimatedSprite klassen,
+	 * men jeg tænkte det er bedst at starte med at have den tæt på,
+	 * så du hurtigt kunne finde ud af hvad nyt der er lavet.
+	 */ 
+	/**
+	 * Bruges til at finde ud af om en AnimatedSprite (nok mest en knap) er trykket på.
+	 * @param target - The <code>AnimatedSprite</code> that may be touched
+	 * @param touchedX - The x-coordinate from the touchUp()-method.
+	 * @param touchedY - The y-coordinate from the touchUp()-method.
+	 * @return <code>true</code> if the target is touched.
+	 */
+	public boolean animatedSpriteIsTouched(AnimatedSprite target, int touchedX, int touchedY) {
+		float spriteX = Gdx.graphics.getWidth() * target.getXrel2Screen();
+		float spriteY = Gdx.graphics.getHeight() * target.getYrel2Screen();
+		float spriteW = (Gdx.graphics.getWidth() / 480f) * target.getWidth();
+		float spriteH = (Gdx.graphics.getHeight() / 800f) * target.getHeight();
+		
+		if (touchedX > spriteX && touchedX < spriteX + spriteW && touchedY > spriteY
+				&& touchedY < spriteY + spriteH) {
+			return true;
 		}
 		return false;
 	}
@@ -195,10 +236,10 @@ public class MainMenu implements Frame {
 	}
 
 	public void addSprite(AnimatedSprite sprite) {
-		this.sprites.add(sprite);
+//		this.sprites.add(sprite);
 	}
 
 	public void removeSprite(AnimatedSprite sprite) {
-		this.sprites.remove(sprite);
+//		this.sprites.remove(sprite);
 	}
 }
