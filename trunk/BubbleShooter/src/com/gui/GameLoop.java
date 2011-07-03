@@ -62,6 +62,7 @@ public class GameLoop implements Frame {
 	
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
+//		Math.atan((x2-x1)/(y2-y1)); //TODO
 		shooter.rotate(45);
 		System.out.println(shooter.getRotation());
 		return true;
