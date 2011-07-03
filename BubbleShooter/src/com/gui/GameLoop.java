@@ -16,6 +16,7 @@ public class GameLoop implements Frame {
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
+	private int shooterRotation = 0;
 
 
 	public GameLoop(Application app){
@@ -63,13 +64,14 @@ public class GameLoop implements Frame {
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		int cY = -y+800; //y converted from input coordinates to animatedSprite
-		System.out.println("x: "+(x-(shooter.getOriginX()+shooter.getX())));
-		System.out.println("y: "+(cY-(shooter.getOriginY()+shooter.getY())));
 		//TODO virker ikke endnu
 		// !!har testet at det er ikke fordi Math regner i radianer!!
-		shooter.rotate((int)Math.atan((x-(shooter.getOriginX()+shooter.getX())))
-				/(cY-(shooter.getOriginY()+shooter.getY())));
-		System.out.println("Rot: "+shooter.getRotation());
+		int newRotAngle = (int)-Math.toDegrees(Math.atan(
+				(x-(shooter.getOriginX()+shooter.getX()))
+				/(cY-(shooter.getOriginY()+shooter.getY()))
+				));
+		shooter.rotate(-shooterRotation+newRotAngle);
+		shooterRotation = newRotAngle;
 		return true;
 	}
 
