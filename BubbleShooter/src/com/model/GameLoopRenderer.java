@@ -21,8 +21,10 @@ public class GameLoopRenderer {
 	private final Matrix4 transformMatrix = new Matrix4();
 	private static SpriteBatch spriteBatch;
 	private static BitmapFont font;
-	public AnimatedSprite shooter;
-	private Texture shooterAnimation;
+	private AnimatedSprite shooter;
+	private AnimatedSprite activeBubble; //TODO initialiser
+	private Texture shooterTexture;
+	private Texture activeBubbleTexture;
 	private GameLoop gameloop;
 
 	/**
@@ -55,16 +57,27 @@ public class GameLoopRenderer {
 		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderBackground();
 		renderShooter();
+		if (activeBubble.isActive()) {
+			renderActiveBubble();
+		}
 	}
 
 	public void populate() {
-		shooterAnimation = new Texture(Gdx.files.internal("res/shooter.png"),
+		shooterTexture = new Texture(Gdx.files.internal("res/shooter.png"),
 				true);
-		shooterAnimation.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		shooter = new AnimatedSprite("shooter", shooterAnimation, 0, 0, 64, 64,
+		shooterTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		shooter = new AnimatedSprite("shooter", shooterTexture, 0, 0, 64, 64,
 				1, 1, 0, 0);
 		shooter.setPosition((480 - 64) / 2, 0);
 		gameloop.setShooter(shooter);
+		
+		activeBubbleTexture = new Texture(Gdx.files.internal("res/bubble.png"),
+				true);
+		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture,
+				0, 0, 32, 32, 1, 1, 0, 0);
+		activeBubble.setActive(false);
+		gameloop.setActiveBubble(activeBubble);
 	}
 
 	private void renderBackground() {
@@ -95,14 +108,32 @@ public class GameLoopRenderer {
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
+	
+	public void renderActiveBubble() {
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		spriteBatch.draw(activeBubble, activeBubble.getX(), activeBubble.getY(), 16,
+				16, activeBubble.getWidth(), activeBubble.getHeight(), 1, 1, activeBubble.getRotation());
+		spriteBatch.disableBlending();
+		spriteBatch.end();
+	}
+	
+	private void renderBubbles() {
+		// TODO Auto-generated method stub
+	}
 
-	public static void draw(String text, int x, int y, Color color) {
+	public static void drawText(String text, int x, int y, Color color) {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		font.setColor(color); // Vil nok unødigt sænke performance
 		font.draw(spriteBatch, text, x, y);
 		spriteBatch.disableBlending();
 		spriteBatch.end();
+	}
+	
+	public static void draw(){
+		
 	}
 
 	public void dispose() {

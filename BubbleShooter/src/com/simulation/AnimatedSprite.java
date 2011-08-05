@@ -20,6 +20,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	private float xRel2Screen;
 	private float yRel2Screen;
 	private List<TextureRegion> frameRegions;
+	private boolean active = true;
 
 	public AnimatedSprite(String name,final Texture texture, final int srcX,
 			final int scrY, final int tileWidth, final int tileHeight,
@@ -93,6 +94,14 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 
 	public String getName() {
 		return name;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public boolean isPlay() {
