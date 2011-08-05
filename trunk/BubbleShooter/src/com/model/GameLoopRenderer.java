@@ -57,9 +57,9 @@ public class GameLoopRenderer {
 		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderBackground();
 		renderShooter();
-		if (activeBubble.isActive()) {
+//		if (activeBubble.isActive()) {
 			renderActiveBubble();
-		}
+//		}
 	}
 
 	public void populate() {
@@ -76,7 +76,7 @@ public class GameLoopRenderer {
 		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture,
 				0, 0, 32, 32, 1, 1, 0, 0);
-		activeBubble.setActive(false);
+//		activeBubble.setActive(false);
 		gameloop.setActiveBubble(activeBubble);
 	}
 
