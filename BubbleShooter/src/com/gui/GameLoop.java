@@ -63,7 +63,7 @@ public class GameLoop implements Frame {
 	
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		int cY = -y+800; //y converted from input coordinates to animatedSprite
+		int cY = -y+800; //y converted from input- to animatedSprite-coordinates
 		//TODO virker ikke endnu
 		// !!har testet at det er ikke fordi Math regner i radianer!!
 		int newRotAngle = (int)-Math.toDegrees(Math.atan(
