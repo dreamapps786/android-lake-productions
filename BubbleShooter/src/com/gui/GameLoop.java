@@ -72,9 +72,14 @@ public class GameLoop implements Frame {
 			if (newRotAngle > -60 && newRotAngle < 60) {
 				shooter.rotate(-shooterRotation + newRotAngle);
 				shooterRotation = newRotAngle;
+				
 			}
 		}
 		return true;
+	}
+	
+	public void shootBuble(int rotation){
+		
 	}
 
 	@Override
