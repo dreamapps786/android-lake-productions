@@ -72,8 +72,8 @@ public class GameLoop implements Frame {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		activeBubble.setActive(false);
-		if (!activeBubble.isActive()) {
+//		activeBubble.setActive(false);
+//		if (!activeBubble.isActive()) {
 			int cY = -y + 800; // y converted from input- to
 								// animatedSprite-coordinates
 			if (cY > shooter.getOriginY()) {
@@ -86,7 +86,7 @@ public class GameLoop implements Frame {
 					shootBubble(newRotAngle);
 				}
 			}
-		}
+//		}
 		return true;
 	}
 	
@@ -101,12 +101,12 @@ public class GameLoop implements Frame {
 		System.out.println("x: "+x + " y: "+y);
 		activeBubble.setPosition(x-activeBubble.getOriginX(),
 				y-activeBubble.getOriginY());
-		activeBubble.setActive(true);
+//		activeBubble.setActive(true);
 		animateActiveBubble(angle);
 	}
 	
 	private void animateActiveBubble(double angle) {
-		while (activeBubble.isActive()) {
+//		while (activeBubble.isActive()) {
 			double speed = 1;
 			double bC = Math.toDegrees(Math.sin(90));
 			double a = -( speed * Math.toDegrees(Math.sin(Math.toRadians(angle))) ) / bC;
@@ -121,7 +121,7 @@ public class GameLoop implements Frame {
 					e.printStackTrace();
 				}
 			}
-		}
+//		}
 	}
 	
 	
