@@ -11,6 +11,7 @@ import com.model.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
 import com.simulation.MainInputProcessor;
 import com.simulation.Simulation;
+import com.badlogic.gdx.math.Rectangle;
 
 public class GameLoop implements Frame {
 	private Simulation simulation;
@@ -23,6 +24,7 @@ public class GameLoop implements Frame {
 	private AnimatedSprite activeBubble;
 	private ArrayList<AnimatedSprite> bubbles;
 	private int shooterRotation = 0;
+	private Rectangle collisionBox;
 
 	public GameLoop(Application app) {
 		initialize();
@@ -35,6 +37,7 @@ public class GameLoop implements Frame {
 		renderer = new GameLoopRenderer(this);
 		inputProcessor = new MainInputProcessor(this);
 		bubbles = new ArrayList<AnimatedSprite>();
+		collisionBox = new Rectangle(0, 0, 460, 800);
 	}
 
 	@Override
@@ -49,7 +52,7 @@ public class GameLoop implements Frame {
 		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(),
 				150, 150, Color.RED);
 		if (activeBubble.isActive()) {
-			animateActiveBubble(shooterRotation);
+			animateActiveBubble();
 		}
 	}
 
@@ -79,7 +82,6 @@ public class GameLoop implements Frame {
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		activeBubble.setActive(true);
-		// if (!activeBubble.isActive()) {
 		int cY = -y + 800; // y converted from input- to
 							// animatedSprite-coordinates
 		if (cY > shooter.getOriginY()) {
@@ -89,15 +91,16 @@ public class GameLoop implements Frame {
 			if (newRotAngle > -60 && newRotAngle < 60) {
 				shooter.rotate(-shooterRotation + newRotAngle);
 				shooterRotation = newRotAngle;
-				shootBubble(newRotAngle);
+				activeBubble.setDirection(newRotAngle);
+				shootBubble();
 			}
 		}
-		// }
 		return true;
 	}
 
-	public void shootBubble(double angle) {
+	public void shootBubble() {
 		int dist = 40;
+		double angle = activeBubble.getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(dist * Math.toDegrees(Math.sin(Math.toRadians(angle))))
 				/ bC;
@@ -105,24 +108,21 @@ public class GameLoop implements Frame {
 				.toRadians(180 - angle - 90)))) / bC;
 		int x = (int) (a + shooter.getOriginX() + shooter.getX());
 		int y = (int) (b + shooter.getOriginY() + shooter.getY());
-		System.out.println("a: " + a + " b: " + b);
-		System.out.println("x: " + x + " y: " + y);
 		activeBubble.setPosition(x - activeBubble.getOriginX(), y
 				- activeBubble.getOriginY());
-		// activeBubble.setActive(true);
-		animateActiveBubble(angle);
+		animateActiveBubble();
 	}
 
-	private void animateActiveBubble(double angle) {
-		// while (activeBubble.isActive()) {
-		double speed = 0.1;
+	private void animateActiveBubble() {
+		 double fps = Gdx.graphics.getFramesPerSecond();
+		 double speed = fps / (fps / 8);
+//		double speed = 2;
+		double angle = activeBubble.getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle))))
 				/ bC;
 		double b = (speed * Math.toDegrees(Math.sin(Math
 				.toRadians(180 - angle - 90)))) / bC;
-		// boolean changedDirection = false;
-		// while (!changedDirection) {
 		activeBubble.setPosition(activeBubble.getX() + (float) a,
 				activeBubble.getY() + (float) b);
 		spriteBatch.begin();
@@ -132,13 +132,21 @@ public class GameLoop implements Frame {
 				.draw(activeBubble, activeBubble.getX(), activeBubble.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
-		System.out.println("ActiveBubleX: " + activeBubble.getX());
-		if (activeBubble.getX() < 0
-				|| activeBubble.getX() > 480 - activeBubble.getWidth()) {
-			activeBubble.setActive(false);
-			// changedDirection = true;
+
+		if (!collisionBox.contains(activeBubble.getBoundingRectangle())) {
+			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
-		// }
+	}
+
+	public void changeDirection(float x, float y) {
+		double angle = activeBubble.getDirection();
+		if (x < 0) {
+			activeBubble.setDirection(angle - angle * 2);
+		}
+		if (x > collisionBox.getWidth() - activeBubble.getWidth() / 3) {
+			activeBubble.setDirection(angle + angle * -1 * 2);
+			
+		}
 	}
 
 	@Override

@@ -21,10 +21,12 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	private float yRel2Screen;
 	private List<TextureRegion> frameRegions;
 	private boolean active = true;
+	private double direction;
 
-	public AnimatedSprite(String name,final Texture texture, final int srcX,
+	public AnimatedSprite(String name, final Texture texture, final int srcX,
 			final int scrY, final int tileWidth, final int tileHeight,
-			final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
+			final int rowCount, final int columnCount, float xRel2Screen,
+			float yRel2Screen) {
 		super(texture, srcX, scrY, tileWidth, tileHeight);
 		this.name = name;
 		this.frameRegions = new ArrayList<TextureRegion>();
@@ -70,9 +72,11 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 			this.frameTimeCounter += secondsElapsed;
 			if (frameTimeCounter > animationRateInSeconds) {
 				frameTimeCounter = 0;
-					curFrameIndex = ++curFrameIndex % rowCount; //Sørger for at animationen starter forfra
+				curFrameIndex = ++curFrameIndex % rowCount; // Sørger for at
+															// animationen
+															// starter forfra
 				goToFrame(curFrameIndex);
-				if (curFrameIndex == rowCount -1) {
+				if (curFrameIndex == rowCount - 1) {
 					pause();
 				}
 			}
@@ -106,5 +110,13 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 
 	public boolean isPlay() {
 		return isPlay;
+	}
+
+	public double getDirection() {
+		return direction;
+	}
+
+	public void setDirection(double direction) {
+		this.direction = direction;
 	}
 }
