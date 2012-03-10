@@ -99,6 +99,7 @@ public class GameLoop implements Frame {
 	}
 
 	public void shootBubble() {
+		System.out.println("ShootZeBubblez");
 		int dist = 40;
 		double angle = activeBubble.getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
@@ -114,9 +115,8 @@ public class GameLoop implements Frame {
 	}
 
 	private void animateActiveBubble() {
-		 double fps = Gdx.graphics.getFramesPerSecond();
-		 double speed = fps / (fps / 8);
-//		double speed = 2;
+		double fps = Gdx.graphics.getFramesPerSecond();
+		double speed = 8;
 		double angle = activeBubble.getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle))))
@@ -145,7 +145,7 @@ public class GameLoop implements Frame {
 		}
 		if (x > collisionBox.getWidth() - activeBubble.getWidth() / 3) {
 			activeBubble.setDirection(angle + angle * -1 * 2);
-			
+
 		}
 	}
 

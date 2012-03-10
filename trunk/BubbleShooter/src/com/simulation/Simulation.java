@@ -1,8 +1,5 @@
 package com.simulation;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.gui.Frame;
 
 public class Simulation {

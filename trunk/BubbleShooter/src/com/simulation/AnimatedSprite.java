@@ -29,6 +29,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 			float yRel2Screen) {
 		super(texture, srcX, scrY, tileWidth, tileHeight);
 		this.name = name;
+		System.out.println("Sprite: "+name);
 		this.frameRegions = new ArrayList<TextureRegion>();
 		this.rowCount = rowCount;
 		this.columnCount = columnCount;
