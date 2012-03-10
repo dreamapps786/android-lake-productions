@@ -63,6 +63,7 @@ public class GameLoopRenderer {
 	}
 
 	public void populate() {
+		System.out.println("populate");
 		shooterTexture = new Texture(Gdx.files.internal("res/shooter.png"),
 				true);
 		shooterTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
@@ -79,7 +80,6 @@ public class GameLoopRenderer {
 				0, 0, 32, 32, 1, 1, 0, 0);
 		activeBubble.setActive(false);
 		gameloop.setActiveBubble(activeBubble);
-		
 	}
 
 	private void renderBackground() {
@@ -137,10 +137,8 @@ public class GameLoopRenderer {
 	}
 
 	public static void draw() {
-
 	}
 
 	public void dispose() {
-
 	}
 }

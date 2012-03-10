@@ -1,7 +1,6 @@
 package com.bubbleshooter;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.surfaceview.FillResolutionStrategy;
 import com.model.BubbleShooter;
 
 import android.content.pm.ActivityInfo;
