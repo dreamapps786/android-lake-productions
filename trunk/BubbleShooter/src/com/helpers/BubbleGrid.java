@@ -28,6 +28,8 @@ public class BubbleGrid {
 			}
 		}
 		
+		
+		//TODO vi mangler lige, at sætte værdierne, ellers vil de altid have kordinaterne 0,0
 		boxes[0][0].setOccupied(true);
 		boxes[1][0].setOccupied(true);
 		boxes[0][1].setOccupied(true);
