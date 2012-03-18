@@ -28,13 +28,11 @@ public class BubbleGrid {
 			}
 		}
 		
-		
-		//TODO vi mangler lige, at sætte værdierne, ellers vil de altid have kordinaterne 0,0
 		boxes[0][0].setOccupied(true);
-		boxes[1][0].setOccupied(true);
+//		boxes[1][0].setOccupied(true);
 		boxes[0][1].setOccupied(true);
-		boxes[2][0].setOccupied(true);
-		boxes[0][2].setOccupied(true);
+//		boxes[2][0].setOccupied(true);
+//		boxes[0][2].setOccupied(true);
 	}
 
 	public BubbleGridRectangle[][] getGrid() {
@@ -69,6 +67,7 @@ public class BubbleGrid {
 				}
 			}
 		}
+//		System.out.println(results.get(0).getX());
 		return results;
 	}
 
@@ -95,6 +94,7 @@ public class BubbleGrid {
 					bubbleTexture, (int) x, (int) y, bubbleTexture.getWidth(),
 					bubbleTexture.getHeight(), 0, 0, 0f, 0f);
 			isOccupied = false;
+			bubble.setPosition(x, y);
 		}
 
 		public boolean isOccupied() {
