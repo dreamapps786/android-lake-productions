@@ -128,12 +128,10 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
-		
+		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();		
 		for (AnimatedSprite bubble : bubbles) {
-			System.out.println("X: "+bubble.getX()+" Y: "+bubble.getY());
-			spriteBatch.draw(bubble, bubble.getX(), bubble.getY(), 16,
-					16, bubble.getWidth(), bubble.getHeight(), 1, 1, bubble.getRotation());			
+			spriteBatch.draw(bubble, bubble.getRegionX(), bubble.getRegionY(), 16,
+					16, bubble.getWidth(), bubble.getHeight(), 1, 1, bubble.getRotation());
 		}
 		
 		

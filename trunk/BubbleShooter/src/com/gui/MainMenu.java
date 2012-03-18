@@ -27,12 +27,10 @@ public class MainMenu implements Frame {
 	private final Matrix4 transformMatrix = new Matrix4();
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
-//	private ArrayList<AnimatedSprite> sprites;
 	public AnimatedSprite button;
 	private Texture playAnimation;
 
 	private MainMenu() {
-//		this.sprites = new ArrayList<AnimatedSprite>();
 		spriteBatch = new SpriteBatch();
 		initialize();
 	}
