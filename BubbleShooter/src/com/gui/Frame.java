@@ -33,9 +33,10 @@ public interface Frame {
 	
 	public boolean touchUp(int x, int y, int pointer, int button);
 	
-	public void addSprite(AnimatedSprite sprite);
-	
-	public void removeSprite(AnimatedSprite sprite);
+	//Bliver ikke brugt
+//	public void addSprite(AnimatedSprite sprite);
+//	
+//	public void removeSprite(AnimatedSprite sprite);
 	
 	public void initialize();
 	
