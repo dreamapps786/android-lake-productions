@@ -27,6 +27,7 @@ public class GameLoopRenderer {
 	private AnimatedSprite activeBubble;
 	private Texture shooterTexture;
 	private Texture activeBubbleTexture;
+	private Texture[] bubbleTextures;
 	private GameLoop gameloop;
 	private BubbleGrid bubbleGrid;
 
@@ -51,8 +52,9 @@ public class GameLoopRenderer {
 		}
 		font = new BitmapFont();
 		font.setScale(2, 2);
+		bubbleTextures = new Texture[3];
 		populate();
-		bubbleGrid = new BubbleGrid(activeBubbleTexture, 150,-150);
+		bubbleGrid = new BubbleGrid(bubbleTextures, 0, 0);
 	}
 
 	public void render(Application app, Simulation simulation) {
@@ -75,10 +77,22 @@ public class GameLoopRenderer {
 				1, 1, 0, 0);
 		shooter.setPosition((480 - 64) / 2, 0);
 		gameloop.setShooter(shooter);
-		
-		activeBubbleTexture = new Texture(Gdx.files.internal("res/bubble.png"),
+
+		activeBubbleTexture = new Texture(Gdx.files.internal("res/bubble_green.png"),
 				true);
-		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		activeBubbleTexture.setFilter(TextureFilter.MipMap,
+				TextureFilter.Linear);
+
+		bubbleTextures[0] = new Texture(Gdx.files.internal("res/bubble_blue.png"),
+				true);
+		bubbleTextures[0].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		bubbleTextures[1] = new Texture(Gdx.files.internal("res/bubble_yellow.png"),
+				true);
+		bubbleTextures[1].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		bubbleTextures[2] = new Texture(Gdx.files.internal("res/bubble_green.png"),
+				true);
+		bubbleTextures[2].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+
 		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture,
 				0, 0, 32, 32, 0, 0, 0, 0);
 		activeBubble.setActive(false);
@@ -108,30 +122,32 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32,
-				32, shooter.getWidth(), shooter.getHeight(), 1, 1, shooter.getRotation());
+		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32, 32,
+				shooter.getWidth(), shooter.getHeight(), 1, 1,
+				shooter.getRotation());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
-	
+
 	public void renderActiveBubble() {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(), activeBubble.getY());
+		spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(),
+				activeBubble.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
-	
+
 	private void renderBubbles() {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
-		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();		
+		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
 		for (AnimatedSprite bubble : bubbles) {
 			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY());
 		}
-		
+
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -144,9 +160,9 @@ public class GameLoopRenderer {
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
-	
-	public static void draw(){
-		
+
+	public static void draw() {
+
 	}
 
 	public void dispose() {
