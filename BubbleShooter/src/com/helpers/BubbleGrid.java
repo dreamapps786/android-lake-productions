@@ -11,35 +11,30 @@ public class BubbleGrid {
 	float gridPosY;
 	private BubbleGridRectangle[][] boxes;
 
-	public BubbleGrid(Texture bubbleTexture, float x, float y) {
+	public BubbleGrid(Texture[] bubbleTextures, float x, float y) {
 		this.gridPosX = x;
-		this.gridPosY = y + 800 - bubbleTexture.getHeight();
-		boxes = new BubbleGridRectangle[15][20];
-		populate(bubbleTexture);
+		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
+		boxes = new BubbleGridRectangle[12][15];
+		populate(bubbleTextures);
 	}
 
-	private void populate(Texture bubbleTexture) {
+	private void populate(Texture[] bubbleTextures) {
+		int counter = bubbleTextures.length;
+		System.out.println("Counter: " + counter);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				boxes[i][j] = new BubbleGridRectangle(j * 32, i * 32, 32, 32,
-						bubbleTexture);
+				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27, 32, 32,
+						bubbleTextures[(int) (Math.random() * counter)]);
+				boxes[i][j].setOccupied(true);
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
-			System.out.println(boxes[i].length);
 			for (int j = 0; j < boxes[i].length - 1; j++) {
-				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * 32,
-						32, 32, bubbleTexture);
+				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27,
+						32, 32, bubbleTextures[(int) (Math.random() * counter)]);
+				boxes[i][j].setOccupied(true);
 			}
 		}
-
-		boxes[0][0].setOccupied(true);
-		System.out.println(boxes[1][0].getX() +" "+boxes[1][0].getY());
-		boxes[1][0].setOccupied(true);
-		boxes[0][1].setOccupied(true);
-		boxes[1][1].setOccupied(true);
-		boxes[2][0].setOccupied(true);
-		boxes[0][3].setOccupied(true);
 	}
 
 	public BubbleGridRectangle[][] getGrid() {
@@ -66,7 +61,7 @@ public class BubbleGrid {
 
 	public ArrayList<AnimatedSprite> getBubbles() {
 		ArrayList<AnimatedSprite> results = new ArrayList<AnimatedSprite>(
-				boxes.length * boxes[boxes.length - 1].length);
+				boxes.length * boxes[0].length);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				if (boxes[i][j].isOccupied) {
@@ -74,7 +69,14 @@ public class BubbleGrid {
 				}
 			}
 		}
-		// System.out.println(results.get(0).getX());
+
+		for (int i = 1; i < boxes.length; i += 2) {
+			for (int j = 0; j < boxes[i].length - 1; j++) {
+				if (boxes[i][j].isOccupied) {
+					results.add(boxes[i][j].getBubble());
+				}
+			}
+		}
 		return results;
 	}
 
