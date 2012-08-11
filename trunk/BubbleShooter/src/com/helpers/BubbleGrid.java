@@ -7,11 +7,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
+	float gridPosX;
+	float gridPosY;
 	private BubbleGridRectangle[][] boxes;
 
-	public BubbleGrid(Texture bubleTexture) {
+	public BubbleGrid(Texture bubbleTexture, float x, float y) {
+		this.gridPosX = x;
+		this.gridPosY = y + 800 - bubbleTexture.getHeight();
 		boxes = new BubbleGridRectangle[15][20];
-		populate(bubleTexture);
+		populate(bubbleTexture);
 	}
 
 	private void populate(Texture bubbleTexture) {
@@ -22,17 +26,20 @@ public class BubbleGrid {
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
+			System.out.println(boxes[i].length);
 			for (int j = 0; j < boxes[i].length - 1; j++) {
 				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * 32,
 						32, 32, bubbleTexture);
 			}
 		}
-		
+
 		boxes[0][0].setOccupied(true);
-//		boxes[1][0].setOccupied(true);
+		System.out.println(boxes[1][0].getX() +" "+boxes[1][0].getY());
+		boxes[1][0].setOccupied(true);
 		boxes[0][1].setOccupied(true);
-//		boxes[2][0].setOccupied(true);
-//		boxes[0][2].setOccupied(true);
+		boxes[1][1].setOccupied(true);
+		boxes[2][0].setOccupied(true);
+		boxes[0][3].setOccupied(true);
 	}
 
 	public BubbleGridRectangle[][] getGrid() {
@@ -67,7 +74,7 @@ public class BubbleGrid {
 				}
 			}
 		}
-//		System.out.println(results.get(0).getX());
+		// System.out.println(results.get(0).getX());
 		return results;
 	}
 
@@ -90,6 +97,8 @@ public class BubbleGrid {
 		public BubbleGridRectangle(float x, float y, float width, float height,
 				Texture bubbleTexture) {
 			super(x, y, width, height);
+			x = gridPosX + x;
+			y = gridPosY + y;
 			bubble = new AnimatedSprite("bubble" + x / 32 + "-" + y / 32,
 					bubbleTexture, (int) x, (int) y, bubbleTexture.getWidth(),
 					bubbleTexture.getHeight(), 0, 0, 0f, 0f);

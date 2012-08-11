@@ -52,7 +52,7 @@ public class GameLoopRenderer {
 		font = new BitmapFont();
 		font.setScale(2, 2);
 		populate();
-		bubbleGrid = new BubbleGrid(activeBubbleTexture);
+		bubbleGrid = new BubbleGrid(activeBubbleTexture, 150,-150);
 	}
 
 	public void render(Application app, Simulation simulation) {
@@ -118,8 +118,7 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(activeBubble, activeBubble.getX(), activeBubble.getY(), 16,
-				16, activeBubble.getWidth(), activeBubble.getHeight(), 1, 1, activeBubble.getRotation());
+		spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(), activeBubble.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -127,13 +126,11 @@ public class GameLoopRenderer {
 	private void renderBubbles() {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
-		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();		
 		for (AnimatedSprite bubble : bubbles) {
-			spriteBatch.draw(bubble, bubble.getRegionX(), bubble.getRegionY(), 16,
-					16, bubble.getWidth(), bubble.getHeight(), 1, 1, bubble.getRotation());
+			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY());
 		}
-		
 		
 		spriteBatch.disableBlending();
 		spriteBatch.end();
