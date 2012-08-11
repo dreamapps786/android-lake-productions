@@ -139,15 +139,15 @@ public class GameLoop implements Frame {
 		}
 	}
 
-	@Override
-	public void addSprite(AnimatedSprite sprite) {
-		// sprites.add(sprite);
-	}
-
-	@Override
-	public void removeSprite(AnimatedSprite sprite) {
-		// sprites.remove(sprite);
-	}
+//	@Override
+//	public void addSprite(AnimatedSprite sprite) {
+//		// sprites.add(sprite);
+//	}
+//
+//	@Override
+//	public void removeSprite(AnimatedSprite sprite) {
+//		// sprites.remove(sprite);
+//	}
 
 	@Override
 	public void setDisposable(boolean disposable) {
