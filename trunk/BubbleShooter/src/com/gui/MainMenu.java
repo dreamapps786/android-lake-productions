@@ -220,7 +220,6 @@ public class MainMenu implements Frame {
 		button = new AnimatedSprite("play",playAnimation, 0, 0, 305, 82, 6, 1,
 				0.18125f, 0.24625f);
 		button.setPosition((480 - 305) / 2, 522);
-//		addSprite(button);
 	}
 	
 	@Override
@@ -231,12 +230,4 @@ public class MainMenu implements Frame {
 	public void setDisposable(boolean disposable){
 		this.isDisposable = disposable;
 	}
-
-//	public void addSprite(AnimatedSprite sprite) {
-////		this.sprites.add(sprite);
-//	}
-//
-//	public void removeSprite(AnimatedSprite sprite) {
-////		this.sprites.remove(sprite);
-//	}
 }

@@ -22,6 +22,7 @@ public class GameLoop implements Frame {
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
 	private AnimatedSprite activeBubble;
+	private AnimatedSprite bubbleSplash;
 	private ArrayList<AnimatedSprite> bubbles;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
@@ -78,6 +79,10 @@ public class GameLoop implements Frame {
 	public void setActiveBubble(AnimatedSprite activeBubble) {
 		this.activeBubble = activeBubble;
 	}
+	
+	public void setBubbleSplash(AnimatedSprite bubbleSplash){
+		this.bubbleSplash = bubbleSplash;
+	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
@@ -93,6 +98,10 @@ public class GameLoop implements Frame {
 				shooterRotation = newRotAngle;
 				activeBubble.setDirection(newRotAngle);
 				shootBubble();
+				
+				bubbleSplash.setActive(true);
+				bubbleSplash.setAnimationRate(0.002f);
+				bubbleSplash.play();
 			}
 		}
 		return true;
@@ -122,12 +131,12 @@ public class GameLoop implements Frame {
 				.toRadians(180 - angle - 90)))) / bC;
 		activeBubble.setPosition(activeBubble.getX() + (float) a,
 				activeBubble.getY() + (float) b);
-		
+
 		if (!boundsCollisionBox.contains(activeBubble.getBoundingRectangle())) {
 			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
 	}
-	
+
 	public void changeDirection(float x, float y) {
 		double angle = activeBubble.getDirection();
 		if (x < 0) {
@@ -139,15 +148,15 @@ public class GameLoop implements Frame {
 		}
 	}
 
-//	@Override
-//	public void addSprite(AnimatedSprite sprite) {
-//		// sprites.add(sprite);
-//	}
-//
-//	@Override
-//	public void removeSprite(AnimatedSprite sprite) {
-//		// sprites.remove(sprite);
-//	}
+	// @Override
+	// public void addSprite(AnimatedSprite sprite) {
+	// // sprites.add(sprite);
+	// }
+	//
+	// @Override
+	// public void removeSprite(AnimatedSprite sprite) {
+	// // sprites.remove(sprite);
+	// }
 
 	@Override
 	public void setDisposable(boolean disposable) {
