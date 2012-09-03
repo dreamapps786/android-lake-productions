@@ -16,6 +16,7 @@ public class BubbleGrid {
 		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
 		boxes = new BubbleGridRectangle[12][15];
 		populate(bubbleTextures);
+		printBubbleGrid();
 	}
 
 	private void populate(Texture[] bubbleTextures) {
@@ -42,6 +43,7 @@ public class BubbleGrid {
 	}
 
 	public boolean isColliding(float x, float y) {
+		System.out.println("X:" + x + " Y: " + y);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				if (boxes[i][j].contains(x + 16, y + 16)
@@ -92,7 +94,7 @@ public class BubbleGrid {
 
 	@SuppressWarnings("serial")
 	public class BubbleGridRectangle extends Rectangle {
-		private Rectangle rectangle;
+		// private Rectangle rectangle;
 		private AnimatedSprite bubble;
 		private boolean isOccupied;
 
@@ -122,7 +124,7 @@ public class BubbleGrid {
 
 		@Override
 		public String toString() {
-			return rectangle.toString();
+			return "X: " + this.x + " Y: " + this.y;
 		}
 	}
 }
