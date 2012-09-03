@@ -189,4 +189,8 @@ public class GameLoopRenderer {
 	public void dispose() {
 
 	}
+	
+	public boolean checkForCollission(float x, float y){
+		return bubbleGrid.isColliding(x, y);
+	}
 }

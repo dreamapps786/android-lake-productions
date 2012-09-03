@@ -135,6 +135,10 @@ public class GameLoop implements Frame {
 		if (!boundsCollisionBox.contains(activeBubble.getBoundingRectangle())) {
 			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
+		
+		if (renderer.checkForCollission(activeBubble.getX(), activeBubble.getY())) {
+			System.out.println("Collission!!!!");
+		}
 	}
 
 	public void changeDirection(float x, float y) {
