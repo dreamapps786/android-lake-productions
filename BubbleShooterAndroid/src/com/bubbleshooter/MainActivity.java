@@ -1,7 +1,7 @@
 package com.bubbleshooter;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.gui.BubbleShooter;
+import com.model.BubbleShooter;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
