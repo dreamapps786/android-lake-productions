@@ -20,7 +20,7 @@ public class BubbleGrid {
 
 	private void populate(Texture[] bubbleTextures) {
 		int counter = bubbleTextures.length;
-		System.out.println("Counter: " + counter);
+		System.out.println("NumberOfTextures (colors): " + counter);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 840,
@@ -45,9 +45,16 @@ public class BubbleGrid {
 	public boolean isColliding(float x, float y) {
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				if (boxes[i][j].contains(x + 16, y + 16)
-						&& boxes[i][j].isOccupied) {
-//					boxes[i + 1][j].setOccupied(true);
+				if (boxes[i][j].isOccupied && boxes[i][j].contains(x, y + 16)) {
+					System.out.println("Collision (" + x + "x, " + y + "y) i: " + i + ", j: " + j);
+					return true;
+				}
+			}
+		}
+		for (int i = 1; i < boxes.length; i += 2) {
+			for (int j = 0; j < boxes[i].length - 1; j++) {
+				if (boxes[i][j].isOccupied && boxes[i][j].contains(x, y + 16)) {
+					System.out.println("Collision (" + x + "x, " + y + "y) i: " + i + ", j: " + j);
 					return true;
 				}
 			}
