@@ -85,9 +85,10 @@ public class MainMenu implements Frame {
 //		GL10 gl = app.getGraphics().getGL10();  // Skal kaldes hvis GL skal bruges igen
 //		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderBackground();
-		renderButtons();
 		if (!showButton) {
 			renderButtonAnimations(button);
+		} else {
+			renderButtons();
 		}
 	}
 

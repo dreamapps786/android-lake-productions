@@ -29,7 +29,7 @@ public interface Frame {
 	/**
 	 * Cleans up all resources of the screen, e.g. meshes, textures etc.
 	 */
-	public void dispose ();
+	public void dispose();
 	
 	public boolean touchUp(int x, int y, int pointer, int button);
 	
