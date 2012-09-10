@@ -66,11 +66,11 @@ public class GameLoopRenderer {
 		renderBackground();
 		renderShooter();
 		renderBubbles();
-		
+
 		if (bubbleSplash.isActive()) {
 			renderBubbleSplash();
 		}
-		
+
 		if (activeBubble.isActive()) {
 			renderActiveBubble();
 		}
@@ -89,7 +89,7 @@ public class GameLoopRenderer {
 				Gdx.files.internal("res/bubble_green.png"), true);
 		activeBubbleTexture.setFilter(TextureFilter.MipMap,
 				TextureFilter.Linear);
-		
+
 		bubbleSplashTexture = new Texture(
 				Gdx.files.internal("res/bubble_splash.png"), true);
 		bubbleSplashTexture.setFilter(TextureFilter.MipMap,
@@ -103,11 +103,13 @@ public class GameLoopRenderer {
 		bubbleTextures[1].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 		bubbleTextures[2] = new Texture(
 				Gdx.files.internal("res/bubble_green.png"), true);
-		bubbleTextures[2].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		bubbleTextures[2].setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		bubbleSplash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, 0, 0, 32, 32, 2, 2, 0, 0);
-		
-		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture,0, 0, 32, 32, 0, 0, 0, 0);
+		bubbleSplash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture,
+				0, 0, 32, 32, 2, 2, 0, 0);
+
+		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture,
+				0, 0, 32, 32, 0, 0, 0, 0);
 		activeBubble.setActive(false);
 		bubbleSplash.setActive(false);
 		gameloop.setActiveBubble(activeBubble);
@@ -160,7 +162,8 @@ public class GameLoopRenderer {
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
 		for (AnimatedSprite bubble : bubbles) {
-			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY());
+			spriteBatch.draw(bubble.getTexture(), bubble.getX(),
+					bubble.getY() - 840);
 		}
 		spriteBatch.disableBlending();
 		spriteBatch.end();
@@ -170,7 +173,8 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(bubbleSplash, bubbleSplash.getX(), bubbleSplash.getY());
+		spriteBatch
+				.draw(bubbleSplash, bubbleSplash.getX(), bubbleSplash.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -184,13 +188,11 @@ public class GameLoopRenderer {
 		spriteBatch.end();
 	}
 
-	
-
 	public void dispose() {
 
 	}
-	
-	public boolean checkForCollission(float x, float y){
+
+	public boolean checkForCollission(float x, float y) {
 		return bubbleGrid.isColliding(x, y);
 	}
 }

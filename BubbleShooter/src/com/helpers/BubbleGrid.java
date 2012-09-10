@@ -14,9 +14,8 @@ public class BubbleGrid {
 	public BubbleGrid(Texture[] bubbleTextures, float x, float y) {
 		this.gridPosX = x;
 		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
-		boxes = new BubbleGridRectangle[12][15];
+		boxes = new BubbleGridRectangle[8][10];
 		populate(bubbleTextures);
-		printBubbleGrid();
 	}
 
 	private void populate(Texture[] bubbleTextures) {
@@ -24,15 +23,16 @@ public class BubbleGrid {
 		System.out.println("Counter: " + counter);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27, 32, 32,
-						bubbleTextures[(int) (Math.random() * counter)]);
+				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 840,
+						32, 32, bubbleTextures[(int) (Math.random() * counter)]);
 				boxes[i][j].setOccupied(true);
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length - 1; j++) {
-				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27,
-						32, 32, bubbleTextures[(int) (Math.random() * counter)]);
+				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27
+						+ 840, 32, 32,
+						bubbleTextures[(int) (Math.random() * counter)]);
 				boxes[i][j].setOccupied(true);
 			}
 		}
@@ -43,12 +43,11 @@ public class BubbleGrid {
 	}
 
 	public boolean isColliding(float x, float y) {
-		System.out.println("X:" + x + " Y: " + y);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				if (boxes[i][j].contains(x + 16, y + 16)
 						&& boxes[i][j].isOccupied) {
-					boxes[i + 1][j].setOccupied(true);
+//					boxes[i + 1][j].setOccupied(true);
 					return true;
 				}
 			}
@@ -82,6 +81,7 @@ public class BubbleGrid {
 		return results;
 	}
 
+	@SuppressWarnings("unused")
 	private void printBubbleGrid() {
 		for (int i = 0; i < boxes.length; i++) {
 			for (int j = 0; j < boxes[i].length; j++) {
