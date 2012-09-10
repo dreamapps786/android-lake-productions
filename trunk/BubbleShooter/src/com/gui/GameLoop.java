@@ -16,14 +16,12 @@ import com.simulation.Simulation;
 public class GameLoop implements Frame {
 	private Simulation simulation;
 	private GameLoopRenderer renderer;
-	private static SpriteBatch spriteBatch;
 	private boolean isDisposable = false;
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
 	private AnimatedSprite activeBubble;
 	private AnimatedSprite bubbleSplash;
-	private ArrayList<AnimatedSprite> bubbles;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
 
@@ -33,11 +31,11 @@ public class GameLoop implements Frame {
 
 	@Override
 	public void initialize() {
-		spriteBatch = new SpriteBatch();
+		new SpriteBatch();
 		simulation = new Simulation(this);
 		renderer = new GameLoopRenderer(this);
 		inputProcessor = new MainInputProcessor(this);
-		bubbles = new ArrayList<AnimatedSprite>();
+		new ArrayList<AnimatedSprite>();
 		boundsCollisionBox = new Rectangle(0, 0, 460, 800);
 	}
 
@@ -98,10 +96,6 @@ public class GameLoop implements Frame {
 				shooterRotation = newRotAngle;
 				activeBubble.setDirection(newRotAngle);
 				shootBubble();
-				
-				bubbleSplash.setActive(true);
-				bubbleSplash.setAnimationRate(0.002f);
-				bubbleSplash.play();
 			}
 		}
 		return true;
@@ -138,6 +132,11 @@ public class GameLoop implements Frame {
 		
 		if (renderer.checkForCollission(activeBubble.getX(), activeBubble.getY())) {
 			System.out.println("Collission!!!!");
+			activeBubble.setActive(false);
+			bubbleSplash.setPosition(100, 100);
+			bubbleSplash.setActive(true);
+			bubbleSplash.setAnimationRate(0.00002f);
+			bubbleSplash.play();
 		}
 	}
 
