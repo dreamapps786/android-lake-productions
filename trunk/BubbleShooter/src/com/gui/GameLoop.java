@@ -42,6 +42,7 @@ public class GameLoop implements Frame {
 	@Override
 	public void update(Application app) {
 		simulation.update(app.getGraphics().getDeltaTime());
+		bubbleSplash.update(app.getGraphics().getDeltaTime());
 	}
 
 	@Override
@@ -52,6 +53,9 @@ public class GameLoop implements Frame {
 				150, 150, Color.RED);
 		if (activeBubble.isActive()) {
 			animateActiveBubble();
+		}
+		if (bubbleSplash.isActive()) {
+			renderer.renderBubbleSplash();
 		}
 	}
 
@@ -77,8 +81,8 @@ public class GameLoop implements Frame {
 	public void setActiveBubble(AnimatedSprite activeBubble) {
 		this.activeBubble = activeBubble;
 	}
-	
-	public void setBubbleSplash(AnimatedSprite bubbleSplash){
+
+	public void setBubbleSplash(AnimatedSprite bubbleSplash) {
 		this.bubbleSplash = bubbleSplash;
 	}
 
@@ -129,13 +133,15 @@ public class GameLoop implements Frame {
 		if (!boundsCollisionBox.contains(activeBubble.getBoundingRectangle())) {
 			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
-		
-		if (renderer.checkForCollission(activeBubble.getX(), activeBubble.getY())) {
+
+		if (renderer.checkForCollission(activeBubble.getX(),
+				activeBubble.getY())) {
 			System.out.println("Collission!!!!");
 			activeBubble.setActive(false);
-			bubbleSplash.setPosition(100, 100);
+			bubbleSplash.setPosition(activeBubble.getX(),
+					activeBubble.getY());
 			bubbleSplash.setActive(true);
-			bubbleSplash.setAnimationRate(0.00002f);
+			bubbleSplash.setAnimationRate(1f);
 			bubbleSplash.play();
 		}
 	}
