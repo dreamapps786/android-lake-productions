@@ -13,7 +13,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	protected int columnCount;
 	protected float animationRateInSeconds = 0.02f;
 	protected boolean isPlay = false;
-	protected int curFrameIndex;
+	protected int curFrameIndex = -1;
 	protected int startX;
 	protected int startY;
 	protected float frameTimeCounter;
@@ -23,9 +23,10 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	private boolean active = true;
 	private double direction;
 
-	public AnimatedSprite(String name,final Texture texture, final int srcX,
+	public AnimatedSprite(String name, final Texture texture, final int srcX,
 			final int scrY, final int tileWidth, final int tileHeight,
-			final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
+			final int rowCount, final int columnCount, float xRel2Screen,
+			float yRel2Screen) {
 		super(texture, srcX, scrY, tileWidth, tileHeight);
 		this.name = name;
 		this.frameRegions = new ArrayList<TextureRegion>();
@@ -69,12 +70,16 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	public void update(final float secondsElapsed) {
 		if (isPlay) {
 			this.frameTimeCounter += secondsElapsed;
+			System.out.println(getName()+" AnimRate"+animationRateInSeconds);
+			System.out.println(frameTimeCounter);
 			if (frameTimeCounter > animationRateInSeconds) {
 				frameTimeCounter = 0;
-					curFrameIndex = ++curFrameIndex % rowCount; //Sørger for at animationen starter forfra
+				curFrameIndex = (curFrameIndex + 1) % (rowCount * columnCount); // Sørger for at animationen starter forfra
 				goToFrame(curFrameIndex);
-				if (curFrameIndex == rowCount -1) {
+
+				if (curFrameIndex == rowCount * columnCount - 1) {
 					pause();
+					curFrameIndex = -1;
 				}
 			}
 		}
@@ -108,7 +113,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	public boolean isPlay() {
 		return isPlay;
 	}
-	
+
 	public double getDirection() {
 		return direction;
 	}
