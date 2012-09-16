@@ -8,6 +8,6 @@ public class Program {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new JoglApplication(new BubbleShooter(), "Bubble Shooter", 460, 800, false);
+		new JoglApplication(new BubbleShooter(), "Bubble Shooter", 480, 800, false);
 	}
 }
