@@ -1,6 +1,7 @@
 package com.helpers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -33,6 +34,8 @@ public class GameLoopRenderer {
 	private Texture[] bubbleTextures;
 	private GameLoop gameloop;
 	private BubbleGrid bubbleGrid;
+
+	private List<AnimatedSprite> debugPoints;
 
 	/**
 	 * Bruges til at adskille renderer metoderne fra GameLoop
@@ -116,6 +119,8 @@ public class GameLoopRenderer {
 		bubbleSplash.setActive(false);
 		gameloop.setActiveBubble(activeBubble);
 		gameloop.setBubbleSplash(bubbleSplash);
+		
+		
 	}
 
 	private void renderBackground() {
