@@ -2,7 +2,6 @@ package com.simulation;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,7 +28,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 			float yRel2Screen) {
 		super(texture, srcX, scrY, tileWidth, tileHeight);
 		this.name = name;
-		this.frameRegions = new ArrayList<TextureRegion>();
+		this.frameRegions = new ArrayList<TextureRegion>(rowCount*columnCount);
 		this.rowCount = rowCount;
 		this.columnCount = columnCount;
 		this.startX = srcX;
@@ -37,6 +36,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 		this.xRel2Screen = xRel2Screen;
 		this.yRel2Screen = yRel2Screen;
 		addFrames(texture);
+		
 	}
 
 	public void addFrames(Texture texture) {
@@ -94,6 +94,10 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 
 	public float getYrel2Screen() {
 		return yRel2Screen;
+	}
+	
+	public void setYRel2Screen(float yRel2Screen){
+		this.yRel2Screen = yRel2Screen;
 	}
 
 	public String getName() {

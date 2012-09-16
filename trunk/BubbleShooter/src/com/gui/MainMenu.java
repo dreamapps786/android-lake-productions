@@ -32,6 +32,7 @@ public class MainMenu implements Frame {
 	public AnimatedSprite playButton;
 	public AnimatedSprite exitButton;
 	private Texture playAnimation;
+	private Texture exitAnimation;
 
 	private MainMenu() {
 		spriteBatch = new SpriteBatch();
@@ -83,6 +84,7 @@ public class MainMenu implements Frame {
 	@Override
 	public void update(Application app) {
 		playButton.update(app.getGraphics().getDeltaTime());
+		exitButton.update(app.getGraphics().getDeltaTime());
 	}
 
 	@Override
@@ -91,14 +93,12 @@ public class MainMenu implements Frame {
 		// bruges igen
 		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderBackground();
-		
+
 		if (!playButton.isActive()) {
-			renderButtonAnimations(playButton);
-		}
-		else if(!exitButton.isActive()){
-			renderButtonAnimations(exitButton);
-		}
-		else {
+			renderButtonAnimation(playButton);
+		} else if (!exitButton.isActive()) {
+			renderButtonAnimation(exitButton);
+		} else {
 			renderButtons();
 		}
 	}
@@ -123,25 +123,25 @@ public class MainMenu implements Frame {
 	}
 
 	private void renderButtons() {
-			spriteBatch.begin();
-			spriteBatch.enableBlending();
-			spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-			// We want to find the horizontal center of the screen
-			// draw(element,(target width-picture
-			// width)/2,y,width,height,cropX,cropY,prescale res Width,prescale
-			// res Height,mirror left, mirror top)
-			
-			if (exitButton.isActive()) {
-				spriteBatch.draw(exit, (480 - exit.getWidth()) / 2, 100);				
-			}
-			if (playButton.isActive()) {
-				spriteBatch.draw(play, (480 - play.getWidth()) / 2, 306);				
-			}
-			spriteBatch.disableBlending();
-			spriteBatch.end();
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		// We want to find the horizontal center of the screen
+		// draw(element,(target width-picture
+		// width)/2,y,width,height,cropX,cropY,prescale res Width,prescale
+		// res Height,mirror left, mirror top)
+
+		if (exitButton.isActive()) {
+			spriteBatch.draw(exit, (480 - exit.getWidth()) / 2, 100);
+		}
+		if (playButton.isActive()) {
+			spriteBatch.draw(play, (480 - play.getWidth()) / 2, 306);
+		}
+		spriteBatch.disableBlending();
+		spriteBatch.end();
 	}
 
-	public void renderButtonAnimations(AnimatedSprite animSprite) {
+	public void renderButtonAnimation(AnimatedSprite animSprite) {
 		animSprite.setActive(false);
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
@@ -155,73 +155,27 @@ public class MainMenu implements Frame {
 				playButton.setActive(true);
 			}
 			if (animSprite.getName().equals("exit")) {
-				setDisposable(true);
 				exitButton.setActive(true);
 			}
 		}
 	}
 
-	// Er ikke brugt. Skal den slettes?
-	// public static void draw(String text, int x, int y) {
-	// spriteBatch.begin();
-	// spriteBatch.enableBlending();
-	// font.draw(spriteBatch, text, x, y);
-	// spriteBatch.disableBlending();
-	// spriteBatch.end();
-	// }
-
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		// ----Gammel kode:----
-		// boolean touched = false;
-		// int i = 0;
-		// while (!touched
-		// && i < sprites.size()
-		// ) {
-		// AnimatedSprite s = sprites.get(i);
-		//
-		// float buttonX = Gdx.graphics.getWidth() *
-		// this.button.getXrel2Screen();
-		// float buttonY = Gdx.graphics.getHeight() *
-		// this.button.getYrel2Screen();
-		// float buttonW = (Gdx.graphics.getWidth() / 480f) *
-		// this.button.getWidth();
-		// float buttonH = (Gdx.graphics.getHeight() / 800f) *
-		// this.button.getHeight();
-		// --------END---------
-
 		if (animatedSpriteIsTouched(this.playButton, x, y)) {
+			System.out.println("Touch Play");
 			this.playButton.isTouched();
-			renderButtonAnimations(this.playButton);
+			renderButtonAnimation(this.playButton);
 		}
 		if (animatedSpriteIsTouched(this.exitButton, x, y)) {
 			System.out.println("Touch Exit");
 			this.exitButton.isTouched();
-			renderButtonAnimations(this.exitButton);
-			
-		}
-		// XXX Jeg tænkte vi skulle bruge else if - i stedet for while loops:
-		// else if (animatedSpriteIsTouched(anotherButton, x, y)) {
-		// anotherButton.isTouched();
-		// renderButtonAnimations(anotherButton);
-		// }
+			renderButtonAnimation(this.exitButton);
 
-		// ----Gammel kode:----
-		// i++;
-		// }
-		// --------END---------
+		}
 		return false;
 	}
 
-	/*
-	 * FIXME Denne dokumentation (og java-doc'en nedenfor) må du gerne fjerne
-	 * når du har læst alt den nye kode der er lavet her i klassen. - denne
-	 * metode er primært lavet for ikke at skulle lave if sætninger inde i
-	 * if-sætninger og for at formindske koden i ovenstående if-else sætninger -
-	 * Metoden skal nok flyttes ind på selve AnimatedSprite klassen, men jeg
-	 * tænkte det er bedst at starte med at have den tæt på, så du hurtigt kunne
-	 * finde ud af hvad nyt der er lavet.
-	 */
 	/**
 	 * Bruges til at finde ud af om en AnimatedSprite (nok mest en knap) er
 	 * trykket på.
@@ -236,17 +190,10 @@ public class MainMenu implements Frame {
 	 */
 	public boolean animatedSpriteIsTouched(AnimatedSprite target, int touchedX,
 			int touchedY) {
-		System.out.println("TouchX: "+touchedX);
-		System.out.println("TouchY: "+touchedY);
-		
 		float spriteX = Gdx.graphics.getWidth() * target.getXrel2Screen();
 		float spriteY = Gdx.graphics.getHeight() * target.getYrel2Screen();
-		System.out.println("SpriteX: "+spriteX);
-		System.out.println("SpriteY: "+spriteY);
 		float spriteW = (Gdx.graphics.getWidth() / 480f) * target.getWidth();
 		float spriteH = (Gdx.graphics.getHeight() / 800f) * target.getHeight();
-		System.out.println("SpriteW: "+spriteW);
-		System.out.println("SpriteH: "+spriteH);
 		if (touchedX > spriteX && touchedX < spriteX + spriteW
 				&& touchedY > spriteY && touchedY < spriteY + spriteH) {
 			return true;
@@ -259,19 +206,43 @@ public class MainMenu implements Frame {
 		playAnimation = new Texture(
 				Gdx.files.internal("res/anim_btn_play_none.png"), true);
 		playAnimation.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		exitAnimation = new Texture(
+				Gdx.files.internal("res/anim_btn_play_none2.png"), true);
+		exitAnimation.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 		float buttonWidth = 305f;
 		float buttonHeight = 82f;
-		float playX = (480-buttonWidth)/2;
+		float playX = (480 - buttonWidth) / 2;
 		float playY = 522;
-//		playButton = new AnimatedSprite("play", playAnimation, 0, 0, 305, 82,
-//				6, 1, 0.18125f, 0.24625f);
-		playButton = new AnimatedSprite("play", playAnimation, 0, 0, (int)buttonWidth, (int)buttonHeight,
-				6, 1, ((Gdx.graphics.getWidth() - buttonWidth - playX)/Gdx.graphics.getWidth()),((Gdx.graphics.getHeight() - buttonHeight - playY)/Gdx.graphics.getHeight()));
+		float exitY = 316;
+		float xRel2Screen = (Gdx.graphics.getWidth() - buttonWidth - playX)
+				/ Gdx.graphics.getWidth();
+
+		playButton = new AnimatedSprite("play", playAnimation, 0, 0,
+				(int) buttonWidth, (int) buttonHeight, 6, 1, xRel2Screen,
+				GetYRel2Screen(playY, buttonHeight));
 		playButton.setPosition(playX, playY);
-		System.out.println(Gdx.graphics.getWidth());
-		System.out.println(playButton.getXrel2Screen());
-		exitButton = new AnimatedSprite("exit", playAnimation, 0, 0, 305, 82, 6, 1, 0.18125f, 0.5f);
-		exitButton.setPosition((480-305)/2, 316);
+		exitButton = new AnimatedSprite("exit", exitAnimation, 0, 0,
+				(int) buttonWidth, (int) buttonHeight, 6, 1, xRel2Screen,
+				GetYRel2Screen(exitY, buttonHeight));
+		exitButton.setPosition((480 - 305) / 2, 316);
+		preventInitializeLag(exitButton);
+		preventInitializeLag(playButton);
+
+	}
+
+	private void preventInitializeLag(AnimatedSprite sprite) {
+		fakeRender(sprite);	
+	}
+	
+	public void fakeRender(AnimatedSprite animSprite) {
+		spriteBatch.begin();
+		spriteBatch.draw(animSprite, Gdx.graphics.getWidth(), 0);
+		spriteBatch.end();
+	}
+
+	private float GetYRel2Screen(float y, float buttonHeight) {
+		return ((Gdx.graphics.getHeight() - buttonHeight - y) / Gdx.graphics
+				.getHeight());
 	}
 
 	@Override
