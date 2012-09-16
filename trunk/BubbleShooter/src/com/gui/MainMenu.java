@@ -157,7 +157,7 @@ public class MainMenu implements Frame {
 			}
 			if (animSprite.getName().equals("exit")) {
 				exitButton.setActive(true);
-				this.dispose();
+//				this.dispose();
 				Gdx.app.exit();
 			}
 		}
