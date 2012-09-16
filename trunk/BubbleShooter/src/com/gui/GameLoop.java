@@ -1,6 +1,7 @@
 package com.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -24,6 +25,11 @@ public class GameLoop implements Frame {
 	private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
+	
+	//For debugging
+	private int lastInputClickX = -1;
+	private int lastInputClickY = -1;
+	private List<AnimatedSprite> debugPoints;
 
 	public GameLoop(Application app) {
 		initialize();
@@ -35,7 +41,7 @@ public class GameLoop implements Frame {
 		simulation = new Simulation(this);
 		renderer = new GameLoopRenderer(this);
 		inputProcessor = new MainInputProcessor(this);
-		new ArrayList<AnimatedSprite>();
+		debugPoints = new ArrayList<AnimatedSprite>();
 		boundsCollisionBox = new Rectangle(0, 0, 460, 800);
 	}
 
@@ -51,6 +57,7 @@ public class GameLoop implements Frame {
 		renderer.render(app, simulation);
 		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(),
 				150, 150, Color.RED);
+		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, " + lastInputClickY + "y)", 95, 300, Color.RED);
 		if (activeBubble.isActive()) {
 			animateActiveBubble();
 		}
@@ -88,15 +95,19 @@ public class GameLoop implements Frame {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
+		
 		activeBubble.setActive(true);
-		int cY = -y + 800; // y converted from input- to
+		int cY = 800 - y; // y converted from input- to
 							// animatedSprite-coordinates
+		lastInputClickX = x;
+		lastInputClickY = cY;
+		
 		if (cY > shooter.getOriginY()) {
 			int newRotAngle = (int) -Math.toDegrees(Math.atan((x - (shooter
 					.getOriginX() + shooter.getX()))
 					/ (cY - (shooter.getOriginY() + shooter.getY()))));
 			if (newRotAngle > -60 && newRotAngle < 60) {
-				shooter.rotate(-shooterRotation + newRotAngle);
+				shooter.rotate(newRotAngle - shooterRotation);
 				shooterRotation = newRotAngle;
 				activeBubble.setDirection(newRotAngle);
 				shootBubble();
@@ -134,13 +145,17 @@ public class GameLoop implements Frame {
 			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
 
-		if (renderer.checkForCollission(activeBubble.getX(), activeBubble.getY())) {
+		if (renderer.checkForCollission(activeBubble.getX() + (activeBubble.getWidth() / 2),
+				activeBubble.getY()+ activeBubble.getHeight() / 2,
+				activeBubble.getHeight() / 2)) { //The bubble has to be a square
+//		if (renderer.checkForCollission(activeBubble.getBoundingRectangle())) {
 			System.out.println("Collission!");
+			System.out.println(activeBubble.getX() + "x, " + activeBubble.getY() + "y");
 			activeBubble.setActive(false);
 			bubbleSplash.setPosition(activeBubble.getX(), activeBubble.getY());
 			bubbleSplash.setActive(true);
-			bubbleSplash.setAnimationRate(1f);
-			bubbleSplash.play();
+//			bubbleSplash.setAnimationRate(1f);
+//			bubbleSplash.play();
 		}
 	}
 
