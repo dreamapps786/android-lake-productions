@@ -36,7 +36,6 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 		this.xRel2Screen = xRel2Screen;
 		this.yRel2Screen = yRel2Screen;
 		addFrames(texture);
-		
 	}
 
 	public void addFrames(Texture texture) {

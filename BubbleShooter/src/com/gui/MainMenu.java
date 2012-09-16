@@ -1,7 +1,5 @@
 package com.gui;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -79,6 +77,9 @@ public class MainMenu implements Frame {
 		title.dispose();
 		play.dispose();
 		exit.dispose();
+		font.dispose();
+		playAnimation.dispose();
+		exitAnimation.dispose();
 	}
 
 	@Override
@@ -156,6 +157,8 @@ public class MainMenu implements Frame {
 			}
 			if (animSprite.getName().equals("exit")) {
 				exitButton.setActive(true);
+				this.dispose();
+				Gdx.app.exit();
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package com.gui;
 
 import com.badlogic.gdx.Application;
-import com.simulation.AnimatedSprite;
 
 public interface Frame {
 	/**
@@ -32,11 +31,6 @@ public interface Frame {
 	public void dispose();
 	
 	public boolean touchUp(int x, int y, int pointer, int button);
-	
-	//Bliver ikke brugt
-//	public void addSprite(AnimatedSprite sprite);
-//	
-//	public void removeSprite(AnimatedSprite sprite);
 	
 	public void initialize();
 	
