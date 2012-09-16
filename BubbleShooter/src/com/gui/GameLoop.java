@@ -134,12 +134,10 @@ public class GameLoop implements Frame {
 			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
 
-		if (renderer.checkForCollission(activeBubble.getX(),
-				activeBubble.getY())) {
-			System.out.println("Collission!!!!");
+		if (renderer.checkForCollission(activeBubble.getX(), activeBubble.getY())) {
+			System.out.println("Collission!");
 			activeBubble.setActive(false);
-			bubbleSplash.setPosition(activeBubble.getX(),
-					activeBubble.getY());
+			bubbleSplash.setPosition(activeBubble.getX(), activeBubble.getY());
 			bubbleSplash.setActive(true);
 			bubbleSplash.setAnimationRate(1f);
 			bubbleSplash.play();

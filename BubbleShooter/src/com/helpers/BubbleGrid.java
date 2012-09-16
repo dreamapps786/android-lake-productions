@@ -10,22 +10,27 @@ public class BubbleGrid {
 	float gridPosX;
 	float gridPosY;
 	private BubbleGridRectangle[][] boxes;
+	private final int gridWidth = 15;
+	private final int gridHeight = 18;
+	private final int initialPopHeight = 8;
 
 	public BubbleGrid(Texture[] bubbleTextures, float x, float y) {
 		this.gridPosX = x;
 		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
-		boxes = new BubbleGridRectangle[8][10];
+		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
 		populate(bubbleTextures);
 	}
 
 	private void populate(Texture[] bubbleTextures) {
 		int counter = bubbleTextures.length;
-		System.out.println("NumberOfTextures (colors): " + counter);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 840,
 						32, 32, bubbleTextures[(int) (Math.random() * counter)]);
-				boxes[i][j].setOccupied(true);
+				if (i < initialPopHeight) {
+					boxes[i][j].setOccupied(true);
+				}
+				
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
@@ -33,7 +38,9 @@ public class BubbleGrid {
 				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27
 						+ 840, 32, 32,
 						bubbleTextures[(int) (Math.random() * counter)]);
-				boxes[i][j].setOccupied(true);
+				if (i < initialPopHeight) {
+					boxes[i][j].setOccupied(true);
+				}
 			}
 		}
 	}

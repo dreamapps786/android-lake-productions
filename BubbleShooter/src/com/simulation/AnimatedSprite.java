@@ -70,8 +70,6 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	public void update(final float secondsElapsed) {
 		if (isPlay) {
 			this.frameTimeCounter += secondsElapsed;
-			System.out.println(getName()+" AnimRate"+animationRateInSeconds);
-			System.out.println(frameTimeCounter);
 			if (frameTimeCounter > animationRateInSeconds) {
 				frameTimeCounter = 0;
 				curFrameIndex = (curFrameIndex + 1) % (rowCount * columnCount); // Sørger for at animationen starter forfra
