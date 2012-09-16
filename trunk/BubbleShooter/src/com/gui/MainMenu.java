@@ -34,7 +34,7 @@ public class MainMenu implements Frame {
 
 	private MainMenu() {
 		spriteBatch = new SpriteBatch();
-		initialize();
+		// initialize();
 	}
 
 	@Override
@@ -64,9 +64,9 @@ public class MainMenu implements Frame {
 	}
 
 	public static MainMenu getInstance() {
-		if (mainMenu == null) {
+//		if (mainMenu == null) {
 			mainMenu = new MainMenu();
-		}
+//		}
 		return mainMenu;
 	}
 
@@ -157,7 +157,7 @@ public class MainMenu implements Frame {
 			}
 			if (animSprite.getName().equals("exit")) {
 				exitButton.setActive(true);
-//				this.dispose();
+				this.dispose();
 				Gdx.app.exit();
 			}
 		}
@@ -234,9 +234,9 @@ public class MainMenu implements Frame {
 	}
 
 	private void preventInitializeLag(AnimatedSprite sprite) {
-		fakeRender(sprite);	
+		fakeRender(sprite);
 	}
-	
+
 	public void fakeRender(AnimatedSprite animSprite) {
 		spriteBatch.begin();
 		spriteBatch.draw(animSprite, Gdx.graphics.getWidth(), 0);

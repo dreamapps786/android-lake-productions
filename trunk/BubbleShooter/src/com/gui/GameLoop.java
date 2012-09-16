@@ -151,6 +151,7 @@ public class GameLoop implements Frame {
 //		if (renderer.checkForCollission(activeBubble.getBoundingRectangle())) {
 			System.out.println("Collission!");
 			System.out.println(activeBubble.getX() + "x, " + activeBubble.getY() + "y");
+			Gdx.input.vibrate(50);
 			activeBubble.setActive(false);
 			bubbleSplash.setPosition(activeBubble.getX(), activeBubble.getY());
 			bubbleSplash.setActive(true);

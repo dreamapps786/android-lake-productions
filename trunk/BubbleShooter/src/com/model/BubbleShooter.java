@@ -20,17 +20,20 @@ public class BubbleShooter implements ApplicationListener {
 		if (!isInitialized) {
 			spriteBatch = new SpriteBatch();
 			frame = MainMenu.getInstance();
+			frame.initialize();
 			isInitialized = true;
+			Gdx.input.setCatchBackKey(true);
 		}
 	}
 
 	@Override
 	public void dispose() {
+		frame.dispose();
 	}
 
 	@Override
 	public void pause() {
-		frame.setDisposable(true);
+//		frame.setDisposable(true);
 
 	}
 
@@ -50,6 +53,8 @@ public class BubbleShooter implements ApplicationListener {
 			}
 			else if (frame instanceof GameLoop) {
 				//Switch to GameOver
+				
+				frame = MainMenu.getInstance();
 			}
 			
 		}
@@ -63,11 +68,10 @@ public class BubbleShooter implements ApplicationListener {
 	@Override
 	public void resume() {
 //		spriteBatch = new SpriteBatch();
-		frame = MainMenu.getInstance();
-		frame.setDisposable(false);
-		frame.initialize();
 		
-
+//		frame = MainMenu.getInstance();
+//		frame.setDisposable(false);
+//		frame.initialize();
 	}
 
 }

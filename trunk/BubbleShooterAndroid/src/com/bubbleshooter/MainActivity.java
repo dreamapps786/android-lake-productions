@@ -13,5 +13,6 @@ public class MainActivity extends AndroidApplication {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initialize(new BubbleShooter(), false);
+        boolean fixMe = true;
     }
 }
