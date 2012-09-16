@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.gui.GameLoop;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
@@ -50,8 +51,8 @@ public class GameLoopRenderer {
 			TextureRegion r = new TextureRegion();
 			r.setRegion(backgroundPart);
 			background.addRegion(i + "", r);
-			spriteBatch = new SpriteBatch();
 		}
+		spriteBatch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setScale(2, 2);
 		bubbleTextures = new Texture[3];
@@ -66,6 +67,7 @@ public class GameLoopRenderer {
 		renderBackground();
 		renderShooter();
 		renderBubbles();
+		
 
 		if (bubbleSplash.isActive()) {
 			renderBubbleSplash();
@@ -163,7 +165,7 @@ public class GameLoopRenderer {
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
 		for (AnimatedSprite bubble : bubbles) {
 			spriteBatch.draw(bubble.getTexture(), bubble.getX(),
-					bubble.getY() - 840);
+					bubble.getY() - 800);
 		}
 		spriteBatch.disableBlending();
 		spriteBatch.end();
@@ -192,7 +194,9 @@ public class GameLoopRenderer {
 
 	}
 
-	public boolean checkForCollission(float x, float y) {
-		return bubbleGrid.isColliding(x, y);
+	public boolean checkForCollission(float centerX, float centerY, float radius) {
+		return bubbleGrid.isColliding(centerX, centerY, radius);
+//	public boolean checkForCollission(Rectangle bounds) {
+//		return bubbleGrid.isColliding(bounds);
 	}
 }

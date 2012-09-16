@@ -25,18 +25,17 @@ public class BubbleGrid {
 		int counter = bubbleTextures.length;
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 840,
+				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 800,
 						32, 32, bubbleTextures[(int) (Math.random() * counter)]);
 				if (i < initialPopHeight) {
 					boxes[i][j].setOccupied(true);
 				}
-				
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length - 1; j++) {
 				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27
-						+ 840, 32, 32,
+						+ 800, 32, 32,
 						bubbleTextures[(int) (Math.random() * counter)]);
 				if (i < initialPopHeight) {
 					boxes[i][j].setOccupied(true);
@@ -49,22 +48,69 @@ public class BubbleGrid {
 		return boxes;
 	}
 
-	public boolean isColliding(float x, float y) {
+	public boolean isColliding(float centerX, float centerY, float radius) {
+//	public boolean isColliding(Rectangle bounds) {
+//		System.out.println("a bub(" + bounds.x + "x, " + bounds.y + "y)");
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				if (boxes[i][j].isOccupied && boxes[i][j].contains(x, y + 16)) {
-					System.out.println("Collision (" + x + "x, " + y + "y) i: " + i + ", j: " + j);
+//				if (i >= 6 && boxes[i][j].isOccupied) {
+//					System.out.println("G-bubble (" + boxes[i][j].getX() + "x, " + boxes[i][j].getY() + "y) row: "
+//							+ i + ", col: " + j + " A-bubble (" + centerX + ", " + centerY + ")");
+//				}
+				if (boxes[i][j].isOccupied && checkFivePointCollission(boxes[i][j], centerX, centerY, radius)) {
+//					System.out.println("Collision (" + centerX + "x, " + centerY + "y) i: " + i + ", j: " + j);
+//					System.out.println("Collision i: " + i + ", j: " + j);
 					return true;
 				}
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length - 1; j++) {
-				if (boxes[i][j].isOccupied && boxes[i][j].contains(x, y + 16)) {
-					System.out.println("Collision (" + x + "x, " + y + "y) i: " + i + ", j: " + j);
+//				if (i >= 6 && boxes[i][j].isOccupied) {
+//					System.out.println("G-bubble (" + boxes[i][j].getX() + "x, " + boxes[i][j].getY() + "y) row: "
+//							+ i + ", col: " + j + " A-bubble (" + centerX + ", " + centerY + ")");
+//				}
+				if (boxes[i][j].isOccupied && checkFivePointCollission(boxes[i][j], centerX, centerY, radius)) {
+//					System.out.println("Collision (" + centerX + "x, " + centerY + "y) i: " + i + ", j: " + j);
+//					System.out.println("Collision i: " + i + ", j: " + j);
 					return true;
 				}
 			}
+		}
+//		System.out.println("No collision\n----- -----");
+		return false;
+	}
+	
+	private boolean deleteThis = true;
+	
+	private boolean checkFivePointCollission(Rectangle gridBubbleRect, float activeBubbleCenterX,
+			float activeBubbleCenterY, float radius) {
+		
+		float wX = activeBubbleCenterX - radius;
+		float wY = activeBubbleCenterY;
+		float nwX = activeBubbleCenterX + radius * (float)Math.cos(Math.toRadians(135));
+		float nwY = activeBubbleCenterY + radius * (float)Math.sin(Math.toRadians(135));
+		float nX = activeBubbleCenterX;
+		float nY = activeBubbleCenterY + radius;
+		float neX = activeBubbleCenterX + radius * (float)Math.cos(Math.toRadians(45));
+		float neY = activeBubbleCenterY + radius * (float)Math.sin(Math.toRadians(45));
+		float eX = activeBubbleCenterX + radius;
+		float eY = activeBubbleCenterY;
+		if (deleteThis) {
+			deleteThis = false;
+			System.out.println("west(" + wX + ", " + wY+")");
+			System.out.println("northwest(" + nwX + ", " + nwY+")");
+			System.out.println("north(" + nX + ", " + nY+")");
+			System.out.println("northeast(" + neX + ", " + neY+")");
+			System.out.println("east(" + eX + ", " + eY+")");
+		}
+		
+		if (gridBubbleRect.contains(wX, wY) || //west point
+				gridBubbleRect.contains(nwX, nwY) || //northwest point
+				gridBubbleRect.contains(nX, nY) || //north point
+				gridBubbleRect.contains(neX, neY) || //northeast point
+				gridBubbleRect.contains(eX, eY)) { //east point
+			return true;
 		}
 		return false;
 	}
