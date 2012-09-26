@@ -23,23 +23,23 @@ public class BubbleGrid {
 
 	private void populate(Texture[] bubbleTextures) {
 		int counter = bubbleTextures.length;
-		for (int i = 0; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length; j++) {
-				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 800,
-						32, 32, j, i,
+		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
+				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32, yIndex * -27 + 800,
+						32, 32, xIndex, yIndex,
 						bubbleTextures[(int) (Math.random() * counter)]);
-				if (i < initialPopHeight) {
-					boxes[i][j].setOccupied(true);
+				if (yIndex < initialPopHeight) {
+					boxes[yIndex][xIndex].setOccupied(true);
 				}
 			}
 		}
-		for (int i = 1; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length - 1; j++) {
-				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27
-						+ 800, 32, 32, i, j,
+		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
+				boxes[yIndex][xIndex] = new BubbleGridRectangle((xIndex * 32) + 16, yIndex * -27
+						+ 800, 32, 32, xIndex, yIndex,
 						bubbleTextures[(int) (Math.random() * counter)]);
-				if (i < initialPopHeight) {
-					boxes[i][j].setOccupied(true);
+				if (yIndex < initialPopHeight) {
+					boxes[yIndex][xIndex].setOccupied(true);
 				}
 			}
 		}
@@ -51,41 +51,21 @@ public class BubbleGrid {
 
 	public BubbleGridRectangle isColliding(float centerX, float centerY,
 			float radius) {
-		// public boolean isColliding(Rectangle bounds) {
-		// System.out.println("a bub(" + bounds.x + "x, " + bounds.y + "y)");
-		for (int i = 0; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length; j++) {
-				// if (i >= 6 && boxes[i][j].isOccupied) {
-				// System.out.println("G-bubble (" + boxes[i][j].getX() + "x, "
-				// + boxes[i][j].getY() + "y) row: "
-				// + i + ", col: " + j + " A-bubble (" + centerX + ", " +
-				// centerY + ")");
-				// }
-				if (boxes[i][j].isOccupied
-						&& checkFivePointCollission(boxes[i][j], centerX,
+		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
+				if (boxes[yIndex][xIndex].isOccupied
+						&& checkFivePointCollission(boxes[yIndex][xIndex], centerX,
 								centerY, radius)) {
-					// System.out.println("Collision (" + centerX + "x, " +
-					// centerY + "y) i: " + i + ", j: " + j);
-					// System.out.println("Collision i: " + i + ", j: " + j);
-					return boxes[i][j];
+					return boxes[yIndex][xIndex];
 				}
 			}
 		}
-		for (int i = 1; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length - 1; j++) {
-				// if (i >= 6 && boxes[i][j].isOccupied) {
-				// System.out.println("G-bubble (" + boxes[i][j].getX() + "x, "
-				// + boxes[i][j].getY() + "y) row: "
-				// + i + ", col: " + j + " A-bubble (" + centerX + ", " +
-				// centerY + ")");
-				// }
-				if (boxes[i][j].isOccupied
-						&& checkFivePointCollission(boxes[i][j], centerX,
+		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
+				if (boxes[yIndex][xIndex].isOccupied
+						&& checkFivePointCollission(boxes[yIndex][xIndex], centerX,
 								centerY, radius)) {
-					// System.out.println("Collision (" + centerX + "x, " +
-					// centerY + "y) i: " + i + ", j: " + j);
-					// System.out.println("Collision i: " + i + ", j: " + j);
-					return boxes[i][j];
+					return boxes[yIndex][xIndex];
 				}
 			}
 		}
@@ -120,7 +100,6 @@ public class BubbleGrid {
 			System.out.println("northeast(" + neX + ", " + neY + ")");
 			System.out.println("east(" + eX + ", " + eY + ")");
 		}
-
 		if (gridBubbleRect.contains(wX, wY) || // west point
 				gridBubbleRect.contains(nwX, nwY) || // northwest point
 				gridBubbleRect.contains(nX, nY) || // north point
