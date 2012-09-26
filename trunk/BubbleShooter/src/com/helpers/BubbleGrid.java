@@ -75,7 +75,7 @@ public class BubbleGrid {
 
 	private boolean isFirstIteration = true;
 
-	private boolean checkFivePointCollission(Rectangle gridBubbleRect,
+	private boolean checkFivePointCollission(BubbleGridRectangle gridBubbleRect,
 			float activeBubbleCenterX, float activeBubbleCenterY, float radius) {
 
 		float wX = activeBubbleCenterX - radius;
@@ -100,11 +100,12 @@ public class BubbleGrid {
 			System.out.println("northeast(" + neX + ", " + neY + ")");
 			System.out.println("east(" + eX + ", " + eY + ")");
 		}
-		if (gridBubbleRect.contains(wX, wY) || // west point
-				gridBubbleRect.contains(nwX, nwY) || // northwest point
-				gridBubbleRect.contains(nX, nY) || // north point
-				gridBubbleRect.contains(neX, neY) || // northeast point
-				gridBubbleRect.contains(eX, eY)) { // east point
+		//.overlapsLowerHalf() har erstattet .contains()
+		if (gridBubbleRect.overlapsLowerHalf(wX, wY) || // west point
+				gridBubbleRect.overlapsLowerHalf(nwX, nwY) || // northwest point
+				gridBubbleRect.overlapsLowerHalf(nX, nY) || // north point
+				gridBubbleRect.overlapsLowerHalf(neX, neY) || // northeast point
+				gridBubbleRect.overlapsLowerHalf(eX, eY)) { // east point
 			return true;
 		}
 		return false;
@@ -170,6 +171,29 @@ public class BubbleGrid {
 					bubbleTexture.getHeight(), 0, 0, 0f, 0f);
 			isOccupied = false;
 			bubble.setPosition(x, y);
+		}
+		
+		public boolean overlapsLowerHalf(float x, float y) {
+			float topY = this.y + (this.height/2);
+			float bottomY = this.y;
+			float leftX = this.x;
+			float rightX = this.x + this.width;
+			boolean insideX = x > leftX && x < rightX;
+			boolean insideY = y > bottomY && y < topY;
+			if (insideX) {
+				System.out.print("insideX - " + y + "y, " + bottomY + "bY, " + topY + "tY");
+				//System.out.print("insideX - " + x + "x, " + leftX + "lX, " + rightX + "rX");
+			}
+			if (insideY) {
+				System.out.print("\tinsideY - " + x + "x, " + leftX + "lX, " + rightX + "rX");
+				//System.out.print("\tinsideY - " + y + "y, " + bottomY + "bY, " + topY + "tY");
+			}
+			if (insideX || insideY) {
+				System.out.println();
+			}
+//			boolean contains = x > leftX && x < rightX
+//					&& y > bottomY && y < topY;
+			return insideX && insideY;
 		}
 
 		public boolean isOccupied() {
