@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.helpers.GameLoopRenderer;
 import com.simulation.AnimatedSprite;
 import com.simulation.MainInputProcessor;
@@ -25,8 +26,8 @@ public class GameLoop implements Frame {
 	private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
-	
-	//For debugging
+
+	// For debugging
 	private int lastInputClickX = -1;
 	private int lastInputClickY = -1;
 	private List<AnimatedSprite> debugPoints;
@@ -57,7 +58,8 @@ public class GameLoop implements Frame {
 		renderer.render(app, simulation);
 		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(),
 				150, 150, Color.RED);
-		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, " + lastInputClickY + "y)", 95, 300, Color.RED);
+		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, "
+				+ lastInputClickY + "y)", 95, 300, Color.RED);
 		if (activeBubble.isActive()) {
 			animateActiveBubble();
 		}
@@ -95,13 +97,13 @@ public class GameLoop implements Frame {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		
+
 		activeBubble.setActive(true);
 		int cY = 800 - y; // y converted from input- to
 							// animatedSprite-coordinates
 		lastInputClickX = x;
 		lastInputClickY = cY;
-		
+
 		if (cY > shooter.getOriginY()) {
 			int newRotAngle = (int) -Math.toDegrees(Math.atan((x - (shooter
 					.getOriginX() + shooter.getX()))
@@ -144,19 +146,20 @@ public class GameLoop implements Frame {
 		if (!boundsCollisionBox.contains(activeBubble.getBoundingRectangle())) {
 			changeDirection(activeBubble.getX(), activeBubble.getY());
 		}
-
-		if (renderer.checkForCollission(activeBubble.getX() + (activeBubble.getWidth() / 2),
-				activeBubble.getY()+ activeBubble.getHeight() / 2,
-				activeBubble.getHeight() / 2)) { //The bubble has to be a square
-//		if (renderer.checkForCollission(activeBubble.getBoundingRectangle())) {
+		BubbleGridRectangle collidingBubble = renderer.checkForCollission(
+				activeBubble.getX() + (activeBubble.getWidth() / 2),
+				activeBubble.getY() + activeBubble.getHeight() / 2,
+				activeBubble.getHeight() / 2);
+		if (collidingBubble != null) { // The bubble has to be a square
+		// if (renderer.checkForCollission(activeBubble.getBoundingRectangle()))
+		// {
 			System.out.println("Collission!");
-			System.out.println(activeBubble.getX() + "x, " + activeBubble.getY() + "y");
+			System.out.println(activeBubble.getX() + "x, "
+					+ activeBubble.getY() + "y");
 			Gdx.input.vibrate(50);
 			activeBubble.setActive(false);
-			bubbleSplash.setPosition(activeBubble.getX(), activeBubble.getY());
-			bubbleSplash.setActive(true);
-//			bubbleSplash.setAnimationRate(1f);
-//			bubbleSplash.play();
+//			bubbleSplash.setPosition(activeBubble.getX(), activeBubble.getY());
+//			bubbleSplash.setActive(true);
 		}
 	}
 

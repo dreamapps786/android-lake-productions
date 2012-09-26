@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.gui.GameLoop;
+import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -70,7 +71,6 @@ public class GameLoopRenderer {
 		renderBackground();
 		renderShooter();
 		renderBubbles();
-		
 
 		if (bubbleSplash.isActive()) {
 			renderBubbleSplash();
@@ -119,8 +119,7 @@ public class GameLoopRenderer {
 		bubbleSplash.setActive(false);
 		gameloop.setActiveBubble(activeBubble);
 		gameloop.setBubbleSplash(bubbleSplash);
-		
-		
+
 	}
 
 	private void renderBackground() {
@@ -199,9 +198,29 @@ public class GameLoopRenderer {
 
 	}
 
-	public boolean checkForCollission(float centerX, float centerY, float radius) {
-		return bubbleGrid.isColliding(centerX, centerY, radius);
-//	public boolean checkForCollission(Rectangle bounds) {
-//		return bubbleGrid.isColliding(bounds);
+	public BubbleGridRectangle checkForCollission(float centerX, float centerY,
+			float radius) {
+		BubbleGridRectangle collidingBubble = bubbleGrid.isColliding(centerX,
+				centerY, radius);
+		if (collidingBubble != null) {
+			bubbleGrid.getGrid()[collidingBubble.getCoordinateY()+1][collidingBubble
+					.getCoordinateX()].setOccupied(true);
+			System.out
+					.println("New BubbleX: "
+							+ bubbleGrid.getGrid()[collidingBubble
+									.getCoordinateY()+1][collidingBubble
+									.getCoordinateX()].getCoordinateX());
+			System.out
+					.println("New BubbleY: "
+							+ bubbleGrid.getGrid()[collidingBubble
+									.getCoordinateY()+1][collidingBubble
+									.getCoordinateX()].getCoordinateY());
+
+			System.out.println("CollidingBubble X:" + collidingBubble.getX()
+					+ " Y: " + collidingBubble.getY());
+		}
+		return collidingBubble;
+		// public boolean checkForCollission(Rectangle bounds) {
+		// return bubbleGrid.isColliding(bounds);
 	}
 }

@@ -26,7 +26,8 @@ public class BubbleGrid {
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				boxes[i][j] = new BubbleGridRectangle(j * 32, i * -27 + 800,
-						32, 32, bubbleTextures[(int) (Math.random() * counter)]);
+						32, 32, j, i,
+						bubbleTextures[(int) (Math.random() * counter)]);
 				if (i < initialPopHeight) {
 					boxes[i][j].setOccupied(true);
 				}
@@ -35,7 +36,7 @@ public class BubbleGrid {
 		for (int i = 1; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length - 1; j++) {
 				boxes[i][j] = new BubbleGridRectangle((j * 32) + 16, i * -27
-						+ 800, 32, 32,
+						+ 800, 32, 32, i, j,
 						bubbleTextures[(int) (Math.random() * counter)]);
 				if (i < initialPopHeight) {
 					boxes[i][j].setOccupied(true);
@@ -48,68 +49,83 @@ public class BubbleGrid {
 		return boxes;
 	}
 
-	public boolean isColliding(float centerX, float centerY, float radius) {
-//	public boolean isColliding(Rectangle bounds) {
-//		System.out.println("a bub(" + bounds.x + "x, " + bounds.y + "y)");
+	public BubbleGridRectangle isColliding(float centerX, float centerY,
+			float radius) {
+		// public boolean isColliding(Rectangle bounds) {
+		// System.out.println("a bub(" + bounds.x + "x, " + bounds.y + "y)");
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-//				if (i >= 6 && boxes[i][j].isOccupied) {
-//					System.out.println("G-bubble (" + boxes[i][j].getX() + "x, " + boxes[i][j].getY() + "y) row: "
-//							+ i + ", col: " + j + " A-bubble (" + centerX + ", " + centerY + ")");
-//				}
-				if (boxes[i][j].isOccupied && checkFivePointCollission(boxes[i][j], centerX, centerY, radius)) {
-//					System.out.println("Collision (" + centerX + "x, " + centerY + "y) i: " + i + ", j: " + j);
-//					System.out.println("Collision i: " + i + ", j: " + j);
-					return true;
+				// if (i >= 6 && boxes[i][j].isOccupied) {
+				// System.out.println("G-bubble (" + boxes[i][j].getX() + "x, "
+				// + boxes[i][j].getY() + "y) row: "
+				// + i + ", col: " + j + " A-bubble (" + centerX + ", " +
+				// centerY + ")");
+				// }
+				if (boxes[i][j].isOccupied
+						&& checkFivePointCollission(boxes[i][j], centerX,
+								centerY, radius)) {
+					// System.out.println("Collision (" + centerX + "x, " +
+					// centerY + "y) i: " + i + ", j: " + j);
+					// System.out.println("Collision i: " + i + ", j: " + j);
+					return boxes[i][j];
 				}
 			}
 		}
 		for (int i = 1; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length - 1; j++) {
-//				if (i >= 6 && boxes[i][j].isOccupied) {
-//					System.out.println("G-bubble (" + boxes[i][j].getX() + "x, " + boxes[i][j].getY() + "y) row: "
-//							+ i + ", col: " + j + " A-bubble (" + centerX + ", " + centerY + ")");
-//				}
-				if (boxes[i][j].isOccupied && checkFivePointCollission(boxes[i][j], centerX, centerY, radius)) {
-//					System.out.println("Collision (" + centerX + "x, " + centerY + "y) i: " + i + ", j: " + j);
-//					System.out.println("Collision i: " + i + ", j: " + j);
-					return true;
+				// if (i >= 6 && boxes[i][j].isOccupied) {
+				// System.out.println("G-bubble (" + boxes[i][j].getX() + "x, "
+				// + boxes[i][j].getY() + "y) row: "
+				// + i + ", col: " + j + " A-bubble (" + centerX + ", " +
+				// centerY + ")");
+				// }
+				if (boxes[i][j].isOccupied
+						&& checkFivePointCollission(boxes[i][j], centerX,
+								centerY, radius)) {
+					// System.out.println("Collision (" + centerX + "x, " +
+					// centerY + "y) i: " + i + ", j: " + j);
+					// System.out.println("Collision i: " + i + ", j: " + j);
+					return boxes[i][j];
 				}
 			}
 		}
-//		System.out.println("No collision\n----- -----");
-		return false;
+		// System.out.println("No collision\n----- -----");
+		return null;
 	}
-	
+
 	private boolean deleteThis = true;
-	
-	private boolean checkFivePointCollission(Rectangle gridBubbleRect, float activeBubbleCenterX,
-			float activeBubbleCenterY, float radius) {
-		
+
+	private boolean checkFivePointCollission(Rectangle gridBubbleRect,
+			float activeBubbleCenterX, float activeBubbleCenterY, float radius) {
+
 		float wX = activeBubbleCenterX - radius;
 		float wY = activeBubbleCenterY;
-		float nwX = activeBubbleCenterX + radius * (float)Math.cos(Math.toRadians(135));
-		float nwY = activeBubbleCenterY + radius * (float)Math.sin(Math.toRadians(135));
+		float nwX = activeBubbleCenterX + radius
+				* (float) Math.cos(Math.toRadians(135));
+		float nwY = activeBubbleCenterY + radius
+				* (float) Math.sin(Math.toRadians(135));
 		float nX = activeBubbleCenterX;
 		float nY = activeBubbleCenterY + radius;
-		float neX = activeBubbleCenterX + radius * (float)Math.cos(Math.toRadians(45));
-		float neY = activeBubbleCenterY + radius * (float)Math.sin(Math.toRadians(45));
+		float neX = activeBubbleCenterX + radius
+				* (float) Math.cos(Math.toRadians(45));
+		float neY = activeBubbleCenterY + radius
+				* (float) Math.sin(Math.toRadians(45));
 		float eX = activeBubbleCenterX + radius;
 		float eY = activeBubbleCenterY;
 		if (deleteThis) {
 			deleteThis = false;
-			System.out.println("west(" + wX + ", " + wY+")");
-			System.out.println("northwest(" + nwX + ", " + nwY+")");
-			System.out.println("north(" + nX + ", " + nY+")");
-			System.out.println("northeast(" + neX + ", " + neY+")");
-			System.out.println("east(" + eX + ", " + eY+")");
+			System.out.println("west(" + wX + ", " + wY + ")");
+			System.out.println("northwest(" + nwX + ", " + nwY + ")");
+			System.out.println("north(" + nX + ", " + nY + ")");
+			System.out.println("northeast(" + neX + ", " + neY + ")");
+			System.out.println("east(" + eX + ", " + eY + ")");
 		}
-		
-		if (gridBubbleRect.contains(wX, wY) || //west point
-				gridBubbleRect.contains(nwX, nwY) || //northwest point
-				gridBubbleRect.contains(nX, nY) || //north point
-				gridBubbleRect.contains(neX, neY) || //northeast point
-				gridBubbleRect.contains(eX, eY)) { //east point
+
+		if (gridBubbleRect.contains(wX, wY) || // west point
+				gridBubbleRect.contains(nwX, nwY) || // northwest point
+				gridBubbleRect.contains(nX, nY) || // north point
+				gridBubbleRect.contains(neX, neY) || // northeast point
+				gridBubbleRect.contains(eX, eY)) { // east point
 			return true;
 		}
 		return false;
@@ -125,6 +141,9 @@ public class BubbleGrid {
 				boxes.length * boxes[0].length);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
+				if (i == 7 && j == 8) {
+					System.out.println("HIT HIT");
+				}
 				if (boxes[i][j].isOccupied) {
 					results.add(boxes[i][j].getBubble());
 				}
@@ -157,12 +176,16 @@ public class BubbleGrid {
 		// private Rectangle rectangle;
 		private AnimatedSprite bubble;
 		private boolean isOccupied;
+		private int coordinateX;
+		private int coordinateY;
 
 		public BubbleGridRectangle(float x, float y, float width, float height,
-				Texture bubbleTexture) {
+				int coordinateX, int coordinateY, Texture bubbleTexture) {
 			super(x, y, width, height);
 			x = gridPosX + x;
 			y = gridPosY + y;
+			this.coordinateX = coordinateX;
+			this.coordinateY = coordinateY;
 			bubble = new AnimatedSprite("bubble" + x / 32 + "-" + y / 32,
 					bubbleTexture, (int) x, (int) y, bubbleTexture.getWidth(),
 					bubbleTexture.getHeight(), 0, 0, 0f, 0f);
@@ -180,6 +203,22 @@ public class BubbleGrid {
 
 		public AnimatedSprite getBubble() {
 			return bubble;
+		}
+
+		public int getCoordinateX() {
+			return coordinateX;
+		}
+
+		public void setCoordinateX(int coordinateX) {
+			this.coordinateX = coordinateX;
+		}
+
+		public int getCoordinateY() {
+			return coordinateY;
+		}
+
+		public void setCoordinateY(int coordinateY) {
+			this.coordinateY = coordinateY;
 		}
 
 		@Override
