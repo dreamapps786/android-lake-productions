@@ -2,6 +2,7 @@ package com.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -253,12 +254,39 @@ public class GameLoopRenderer {
 		BubbleTexture.BubbleColor color = ((BubbleTexture) bubble.getBubble().getTexture()).getColor();
 		int totalCount = 0;
 		
-		totalCount += checkNeighbour(bubble);
+		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		checkNeighbours(bubble, bubblesToExplode);
+		
+//		totalCount += checkNeighbour(bubble);
 		return false;
 	}
 
-	private int checkNeighbour(BubbleGridRectangle bubble) {
-		
-		return 0;
+//	private int checkNeighbours(BubbleGridRectangle bubble) {
+	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode) {
+		//---------PSEUDO KODE---------
+//		if (bubbleToCheck.venstreOverMig() == samme farve) {
+//			bubblesToExplode.add(bubbleToCheck.venstreOverMig());
+//			checkNeighbours(bubbleToCheck.venstreOverMig(), bubblesToExplode);
+//		}
+//		if (bubbleToCheck.højreOverMig() == samme farve) {
+//			bubblesToExplode.add(bubbleToCheck.højreOverMig());
+//			checkNeighbours(bubbleToCheck.højreOverMig(), bubblesToExplode);
+//		}
+//		if (bubbleToCheck.højreForMig() == samme farve) {
+//			bubblesToExplode.add(bubbleToCheck.højreForMig());
+//			checkNeighbours(bubbleToCheck.højreForMig(), bubblesToExplode);
+//		}
+//		if (bubbleToCheck.højreUnderMig() == samme farve) {
+//			bubblesToExplode.add(bubbleToCheck.højreUnderMig());
+//			checkNeighbours(bubbleToCheck.højreUnderMig(), bubblesToExplode);
+//		}
+//		if (bubbleToCheck.venstreUnderMig() == samme farve) {
+//			bubblesToExplode.add(bubbleToCheck.venstreUnderMig());
+//			checkNeighbours(bubbleToCheck.venstreUnderMig(), bubblesToExplode);
+//		}
+//		if (bubbleToCheck.venstreForMig() == samme farve) {
+//			bubblesToExplode.add(bubbleToCheck.venstreForMig());
+//			checkNeighbours(bubbleToCheck.venstreForMig(), bubblesToExplode);
+//		}
 	}
 }
