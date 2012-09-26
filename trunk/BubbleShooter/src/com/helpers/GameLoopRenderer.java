@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.gui.GameLoop;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
+import com.helpers.extensions.BubbleTexture;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -32,7 +33,7 @@ public class GameLoopRenderer {
 	private Texture shooterTexture;
 	private Texture activeBubbleTexture;
 	private Texture bubbleSplashTexture;
-	private Texture[] bubbleTextures;
+	private BubbleTexture[] bubbleTextures;
 	private GameLoop gameloop;
 	private BubbleGrid bubbleGrid;
 
@@ -58,11 +59,11 @@ public class GameLoopRenderer {
 		}
 		spriteBatch = new SpriteBatch();
 		font = new BitmapFont();
-		font.setScale(2, 2);
-		bubbleTextures = new Texture[3];
+		font.setScale(1.6f, 1.6f);
+		bubbleTextures = new BubbleTexture[3];
 		populate();
 		bubbleGrid = new BubbleGrid(bubbleTextures, 0, 0);
-		
+
 		activeBubble.setActive(true);
 		activeBubble.setPosition(65, 579);
 	}
@@ -103,14 +104,17 @@ public class GameLoopRenderer {
 		bubbleSplashTexture.setFilter(TextureFilter.MipMap,
 				TextureFilter.Linear);
 
-		bubbleTextures[0] = new Texture(
-				Gdx.files.internal("res/bubble_blue.png"), true);
+		bubbleTextures[0] = new BubbleTexture(
+				Gdx.files.internal("res/bubble_blue.png"), true,
+				BubbleTexture.BubbleColor.blue);
 		bubbleTextures[0].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		bubbleTextures[1] = new Texture(
-				Gdx.files.internal("res/bubble_yellow.png"), true);
+		bubbleTextures[1] = new BubbleTexture(
+				Gdx.files.internal("res/bubble_yellow.png"), true,
+				BubbleTexture.BubbleColor.yellow);
 		bubbleTextures[1].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		bubbleTextures[2] = new Texture(
-				Gdx.files.internal("res/bubble_green.png"), true);
+		bubbleTextures[2] = new BubbleTexture(
+				Gdx.files.internal("res/bubble_green.png"), true,
+				BubbleTexture.BubbleColor.green);
 		bubbleTextures[2].setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
 		bubbleSplash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture,
@@ -230,6 +234,7 @@ public class GameLoopRenderer {
 			System.out.println("CollidingBubble Xindex:"
 					+ collidingBubble.getCoordinateX() + " Yindex: "
 					+ collidingBubble.getCoordinateY());
+//			System.out.println("CollidingColor: "+collidingBubble.getBubble().getTexture().ge);
 		}
 		return collidingBubble;
 		// public boolean checkForCollission(Rectangle bounds) {
