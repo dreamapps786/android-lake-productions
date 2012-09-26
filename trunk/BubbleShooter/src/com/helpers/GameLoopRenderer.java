@@ -18,6 +18,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.gui.GameLoop;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.helpers.extensions.BubbleTexture;
+import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -210,11 +211,15 @@ public class GameLoopRenderer {
 		BubbleGridRectangle collidingBubble = bubbleGrid.isColliding(centerX,
 				centerY, radius);
 		if (collidingBubble != null) {
-			BubbleGridRectangle target = bubbleGrid.getGrid()[collidingBubble
-					.getCoordinateY() + 1][collidingBubble.getCoordinateX()];
+			int coordinateX = collidingBubble.getCoordinateX();
+						BubbleGridRectangle target = bubbleGrid.getGrid()[collidingBubble
+					.getCoordinateY() + 1][coordinateX % 2 == 0 ? coordinateX : coordinateX+1];
 			if (!target.isOccupied()) {
-				bubbleGrid.getGrid()[collidingBubble.getCoordinateY() + 1][collidingBubble
-						.getCoordinateX()].setOccupied(true);
+				boolean destroyed = destroySameColorBubbles(collidingBubble);
+				if (!destroyed) {
+					bubbleGrid.getGrid()[collidingBubble.getCoordinateY() + 1][collidingBubble
+							.getCoordinateX()].setOccupied(true);
+				}
 			} else {
 				System.out.println("TargetAlreadyOccupied");
 			}
@@ -234,10 +239,26 @@ public class GameLoopRenderer {
 			System.out.println("CollidingBubble Xindex:"
 					+ collidingBubble.getCoordinateX() + " Yindex: "
 					+ collidingBubble.getCoordinateY());
-//			System.out.println("CollidingColor: "+collidingBubble.getBubble().getTexture().ge);
+			System.out
+					.println("CollidingColor: "
+							+ ((BubbleTexture) collidingBubble.getBubble()
+									.getTexture()).getColor());
 		}
 		return collidingBubble;
 		// public boolean checkForCollission(Rectangle bounds) {
 		// return bubbleGrid.isColliding(bounds);
+	}
+
+	private boolean destroySameColorBubbles(BubbleGridRectangle bubble) {
+		BubbleTexture.BubbleColor color = ((BubbleTexture) bubble.getBubble().getTexture()).getColor();
+		int totalCount = 0;
+		
+		totalCount += checkNeighbour(bubble);
+		return false;
+	}
+
+	private int checkNeighbour(BubbleGridRectangle bubble) {
+		
+		return 0;
 	}
 }
