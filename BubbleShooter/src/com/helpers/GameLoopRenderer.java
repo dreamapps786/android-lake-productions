@@ -234,7 +234,7 @@ public class GameLoopRenderer {
 			System.out.println("CollidingBubble Xindex:"
 					+ collidingBubble.getCoordinateX() + " Yindex: "
 					+ collidingBubble.getCoordinateY());
-			System.out.println("CollidingColor: "+collidingBubble.getBubble().getTexture().ge);
+//			System.out.println("CollidingColor: "+collidingBubble.getBubble().getTexture().ge);
 		}
 		return collidingBubble;
 		// public boolean checkForCollission(Rectangle bounds) {
