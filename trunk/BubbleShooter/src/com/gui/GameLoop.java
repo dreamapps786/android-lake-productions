@@ -133,7 +133,7 @@ public class GameLoop implements Frame {
 	}
 
 	private void animateActiveBubble() {
-		double speed = 8;
+		double speed = 0; //default:8
 		double angle = activeBubble.getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle))))
@@ -153,8 +153,7 @@ public class GameLoop implements Frame {
 		if (collidingBubble != null) { // The bubble has to be a square
 		// if (renderer.checkForCollission(activeBubble.getBoundingRectangle()))
 		// {
-			System.out.println("Collission!");
-			System.out.println(activeBubble.getX() + "x, "
+			System.out.println("ActiveBubble: "+activeBubble.getX() + "x, "
 					+ activeBubble.getY() + "y");
 			Gdx.input.vibrate(50);
 			activeBubble.setActive(false);

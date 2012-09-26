@@ -56,7 +56,6 @@ public class BubbleShooter implements ApplicationListener {
 				
 				frame = MainMenu.getInstance();
 			}
-			
 		}
 	}
 

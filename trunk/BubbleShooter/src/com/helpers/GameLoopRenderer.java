@@ -62,6 +62,9 @@ public class GameLoopRenderer {
 		bubbleTextures = new Texture[3];
 		populate();
 		bubbleGrid = new BubbleGrid(bubbleTextures, 0, 0);
+		
+		activeBubble.setActive(true);
+		activeBubble.setPosition(65, 579);
 	}
 
 	public void render(Application app, Simulation simulation) {
@@ -203,21 +206,30 @@ public class GameLoopRenderer {
 		BubbleGridRectangle collidingBubble = bubbleGrid.isColliding(centerX,
 				centerY, radius);
 		if (collidingBubble != null) {
-			bubbleGrid.getGrid()[collidingBubble.getCoordinateY()+1][collidingBubble
-					.getCoordinateX()].setOccupied(true);
-			System.out
-					.println("New BubbleX: "
-							+ bubbleGrid.getGrid()[collidingBubble
-									.getCoordinateY()+1][collidingBubble
-									.getCoordinateX()].getCoordinateX());
-			System.out
-					.println("New BubbleY: "
-							+ bubbleGrid.getGrid()[collidingBubble
-									.getCoordinateY()+1][collidingBubble
-									.getCoordinateX()].getCoordinateY());
+			BubbleGridRectangle target = bubbleGrid.getGrid()[collidingBubble
+					.getCoordinateY() + 1][collidingBubble.getCoordinateX()];
+			if (!target.isOccupied()) {
+				bubbleGrid.getGrid()[collidingBubble.getCoordinateY() + 1][collidingBubble
+						.getCoordinateX()].setOccupied(true);
+			} else {
+				System.out.println("TargetAlreadyOccupied");
+			}
+			// System.out
+			// .println("New BubbleX: "
+			// + bubbleGrid.getGrid()[collidingBubble
+			// .getCoordinateY()+1][collidingBubble
+			// .getCoordinateX()].getCoordinateX());
+			// System.out
+			// .println("New BubbleY: "
+			// + bubbleGrid.getGrid()[collidingBubble
+			// .getCoordinateY()+1][collidingBubble
+			// .getCoordinateX()].getCoordinateY());
 
 			System.out.println("CollidingBubble X:" + collidingBubble.getX()
 					+ " Y: " + collidingBubble.getY());
+			System.out.println("CollidingBubble Xindex:"
+					+ collidingBubble.getCoordinateX() + " Yindex: "
+					+ collidingBubble.getCoordinateY());
 		}
 		return collidingBubble;
 		// public boolean checkForCollission(Rectangle bounds) {
