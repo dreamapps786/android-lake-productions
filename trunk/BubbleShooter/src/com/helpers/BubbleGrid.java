@@ -181,17 +181,17 @@ public class BubbleGrid {
 			float rightX = this.x + this.width;
 			boolean insideX = x > leftX && x < rightX;
 			boolean insideY = y > bottomY && y < topY;
-			if (insideX) {
-				System.out.print("insideX - " + y + "y, " + bottomY + "bY, " + topY + "tY");
-				//System.out.print("insideX - " + x + "x, " + leftX + "lX, " + rightX + "rX");
-			}
-			if (insideY) {
-				System.out.print("\tinsideY - " + x + "x, " + leftX + "lX, " + rightX + "rX");
-				//System.out.print("\tinsideY - " + y + "y, " + bottomY + "bY, " + topY + "tY");
-			}
-			if (insideX || insideY) {
-				System.out.println();
-			}
+//			if (insideX) {
+//				System.out.print("insideX - " + y + "y, " + bottomY + "bY, " + topY + "tY");
+//				//System.out.print("insideX - " + x + "x, " + leftX + "lX, " + rightX + "rX");
+//			}
+//			if (insideY) {
+//				System.out.print("\tinsideY - " + x + "x, " + leftX + "lX, " + rightX + "rX");
+//				//System.out.print("\tinsideY - " + y + "y, " + bottomY + "bY, " + topY + "tY");
+//			}
+//			if (insideX || insideY) {
+//				System.out.println();
+//			}
 //			boolean contains = x > leftX && x < rightX
 //					&& y > bottomY && y < topY;
 			return insideX && insideY;
