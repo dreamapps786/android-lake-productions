@@ -93,7 +93,7 @@ public class BubbleGrid {
 		return null;
 	}
 
-	private boolean deleteThis = true;
+	private boolean isFirstIteration = true;
 
 	private boolean checkFivePointCollission(Rectangle gridBubbleRect,
 			float activeBubbleCenterX, float activeBubbleCenterY, float radius) {
@@ -112,8 +112,8 @@ public class BubbleGrid {
 				* (float) Math.sin(Math.toRadians(45));
 		float eX = activeBubbleCenterX + radius;
 		float eY = activeBubbleCenterY;
-		if (deleteThis) {
-			deleteThis = false;
+		if (isFirstIteration) { //Kun til debugging
+			isFirstIteration = false;
 			System.out.println("west(" + wX + ", " + wY + ")");
 			System.out.println("northwest(" + nwX + ", " + nwY + ")");
 			System.out.println("north(" + nX + ", " + nY + ")");
