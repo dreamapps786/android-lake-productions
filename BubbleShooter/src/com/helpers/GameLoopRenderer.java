@@ -254,8 +254,19 @@ public class GameLoopRenderer {
 		BubbleTexture.BubbleColor color = ((BubbleTexture) bubble.getBubble().getTexture()).getColor();
 		int totalCount = 0;
 		
-		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
-		checkNeighbours(bubble, bubblesToExplode);
+		
+		//-------------PSEUDO KODE---------------
+//		int noColorMatchesToExplode = 3;
+//		
+//		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+//		checkNeighbours(bubble, bubblesToExplode);
+//		
+//		if(bubblesToExplode.size() >= noColorMatchesToExplode) {
+//			checkForFallingFruit(bubblesToExplode); //Tilføj dem der skal splashe pga. de ikke længere sidder fast på nogen ovenfra.
+//			for (int i = 0; i < bubblesToExplode.size(); i++) { //Måske modsat rækkefølge i stedet
+//				bubblesToExplode.get(i).setSplashing(true);
+//			}
+//		}
 		
 //		totalCount += checkNeighbour(bubble);
 		return false;
