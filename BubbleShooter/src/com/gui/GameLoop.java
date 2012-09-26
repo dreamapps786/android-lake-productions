@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.helpers.GameLoopRenderer;
+import com.helpers.PointService;
 import com.simulation.AnimatedSprite;
 import com.simulation.MainInputProcessor;
 import com.simulation.Simulation;
@@ -58,6 +59,7 @@ public class GameLoop implements Frame {
 		renderer.render(app, simulation);
 		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(),
 				150, 150, Color.RED);
+		GameLoopRenderer.drawText("Total Score: "+PointService.getTotalPoints(), 300, 100, Color.BLUE);
 		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, "
 				+ lastInputClickY + "y)", 95, 300, Color.RED);
 		if (activeBubble.isActive()) {
@@ -133,7 +135,7 @@ public class GameLoop implements Frame {
 	}
 
 	private void animateActiveBubble() {
-		double speed = 0; //default:8
+		double speed = 8; //default:8
 		double angle = activeBubble.getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle))))
@@ -153,6 +155,7 @@ public class GameLoop implements Frame {
 		if (collidingBubble != null) { // The bubble has to be a square
 		// if (renderer.checkForCollission(activeBubble.getBoundingRectangle()))
 		// {
+			PointService.Score();
 			System.out.println("ActiveBubble: "+activeBubble.getX() + "x, "
 					+ activeBubble.getY() + "y");
 			Gdx.input.vibrate(50);
