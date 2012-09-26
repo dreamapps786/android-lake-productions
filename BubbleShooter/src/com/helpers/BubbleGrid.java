@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.helpers.extensions.BubbleTexture;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
@@ -14,14 +15,14 @@ public class BubbleGrid {
 	private final int gridHeight = 18;
 	private final int initialPopHeight = 8;
 
-	public BubbleGrid(Texture[] bubbleTextures, float x, float y) {
+	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		this.gridPosX = x;
 		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
 		populate(bubbleTextures);
 	}
 
-	private void populate(Texture[] bubbleTextures) {
+	private void populate(BubbleTexture[] bubbleTextures) {
 		int counter = bubbleTextures.length;
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
@@ -160,7 +161,7 @@ public class BubbleGrid {
 		private int coordinateY;
 
 		public BubbleGridRectangle(float x, float y, float width, float height,
-				int coordinateX, int coordinateY, Texture bubbleTexture) {
+				int coordinateX, int coordinateY, BubbleTexture bubbleTexture) {
 			super(x, y, width, height);
 			x = gridPosX + x;
 			y = gridPosY + y;
