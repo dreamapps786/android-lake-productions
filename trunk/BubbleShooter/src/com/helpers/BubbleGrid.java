@@ -5,13 +5,14 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.helpers.extensions.BubbleTexture;
+import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
-	float gridPosX;
-	float gridPosY;
+	private float gridPosX;
+	private float gridPosY;
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 15;
 	private final int gridHeight = 18;
@@ -164,6 +165,94 @@ public class BubbleGrid {
 		}
 		return results;
 	}
+	
+	public BubbleGridRectangle getLeftParentOfBubble(BubbleGridRectangle ofBubble) {
+		if (!isValidBubble(ofBubble)) return null;
+		
+		int bcX = ofBubble.coordinateX;
+		int bcY = ofBubble.coordinateY;
+		
+		int leftParentX = (bcY % 2 == 0 ? bcX - 1 : bcX);
+		int leftParentY = bcY - 1;
+		
+		if (!isInsideGridCoordinates(leftParentX, leftParentY)) return null;
+		return boxes[leftParentY][leftParentX];
+	}
+	
+	public BubbleGridRectangle getRightParentOfBubble(BubbleGridRectangle ofBubble) {
+		if (!isValidBubble(ofBubble)) return null;
+		
+		int bcX = ofBubble.coordinateX;
+		int bcY = ofBubble.coordinateY;
+		
+		int rightParentX = (bcY % 2 == 0 ? bcX : bcX + 1);
+		int rightParentY = bcY - 1;
+		
+		if (!isInsideGridCoordinates(rightParentX, rightParentY)) return null;
+		return boxes[rightParentY][rightParentX];
+	}
+	
+	public BubbleGridRectangle getLeftSiblingOfBubble(BubbleGridRectangle ofBubble) {
+		if (!isValidBubble(ofBubble)) return null;
+		
+		int bcX = ofBubble.coordinateX;
+		int bcY = ofBubble.coordinateY;
+		
+		int leftSiblingX = bcX - 1;
+		int leftSiblingY = bcY;
+		
+		if (!isInsideGridCoordinates(leftSiblingX, leftSiblingY)) return null;
+		return boxes[leftSiblingY][leftSiblingX];
+	}
+	
+	public BubbleGridRectangle getRightSiblingOfBubble(BubbleGridRectangle ofBubble) {
+		if (!isValidBubble(ofBubble)) return null;
+		
+		int bcX = ofBubble.coordinateX;
+		int bcY = ofBubble.coordinateY;
+		
+		int rightSiblingX = bcX + 1;
+		int rightSiblingY = bcY;
+		
+		if (!isInsideGridCoordinates(rightSiblingX, rightSiblingY)) return null;
+		return boxes[rightSiblingY][rightSiblingX];
+	}
+
+	public BubbleGridRectangle getLeftChildOfBubble(BubbleGridRectangle ofBubble) {
+		if (!isValidBubble(ofBubble)) return null;
+		
+		int bcX = ofBubble.coordinateX;
+		int bcY = ofBubble.coordinateY;
+		
+		int leftChildX = (bcY % 2 == 0 ? bcX - 1 : bcX);
+		int leftChildY = bcY + 1;
+		
+		if (!isInsideGridCoordinates(leftChildX, leftChildY)) return null;
+		return boxes[leftChildY][leftChildX];
+	}
+	
+	public BubbleGridRectangle getRightChildOfBubble(BubbleGridRectangle ofBubble) {
+		if (!isValidBubble(ofBubble)) return null;
+		
+		int bcX = ofBubble.coordinateX;
+		int bcY = ofBubble.coordinateY;
+		
+		int rightChildX = (bcY % 2 == 0 ? bcX : bcX + 1);
+		int rightChildY = bcY + 1;
+		
+		if (!isInsideGridCoordinates(rightChildX, rightChildY)) return null;
+		return boxes[rightChildY][rightChildX];
+	}
+	
+	private boolean isValidBubble(BubbleGridRectangle bubble) {
+		if(bubble == null) return false;
+		if (!isInsideGridCoordinates(bubble.coordinateX, bubble.coordinateY)) return false; //Bubble doesn't exist in grid
+		return true;
+	}
+	
+	public boolean isInsideGridCoordinates(int coordX, int coordY) {
+		return coordX >= 0 && coordY >= 0 && coordX < boxes[0].length && coordY < boxes.length;
+	}
 
 	@SuppressWarnings("unused")
 	private void printBubbleGrid() {
@@ -184,6 +273,7 @@ public class BubbleGrid {
 	public class BubbleGridRectangle extends Rectangle {
 		// private Rectangle rectangle;
 		private AnimatedSprite bubble;
+		private BubbleColor color;
 		private boolean isOccupied;
 		private int coordinateX;
 		private int coordinateY;
@@ -200,6 +290,7 @@ public class BubbleGrid {
 					bubbleTexture.getHeight(), 0, 0, 0f, 0f);
 			isOccupied = false;
 			bubble.setPosition(x, y);
+			color = bubbleTexture.getColor();
 		}
 
 		public boolean overlapsLowerHalf(float x, float y) {
@@ -222,6 +313,10 @@ public class BubbleGrid {
 
 		public AnimatedSprite getBubble() {
 			return bubble;
+		}
+
+		public BubbleColor getColor() {
+			return color;
 		}
 
 		public int getCoordinateX() {

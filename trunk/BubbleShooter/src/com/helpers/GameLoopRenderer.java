@@ -17,6 +17,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.gui.GameLoop;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.helpers.extensions.BubbleTexture;
+import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
 import com.simulation.AnimatedSprite;
@@ -277,57 +278,57 @@ public class GameLoopRenderer {
 		return null;
 	}
 
-	private boolean destroySameColorBubbles(BubbleGridRectangle bubble) {
-		BubbleTexture.BubbleColor color = ((BubbleTexture) bubble.getBubble().getTexture()).getColor();
-		int totalCount = 0;
-
-		// -------------PSEUDO KODE---------------
-		// int noColorMatchesToExplode = 3;
-		//
-		// List<BubbleGridRectangle> bubblesToExplode = new
-		// ArrayList<BubbleGrid.BubbleGridRectangle>();
-		// checkNeighbours(bubble, bubblesToExplode);
-		//
-		// if(bubblesToExplode.size() >= noColorMatchesToExplode) {
-		// checkForFallingFruit(bubblesToExplode); //Tilføj dem der skal splashe
-		// pga. de ikke længere sidder fast på nogen ovenfra.
-		// for (int i = 0; i < bubblesToExplode.size(); i++) { //Måske modsat
-		// rækkefølge i stedet
-		// bubblesToExplode.get(i).setSplashing(true);
-		// }
-		// }
-
-		// totalCount += checkNeighbour(bubble);
+	private boolean destroySameColorBubbles(BubbleGridRectangle bubble) {		
+		
+		//-------------PSEUDO KODE---------------
+		int noColorMatchesToExplode = 3;
+		
+		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		checkNeighbours(bubble, bubblesToExplode, bubble.getColor());
+		
+		if(bubblesToExplode.size() >= noColorMatchesToExplode) {
+			//checkForFallingFruit(bubblesToExplode); //TODO Tilføj dem der skal splashe pga. de ikke længere sidder fast på nogen ovenfra.
+			for (int i = 0; i < bubblesToExplode.size(); i++) { //Måske modsat rækkefølge i stedet
+				//bubblesToExplode.get(i).setSplashing(true); //TODO start splashing effekt
+				bubblesToExplode.get(i).setOccupied(false);
+			}
+		}
+		
+		//totalCount += checkNeighbour(bubble);
 		return false;
 	}
 
 	// private int checkNeighbours(BubbleGridRectangle bubble) {
-	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode) {
-		// ---------PSEUDO KODE---------
-		// if (bubbleToCheck.venstreOverMig() == samme farve) {
-		// bubblesToExplode.add(bubbleToCheck.venstreOverMig());
-		// checkNeighbours(bubbleToCheck.venstreOverMig(), bubblesToExplode);
-		// }
-		// if (bubbleToCheck.højreOverMig() == samme farve) {
-		// bubblesToExplode.add(bubbleToCheck.højreOverMig());
-		// checkNeighbours(bubbleToCheck.højreOverMig(), bubblesToExplode);
-		// }
-		// if (bubbleToCheck.højreForMig() == samme farve) {
-		// bubblesToExplode.add(bubbleToCheck.højreForMig());
-		// checkNeighbours(bubbleToCheck.højreForMig(), bubblesToExplode);
-		// }
-		// if (bubbleToCheck.højreUnderMig() == samme farve) {
-		// bubblesToExplode.add(bubbleToCheck.højreUnderMig());
-		// checkNeighbours(bubbleToCheck.højreUnderMig(), bubblesToExplode);
-		// }
-		// if (bubbleToCheck.venstreUnderMig() == samme farve) {
-		// bubblesToExplode.add(bubbleToCheck.venstreUnderMig());
-		// checkNeighbours(bubbleToCheck.venstreUnderMig(), bubblesToExplode);
-		// }
-		// if (bubbleToCheck.venstreForMig() == samme farve) {
-		// bubblesToExplode.add(bubbleToCheck.venstreForMig());
-		// checkNeighbours(bubbleToCheck.venstreForMig(), bubblesToExplode);
-		// }
+	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor) {
+		bubblesToExplode.add(bubbleToCheck);
+		
+		System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor());
+		
+		BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
+		BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubbleToCheck);
+		BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubbleToCheck);
+		BubbleGridRectangle rightSibling = bubbleGrid.getRightSiblingOfBubble(bubbleToCheck);
+		BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
+		BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
+
+		if (leftParent != null && leftParent.getColor() == collidingColor && !bubblesToExplode.contains(leftParent)) {
+			checkNeighbours(leftParent, bubblesToExplode, collidingColor);
+		}
+		if (rightParent != null && rightParent.getColor() == collidingColor && !bubblesToExplode.contains(rightParent)) {
+			checkNeighbours(rightParent, bubblesToExplode, collidingColor);
+		}
+		if (leftSibling != null && leftSibling.getColor() == collidingColor && !bubblesToExplode.contains(leftSibling)) {
+			checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
+		}
+		if (rightSibling != null && rightSibling.getColor() == collidingColor && !bubblesToExplode.contains(rightSibling)) {
+			checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
+		}
+		if (leftChild != null && leftChild.getColor() == collidingColor && !bubblesToExplode.contains(leftChild)) {
+			checkNeighbours(leftChild, bubblesToExplode, collidingColor);
+		}
+		if (rightChild != null && rightChild.getColor() == collidingColor && !bubblesToExplode.contains(rightChild)) {
+			checkNeighbours(rightChild, bubblesToExplode, collidingColor);
+		}
 	}
 
 	public AnimatedSprite getActiveBubble() {
