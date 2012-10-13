@@ -23,7 +23,6 @@ public class GameLoop implements Frame {
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
-//	private AnimatedSprite activeBubble;
 	private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
