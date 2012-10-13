@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.helpers.extensions.BubbleTexture;
-import com.model.CollissionObject;
-import com.model.CollissionObject.Direction;
+import com.model.CollisionObject;
+import com.model.CollisionObject.Direction;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
@@ -52,15 +52,17 @@ public class BubbleGrid {
 		return boxes;
 	}
 
-	public CollissionObject isColliding(float centerX, float centerY, float radius) {
+	public CollisionObject checkForCollision(float centerX, float centerY, float radius) {
+		centerY+=32; //FIXME Constant to solve collision offset
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
 				if (boxes[yIndex][xIndex].isOccupied) {
-					List<Direction> collidingDirections = checkFivePointCollission(
+					List<Direction> collidingDirections = checkFourPointCollision(
 							boxes[yIndex][xIndex], centerX, centerY, radius);
-					if (collidingDirections.size() == 2) {
-						return new CollissionObject(boxes[yIndex][xIndex],
-								collidingDirections.get(0), collidingDirections.get(1));
+					if (collidingDirections.size() >= 1) {
+						System.out.println("Hit "+collidingDirections.size()+" directions: "+collidingDirections+" Bubbles:"+boxes[yIndex][xIndex].toString());
+						return new CollisionObject(boxes[yIndex][xIndex],
+								collidingDirections);
 					}
 
 				}
@@ -69,22 +71,22 @@ public class BubbleGrid {
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
 				if (boxes[yIndex][xIndex].isOccupied){
-					List<Direction> collidingDirections = checkFivePointCollission(boxes[yIndex][xIndex],
+					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex],
 								centerX, centerY, radius);
-						if (collidingDirections.size() == 2) {
-							return new CollissionObject(boxes[yIndex][xIndex], 
-									collidingDirections.get(0), collidingDirections.get(1));
+						if (collidingDirections.size() >= 1) {
+							System.out.println("Hit "+collidingDirections.size()+" directions: "+collidingDirections.get(0).toString()+" Bubble:"+boxes[yIndex][xIndex].toString());
+							return new CollisionObject(boxes[yIndex][xIndex], 
+									collidingDirections);
 						}
 				}
 			}
 		}
-		// System.out.println("No collision\n----- -----");
 		return null;
 	}
 
 	private boolean isFirstIteration = true;
 
-	private List<Direction> checkFivePointCollission(
+	private List<Direction> checkFourPointCollision(
 			BubbleGridRectangle gridBubbleRect, float activeBubbleCenterX,
 			float activeBubbleCenterY, float radius) {
 		List<Direction> collidingDirections = new ArrayList<Direction>(2);
@@ -104,11 +106,11 @@ public class BubbleGrid {
 		float eY = activeBubbleCenterY;
 		if (isFirstIteration) { // Kun til debugging
 			isFirstIteration = false;
-			System.out.println("west(" + wX + ", " + wY + ")");
-			System.out.println("northwest(" + nwX + ", " + nwY + ")");
-			System.out.println("north(" + nX + ", " + nY + ")");
-			System.out.println("northeast(" + neX + ", " + neY + ")");
-			System.out.println("east(" + eX + ", " + eY + ")");
+//			System.out.println("west(" + wX + ", " + wY + ")");
+//			System.out.println("northwest(" + nwX + ", " + nwY + ")");
+//			System.out.println("north(" + nX + ", " + nY + ")");
+//			System.out.println("northeast(" + neX + ", " + neY + ")");
+//			System.out.println("east(" + eX + ", " + eY + ")");
 		}
 		// .overlapsLowerHalf() har erstattet .contains()
 		if (gridBubbleRect.overlapsLowerHalf(wX, wY)) {
@@ -173,6 +175,10 @@ public class BubbleGrid {
 			System.out.println();
 		}
 	}
+	
+	public int getGridWidth() {
+		return gridWidth;
+	}
 
 	@SuppressWarnings("serial")
 	public class BubbleGridRectangle extends Rectangle {
@@ -236,7 +242,7 @@ public class BubbleGrid {
 
 		@Override
 		public String toString() {
-			return "X: " + this.x + " Y: " + this.y;
+			return "[X: " + this.x + " Y: " + this.y+"]"+" Coordinates["+this.coordinateX+","+this.coordinateY+"]";
 		}
 	}
 }

@@ -23,7 +23,7 @@ public class GameLoop implements Frame {
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
-	private AnimatedSprite activeBubble;
+//	private AnimatedSprite activeBubble;
 	private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
@@ -62,7 +62,7 @@ public class GameLoop implements Frame {
 		GameLoopRenderer.drawText("Total Score: "+PointService.getTotalPoints(), 300, 100, Color.BLUE);
 		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, "
 				+ lastInputClickY + "y)", 95, 300, Color.RED);
-		if (activeBubble.isActive()) {
+		if (renderer.getActiveBubble().isActive()) {
 			animateActiveBubble();
 		}
 		if (bubbleSplash.isActive()) {
@@ -89,9 +89,9 @@ public class GameLoop implements Frame {
 		this.shooter = shooter;
 	}
 
-	public void setActiveBubble(AnimatedSprite activeBubble) {
-		this.activeBubble = activeBubble;
-	}
+//	public void setActiveBubble(AnimatedSprite activeBubble) {
+//		this.activeBubble = activeBubble;
+//	}
 
 	public void setBubbleSplash(AnimatedSprite bubbleSplash) {
 		this.bubbleSplash = bubbleSplash;
@@ -100,7 +100,7 @@ public class GameLoop implements Frame {
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 
-		activeBubble.setActive(true);
+		renderer.getActiveBubble().setActive(true);
 		int cY = 800 - y; // y converted from input- to
 							// animatedSprite-coordinates
 		lastInputClickX = x;
@@ -113,7 +113,7 @@ public class GameLoop implements Frame {
 			if (newRotAngle > -60 && newRotAngle < 60) {
 				shooter.rotate(newRotAngle - shooterRotation);
 				shooterRotation = newRotAngle;
-				activeBubble.setDirection(newRotAngle);
+				renderer.getActiveBubble().setDirection(newRotAngle);
 				shootBubble();
 			}
 		}
@@ -122,7 +122,7 @@ public class GameLoop implements Frame {
 
 	public void shootBubble() {
 		int dist = 40;
-		double angle = activeBubble.getDirection();
+		double angle = renderer.getActiveBubble().getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(dist * Math.toDegrees(Math.sin(Math.toRadians(angle))))
 				/ bC;
@@ -130,48 +130,42 @@ public class GameLoop implements Frame {
 				.toRadians(180 - angle - 90)))) / bC;
 		int x = (int) (a + shooter.getOriginX() + shooter.getX());
 		int y = (int) (b + shooter.getOriginY() + shooter.getY());
-		activeBubble.setPosition(x - activeBubble.getOriginX(), y
-				- activeBubble.getOriginY());
+		renderer.getActiveBubble().setPosition(x - renderer.getActiveBubble().getOriginX(), y
+				- renderer.getActiveBubble().getOriginY());
 	}
 
 	private void animateActiveBubble() {
 		double speed = 8; //default:8
-		double angle = activeBubble.getDirection();
+		double angle = renderer.getActiveBubble().getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle))))
 				/ bC;
 		double b = (speed * Math.toDegrees(Math.sin(Math
 				.toRadians(180 - angle - 90)))) / bC;
-		activeBubble.setPosition(activeBubble.getX() + (float) a,
-				activeBubble.getY() + (float) b);
+		renderer.getActiveBubble().setPosition(renderer.getActiveBubble().getX() + (float) a,
+				renderer.getActiveBubble().getY() + (float) b);
 
-		if (!boundsCollisionBox.contains(activeBubble.getBoundingRectangle())) {
-			changeDirection(activeBubble.getX(), activeBubble.getY());
+		if (!boundsCollisionBox.contains(renderer.getActiveBubble().getBoundingRectangle())) {
+			changeDirection(renderer.getActiveBubble().getX(), renderer.getActiveBubble().getY());
 		}
-		BubbleGridRectangle collidingBubble = renderer.checkForCollission(
-				activeBubble.getX() + (activeBubble.getWidth() / 2),
-				activeBubble.getY() + activeBubble.getHeight() / 2,
-				activeBubble.getHeight() / 2);
+		BubbleGridRectangle collidingBubble = renderer.handleCollision(
+				renderer.getActiveBubble().getX() + (renderer.getActiveBubble().getWidth() / 2),
+				renderer.getActiveBubble().getY() + renderer.getActiveBubble().getHeight() / 2,
+				renderer.getActiveBubble().getHeight() / 2,renderer.getActiveBubble().getDirection());
 		if (collidingBubble != null) { // The bubble has to be a square
-		// if (renderer.checkForCollission(activeBubble.getBoundingRectangle()))
-		// {
-			PointService.Score();
-			System.out.println("ActiveBubble: "+activeBubble.getX() + "x, "
-					+ activeBubble.getY() + "y");
+			System.out.println("ActiveBubble: "+renderer.getActiveBubble().getX() + "x, "
+					+ renderer.getActiveBubble().getY() + "y");
 			Gdx.input.vibrate(50);
-			activeBubble.setActive(false);
-//			bubbleSplash.setPosition(activeBubble.getX(), activeBubble.getY());
-//			bubbleSplash.setActive(true);
 		}
 	}
 
 	public void changeDirection(float x, float y) {
-		double angle = activeBubble.getDirection();
+		double angle = renderer.getActiveBubble().getDirection();
 		if (x < 0) {
-			activeBubble.setDirection(angle - angle * 2);
+			renderer.getActiveBubble().setDirection(angle - angle * 2);
 		}
-		if (x > boundsCollisionBox.getWidth() - activeBubble.getWidth() / 3) {
-			activeBubble.setDirection(angle + angle * -1 * 2);
+		if (x > boundsCollisionBox.getWidth() - renderer.getActiveBubble().getWidth() / 3) {
+			renderer.getActiveBubble().setDirection(angle + angle * -1 * 2);
 
 		}
 	}

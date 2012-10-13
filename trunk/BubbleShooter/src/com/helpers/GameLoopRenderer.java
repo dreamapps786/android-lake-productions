@@ -17,8 +17,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.gui.GameLoop;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.helpers.extensions.BubbleTexture;
-import com.model.CollissionObject;
-import com.model.CollissionObject.Direction;
+import com.model.CollisionObject;
+import com.model.CollisionObject.Direction;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -49,11 +49,8 @@ public class GameLoopRenderer {
 		this.gameloop = gameloop;
 		background = new TextureAtlas();
 		for (int i = 1; i <= 8; i++) {
-			Texture backgroundPart = new Texture(
-					Gdx.files.internal("res/bg/background_portrait_" + i
-							+ ".png"));
-			backgroundPart
-					.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+			Texture backgroundPart = new Texture(Gdx.files.internal("res/bg/background_portrait_" + i + ".png"));
+			backgroundPart.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 			TextureRegion r = new TextureRegion();
 			r.setRegion(backgroundPart);
 			background.addRegion(i + "", r);
@@ -65,8 +62,8 @@ public class GameLoopRenderer {
 		populate();
 		bubbleGrid = new BubbleGrid(bubbleTextures, 0, 0);
 
-		activeBubble.setActive(true);
-		activeBubble.setPosition(65, 579);
+		// activeBubble.setActive(true);
+		// activeBubble.setPosition(65, 579);
 	}
 
 	public void render(Application app, Simulation simulation) {
@@ -87,45 +84,31 @@ public class GameLoopRenderer {
 	}
 
 	public void populate() {
-		shooterTexture = new Texture(Gdx.files.internal("res/shooter.png"),
-				true);
+		shooterTexture = new Texture(Gdx.files.internal("res/shooter.png"), true);
 		shooterTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		shooter = new AnimatedSprite("shooter", shooterTexture, 0, 0, 64, 64,
-				1, 1, 0, 0);
+		shooter = new AnimatedSprite("shooter", shooterTexture, 0, 0, 64, 64, 1, 1, 0, 0);
 		shooter.setPosition((480 - 64) / 2, 0);
 		gameloop.setShooter(shooter);
 
-		activeBubbleTexture = new Texture(
-				Gdx.files.internal("res/bubble_green.png"), true);
-		activeBubbleTexture.setFilter(TextureFilter.MipMap,
-				TextureFilter.Linear);
+		activeBubbleTexture = new Texture(Gdx.files.internal("res/bubble_green.png"), true);
+		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 
-		bubbleSplashTexture = new Texture(
-				Gdx.files.internal("res/bubble_splash.png"), true);
-		bubbleSplashTexture.setFilter(TextureFilter.MipMap,
-				TextureFilter.Linear);
+		bubbleSplashTexture = new Texture(Gdx.files.internal("res/bubble_splash.png"), true);
+		bubbleSplashTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 
-		bubbleTextures[0] = new BubbleTexture(
-				Gdx.files.internal("res/bubble_blue.png"), true,
-				BubbleTexture.BubbleColor.blue);
+		bubbleTextures[0] = new BubbleTexture(Gdx.files.internal("res/bubble_blue.png"), true, BubbleTexture.BubbleColor.blue);
 		bubbleTextures[0].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		bubbleTextures[1] = new BubbleTexture(
-				Gdx.files.internal("res/bubble_yellow.png"), true,
-				BubbleTexture.BubbleColor.yellow);
+		bubbleTextures[1] = new BubbleTexture(Gdx.files.internal("res/bubble_yellow.png"), true, BubbleTexture.BubbleColor.yellow);
 		bubbleTextures[1].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		bubbleTextures[2] = new BubbleTexture(
-				Gdx.files.internal("res/bubble_green.png"), true,
-				BubbleTexture.BubbleColor.green);
+		bubbleTextures[2] = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleTexture.BubbleColor.green);
 		bubbleTextures[2].setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
-		bubbleSplash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture,
-				0, 0, 32, 32, 2, 2, 0, 0);
+		bubbleSplash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, 0, 0, 32, 32, 2, 2, 0, 0);
 
-		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture,
-				0, 0, 32, 32, 0, 0, 0, 0);
+		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture, 0, 0, 32, 32, 0, 0, 0, 0);
 		activeBubble.setActive(false);
 		bubbleSplash.setActive(false);
-		gameloop.setActiveBubble(activeBubble);
+		// gameloop.setActiveBubble(activeBubble);
 		gameloop.setBubbleSplash(bubbleSplash);
 
 	}
@@ -140,9 +123,8 @@ public class GameLoopRenderer {
 		int i = 0;
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 2; col++) {
-				spriteBatch.draw(background.getRegions().get(i).getTexture(),
-						0 + col * 256, (800 - 256) - row * 256, 256, 256, 0, 0,
-						256, 256, false, false);
+				spriteBatch.draw(background.getRegions().get(i).getTexture(), 0 + col * 256, (800 - 256) - row * 256, 256, 256, 0, 0, 256,
+						256, false, false);
 				i++;
 			}
 		}
@@ -153,8 +135,7 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32, 32,
-				shooter.getWidth(), shooter.getHeight(), 1, 1,
+		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32, 32, shooter.getWidth(), shooter.getHeight(), 1, 1,
 				shooter.getRotation());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
@@ -164,8 +145,7 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(),
-				activeBubble.getY());
+		spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(), activeBubble.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -176,8 +156,7 @@ public class GameLoopRenderer {
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
 		for (AnimatedSprite bubble : bubbles) {
-			spriteBatch.draw(bubble.getTexture(), bubble.getX(),
-					bubble.getY() - 800);
+			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - 800);
 		}
 		spriteBatch.disableBlending();
 		spriteBatch.end();
@@ -187,8 +166,7 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch
-				.draw(bubbleSplash, bubbleSplash.getX(), bubbleSplash.getY());
+		spriteBatch.draw(bubbleSplash, bubbleSplash.getX(), bubbleSplash.getY());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -206,101 +184,153 @@ public class GameLoopRenderer {
 
 	}
 
-	public BubbleGridRectangle checkForCollission(float centerX, float centerY,
-			float radius) {
-		CollissionObject collissionObject = bubbleGrid.isColliding(centerX,
-				centerY, radius);
+	public BubbleGridRectangle handleCollision(float centerX, float centerY, float radius, double direction) {
+		CollisionObject collissionObject = bubbleGrid.checkForCollision(centerX, centerY, radius);
 		if (collissionObject != null) {
-			int coordinateX = collissionObject.getCollidingBubble().getCoordinateX();
-						BubbleGridRectangle target = bubbleGrid.getGrid()[collissionObject.getCollidingBubble()
-					.getCoordinateY() + 1][coordinateX % 2 == 0 ? coordinateX : coordinateX+1];
-			if (!target.isOccupied()) {
-				boolean destroyed = destroySameColorBubbles(collissionObject.getCollidingBubble());
-				if (!destroyed) {
-//					if (collissionObject.getCollissionDirection() ANY == W && NW) {
-//						Change new bubbles X-coordinate
-//					}
-					bubbleGrid.getGrid()[collissionObject.getCollidingBubble().getCoordinateY() + 1][collissionObject.getCollidingBubble()
-							.getCoordinateX()].setOccupied(true);
-				}
-			} else {
-				System.out.println("TargetAlreadyOccupied");
-			}
-			// System.out
-			// .println("New BubbleX: "
-			// + bubbleGrid.getGrid()[collidingBubble
-			// .getCoordinateY()+1][collidingBubble
-			// .getCoordinateX()].getCoordinateX());
-			// System.out
-			// .println("New BubbleY: "
-			// + bubbleGrid.getGrid()[collidingBubble
-			// .getCoordinateY()+1][collidingBubble
-			// .getCoordinateX()].getCoordinateY());
+			int collidingX = collissionObject.getCollidingBubble().getCoordinateX();
+			int collidingY = collissionObject.getCollidingBubble().getCoordinateY();
+			List<Direction> directions = collissionObject.getCollissionDirections();
+			BubbleGridRectangle target = null;
+			int rowXOffset = (collidingY % 2 == 1 ? 1 : 0);
+			boolean destroyed = destroySameColorBubbles(collissionObject.getCollidingBubble());
+			if (!destroyed) {
+				if (collidingX == 0 && collidingY % 2 == 0) { // To avoid placing it out of bounds
+					System.out.println("Avoided out of bounds");
+					bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+				} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
+					System.out.println("Avoided out of bounds");
+					bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+				} else {
+					if (directions.size() == 1) {
+						if (directions.contains(Direction.W)) {
+							target = bubbleGrid.getGrid()[collidingY][collidingX + 1];
+							if (!target.isOccupied()) {
+								bubbleGrid.getGrid()[collidingY][collidingX + 1].setOccupied(true);
+							}
+						} else if (directions.contains(Direction.NW)) {
+							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+							if (!target.isOccupied()) {
+								bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+							}
+						} else if (directions.contains(Direction.NE)) {
+							target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
+							if (!target.isOccupied()) {
+								bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+							}
+						} else if (directions.contains(Direction.E)) {
+							target = bubbleGrid.getGrid()[collidingY][collidingX - 1];
+							if (!target.isOccupied()) {
+								bubbleGrid.getGrid()[collidingY][collidingX - 1].setOccupied(true);
+							}
+						}
+					} else if (directions.size() == 2) {
+						if (directions.contains(Direction.W) && directions.contains(Direction.NW)) {
+							if (direction >= 0) {
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+								if (!target.isOccupied()) {
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+								}
+							} else {
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+								if (!target.isOccupied()) {
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+								}
+							}
+						} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
+							if (direction >= 0) {
+								System.out.println(collidingX);
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+								if (!target.isOccupied()) {
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+								}
+							} else {
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
+								if (!target.isOccupied()) {
+									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+								} else {
+									target = bubbleGrid.getGrid()[collidingY + 1][collidingX];
+									if (!target.isOccupied()) {
+										bubbleGrid.getGrid()[collidingY + 1][collidingX].setOccupied(true);
+									}
+								}
+							}
+						} else if (directions.contains(Direction.NE) && directions.contains(Direction.E)) {
+							if (direction >= 0) {
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+								if (!target.isOccupied()) {
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+								}
+							} else {
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
+								if (!target.isOccupied()) {
+									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+								}
+							}
+						}
+					}
 
-			System.out.println("CollidingBubble X:" + collissionObject.getCollidingBubble().getX()
-					+ " Y: " + collissionObject.getCollidingBubble().getY());
-			System.out.println("CollidingBubble Xindex:"
-					+ collissionObject.getCollidingBubble().getCoordinateX() + " Yindex: "
-					+ collissionObject.getCollidingBubble().getCoordinateY());
-			System.out
-					.println("CollidingColor: "
-							+ ((BubbleTexture) collissionObject.getCollidingBubble().getBubble()
-									.getTexture()).getColor());
-			return collissionObject.getCollidingBubble();
+				}
+				activeBubble.setActive(false);
+				PointService.Score();
+			}
 		}
 		return null;
-		// public boolean checkForCollission(Rectangle bounds) {
-		// return bubbleGrid.isColliding(bounds);
 	}
 
 	private boolean destroySameColorBubbles(BubbleGridRectangle bubble) {
 		BubbleTexture.BubbleColor color = ((BubbleTexture) bubble.getBubble().getTexture()).getColor();
 		int totalCount = 0;
-		
-		
-		//-------------PSEUDO KODE---------------
-//		int noColorMatchesToExplode = 3;
-//		
-//		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
-//		checkNeighbours(bubble, bubblesToExplode);
-//		
-//		if(bubblesToExplode.size() >= noColorMatchesToExplode) {
-//			checkForFallingFruit(bubblesToExplode); //Tilføj dem der skal splashe pga. de ikke længere sidder fast på nogen ovenfra.
-//			for (int i = 0; i < bubblesToExplode.size(); i++) { //Måske modsat rækkefølge i stedet
-//				bubblesToExplode.get(i).setSplashing(true);
-//			}
-//		}
-		
-//		totalCount += checkNeighbour(bubble);
+
+		// -------------PSEUDO KODE---------------
+		// int noColorMatchesToExplode = 3;
+		//
+		// List<BubbleGridRectangle> bubblesToExplode = new
+		// ArrayList<BubbleGrid.BubbleGridRectangle>();
+		// checkNeighbours(bubble, bubblesToExplode);
+		//
+		// if(bubblesToExplode.size() >= noColorMatchesToExplode) {
+		// checkForFallingFruit(bubblesToExplode); //Tilføj dem der skal splashe
+		// pga. de ikke længere sidder fast på nogen ovenfra.
+		// for (int i = 0; i < bubblesToExplode.size(); i++) { //Måske modsat
+		// rækkefølge i stedet
+		// bubblesToExplode.get(i).setSplashing(true);
+		// }
+		// }
+
+		// totalCount += checkNeighbour(bubble);
 		return false;
 	}
 
-//	private int checkNeighbours(BubbleGridRectangle bubble) {
+	// private int checkNeighbours(BubbleGridRectangle bubble) {
 	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode) {
-		//---------PSEUDO KODE---------
-//		if (bubbleToCheck.venstreOverMig() == samme farve) {
-//			bubblesToExplode.add(bubbleToCheck.venstreOverMig());
-//			checkNeighbours(bubbleToCheck.venstreOverMig(), bubblesToExplode);
-//		}
-//		if (bubbleToCheck.højreOverMig() == samme farve) {
-//			bubblesToExplode.add(bubbleToCheck.højreOverMig());
-//			checkNeighbours(bubbleToCheck.højreOverMig(), bubblesToExplode);
-//		}
-//		if (bubbleToCheck.højreForMig() == samme farve) {
-//			bubblesToExplode.add(bubbleToCheck.højreForMig());
-//			checkNeighbours(bubbleToCheck.højreForMig(), bubblesToExplode);
-//		}
-//		if (bubbleToCheck.højreUnderMig() == samme farve) {
-//			bubblesToExplode.add(bubbleToCheck.højreUnderMig());
-//			checkNeighbours(bubbleToCheck.højreUnderMig(), bubblesToExplode);
-//		}
-//		if (bubbleToCheck.venstreUnderMig() == samme farve) {
-//			bubblesToExplode.add(bubbleToCheck.venstreUnderMig());
-//			checkNeighbours(bubbleToCheck.venstreUnderMig(), bubblesToExplode);
-//		}
-//		if (bubbleToCheck.venstreForMig() == samme farve) {
-//			bubblesToExplode.add(bubbleToCheck.venstreForMig());
-//			checkNeighbours(bubbleToCheck.venstreForMig(), bubblesToExplode);
-//		}
+		// ---------PSEUDO KODE---------
+		// if (bubbleToCheck.venstreOverMig() == samme farve) {
+		// bubblesToExplode.add(bubbleToCheck.venstreOverMig());
+		// checkNeighbours(bubbleToCheck.venstreOverMig(), bubblesToExplode);
+		// }
+		// if (bubbleToCheck.højreOverMig() == samme farve) {
+		// bubblesToExplode.add(bubbleToCheck.højreOverMig());
+		// checkNeighbours(bubbleToCheck.højreOverMig(), bubblesToExplode);
+		// }
+		// if (bubbleToCheck.højreForMig() == samme farve) {
+		// bubblesToExplode.add(bubbleToCheck.højreForMig());
+		// checkNeighbours(bubbleToCheck.højreForMig(), bubblesToExplode);
+		// }
+		// if (bubbleToCheck.højreUnderMig() == samme farve) {
+		// bubblesToExplode.add(bubbleToCheck.højreUnderMig());
+		// checkNeighbours(bubbleToCheck.højreUnderMig(), bubblesToExplode);
+		// }
+		// if (bubbleToCheck.venstreUnderMig() == samme farve) {
+		// bubblesToExplode.add(bubbleToCheck.venstreUnderMig());
+		// checkNeighbours(bubbleToCheck.venstreUnderMig(), bubblesToExplode);
+		// }
+		// if (bubbleToCheck.venstreForMig() == samme farve) {
+		// bubblesToExplode.add(bubbleToCheck.venstreForMig());
+		// checkNeighbours(bubbleToCheck.venstreForMig(), bubblesToExplode);
+		// }
+	}
+
+	public AnimatedSprite getActiveBubble() {
+		return activeBubble;
 	}
 }
