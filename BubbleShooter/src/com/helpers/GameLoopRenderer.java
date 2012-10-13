@@ -287,6 +287,7 @@ public class GameLoopRenderer {
 		checkNeighbours(bubble, bubblesToExplode, bubble.getColor());
 		
 		if(bubblesToExplode.size() >= noColorMatchesToExplode) {
+			System.out.println("Enough bubbles to explode (" + bubblesToExplode.size() + "): " + bubblesToExplode);
 			//checkForFallingFruit(bubblesToExplode); //TODO Tilføj dem der skal splashe pga. de ikke længere sidder fast på nogen ovenfra.
 			for (int i = 0; i < bubblesToExplode.size(); i++) { //Måske modsat rækkefølge i stedet
 				//bubblesToExplode.get(i).setSplashing(true); //TODO start splashing effekt
@@ -311,22 +312,22 @@ public class GameLoopRenderer {
 		BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
 		BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
 
-		if (leftParent != null && leftParent.getColor() == collidingColor && !bubblesToExplode.contains(leftParent)) {
+		if (leftParent != null && leftParent.isOccupied() && leftParent.getColor() == collidingColor && !bubblesToExplode.contains(leftParent)) {
 			checkNeighbours(leftParent, bubblesToExplode, collidingColor);
 		}
-		if (rightParent != null && rightParent.getColor() == collidingColor && !bubblesToExplode.contains(rightParent)) {
+		if (rightParent != null && rightParent.isOccupied() && rightParent.getColor() == collidingColor && !bubblesToExplode.contains(rightParent)) {
 			checkNeighbours(rightParent, bubblesToExplode, collidingColor);
 		}
-		if (leftSibling != null && leftSibling.getColor() == collidingColor && !bubblesToExplode.contains(leftSibling)) {
+		if (leftSibling != null && leftSibling.isOccupied() && leftSibling.getColor() == collidingColor && !bubblesToExplode.contains(leftSibling)) {
 			checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
 		}
-		if (rightSibling != null && rightSibling.getColor() == collidingColor && !bubblesToExplode.contains(rightSibling)) {
+		if (rightSibling != null && rightChild.isOccupied() && rightSibling.getColor() == collidingColor && !bubblesToExplode.contains(rightSibling)) {
 			checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
 		}
-		if (leftChild != null && leftChild.getColor() == collidingColor && !bubblesToExplode.contains(leftChild)) {
+		if (leftChild != null && leftChild.isOccupied() && leftChild.getColor() == collidingColor && !bubblesToExplode.contains(leftChild)) {
 			checkNeighbours(leftChild, bubblesToExplode, collidingColor);
 		}
-		if (rightChild != null && rightChild.getColor() == collidingColor && !bubblesToExplode.contains(rightChild)) {
+		if (rightChild != null && rightChild.isOccupied() && rightChild.getColor() == collidingColor && !bubblesToExplode.contains(rightChild)) {
 			checkNeighbours(rightChild, bubblesToExplode, collidingColor);
 		}
 	}
