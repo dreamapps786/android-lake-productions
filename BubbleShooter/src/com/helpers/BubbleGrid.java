@@ -1,8 +1,8 @@
 package com.helpers;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.helpers.extensions.BubbleTexture;
 import com.model.CollissionObject;
@@ -56,11 +56,11 @@ public class BubbleGrid {
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
 				if (boxes[yIndex][xIndex].isOccupied) {
-					Direction[] collidingDirections = checkFivePointCollission(
+					List<Direction> collidingDirections = checkFivePointCollission(
 							boxes[yIndex][xIndex], centerX, centerY, radius);
-					if (collidingDirections.length == 2) {
+					if (collidingDirections.size() == 2) {
 						return new CollissionObject(boxes[yIndex][xIndex],
-								collidingDirections[0], collidingDirections[1]);
+								collidingDirections.get(0), collidingDirections.get(1));
 					}
 
 				}
@@ -69,10 +69,11 @@ public class BubbleGrid {
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
 				if (boxes[yIndex][xIndex].isOccupied){
-						Direction[] collidingDirection1 = checkFivePointCollission(boxes[yIndex][xIndex],
+					List<Direction> collidingDirections = checkFivePointCollission(boxes[yIndex][xIndex],
 								centerX, centerY, radius);
-						if (collidingDirection1.length == 2) {
-							return new CollissionObject(boxes[yIndex][xIndex], collidingDirection1[0], collidingDirection1[1]);
+						if (collidingDirections.size() == 2) {
+							return new CollissionObject(boxes[yIndex][xIndex], 
+									collidingDirections.get(0), collidingDirections.get(1));
 						}
 				}
 			}
@@ -83,10 +84,10 @@ public class BubbleGrid {
 
 	private boolean isFirstIteration = true;
 
-	private Direction[] checkFivePointCollission(
+	private List<Direction> checkFivePointCollission(
 			BubbleGridRectangle gridBubbleRect, float activeBubbleCenterX,
 			float activeBubbleCenterY, float radius) {
-		Direction[] collidingDirections = new Direction[2];
+		List<Direction> collidingDirections = new ArrayList<Direction>(2);
 		float wX = activeBubbleCenterX - radius;
 		float wY = activeBubbleCenterY;
 		float nwX = activeBubbleCenterX + radius
@@ -111,32 +112,16 @@ public class BubbleGrid {
 		}
 		// .overlapsLowerHalf() har erstattet .contains()
 		if (gridBubbleRect.overlapsLowerHalf(wX, wY)) {
-			if (collidingDirections.length == 0) {
-				collidingDirections[0] = Direction.W;
-			} else if (collidingDirections.length == 1) {
-				collidingDirections[1] = Direction.W;
-			}
+			collidingDirections.add(Direction.W);
 		}
 		if (gridBubbleRect.overlapsLowerHalf(nwX, nwY)) {
-			if (collidingDirections.length == 0) {
-				collidingDirections[0] = Direction.NW;
-			} else if (collidingDirections.length == 1) {
-				collidingDirections[1] = Direction.NW;
-			}
+			collidingDirections.add(Direction.NW);
 		}
 		if (gridBubbleRect.overlapsLowerHalf(neX, neY)) {
-			if (collidingDirections.length == 0) {
-				collidingDirections[0] = Direction.NE;
-			} else if (collidingDirections.length == 1) {
-				collidingDirections[1] = Direction.NE;
-			}
+			collidingDirections.add(Direction.NE);
 		}
 		if (gridBubbleRect.overlapsLowerHalf(eX, eY)) {
-			if (collidingDirections.length == 0) {
-				collidingDirections[0] = Direction.E;
-			} else if (collidingDirections.length == 1) {
-				collidingDirections[1] = Direction.E;
-			}
+			collidingDirections.add(Direction.E);
 		}
 		return collidingDirections;
 		// if (gridBubbleRect.overlapsLowerHalf(wX, wY) || // west point
@@ -218,23 +203,6 @@ public class BubbleGrid {
 			float rightX = this.x + this.width;
 			boolean insideX = x > leftX && x < rightX;
 			boolean insideY = y > bottomY && y < topY;
-			// if (insideX) {
-			// System.out.print("insideX - " + y + "y, " + bottomY + "bY, " +
-			// topY + "tY");
-			// //System.out.print("insideX - " + x + "x, " + leftX + "lX, " +
-			// rightX + "rX");
-			// }
-			// if (insideY) {
-			// System.out.print("\tinsideY - " + x + "x, " + leftX + "lX, " +
-			// rightX + "rX");
-			// //System.out.print("\tinsideY - " + y + "y, " + bottomY + "bY, "
-			// + topY + "tY");
-			// }
-			// if (insideX || insideY) {
-			// System.out.println();
-			// }
-			// boolean contains = x > leftX && x < rightX
-			// && y > bottomY && y < topY;
 			return insideX && insideY;
 		}
 
