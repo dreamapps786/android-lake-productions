@@ -334,6 +334,11 @@ public class BubbleGrid {
 		public void setCoordinateY(int coordinateY) {
 			this.coordinateY = coordinateY;
 		}
+		
+		public void placeBubble(BubbleTexture color){
+			setOccupied(true);
+			this.getBubble().setTexture(color);
+		}
 
 		@Override
 		public String toString() {

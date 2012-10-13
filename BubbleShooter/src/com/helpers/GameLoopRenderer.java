@@ -20,6 +20,7 @@ import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
+import com.simulation.AnimatedBubbleSprite;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -30,10 +31,10 @@ public class GameLoopRenderer {
 	private static SpriteBatch spriteBatch;
 	private static BitmapFont font;
 	private AnimatedSprite shooter;
-	private AnimatedSprite activeBubble;
+	private AnimatedBubbleSprite activeBubble;
 	private AnimatedSprite bubbleSplash;
 	private Texture shooterTexture;
-	private Texture activeBubbleTexture;
+	private BubbleTexture activeBubbleTexture;
 	private Texture bubbleSplashTexture;
 	private BubbleTexture[] bubbleTextures;
 	private GameLoop gameloop;
@@ -91,7 +92,7 @@ public class GameLoopRenderer {
 		shooter.setPosition((480 - 64) / 2, 0);
 		gameloop.setShooter(shooter);
 
-		activeBubbleTexture = new Texture(Gdx.files.internal("res/bubble_green.png"), true);
+		activeBubbleTexture = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true,BubbleColor.green);
 		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 
 		bubbleSplashTexture = new Texture(Gdx.files.internal("res/bubble_splash.png"), true);
@@ -106,7 +107,7 @@ public class GameLoopRenderer {
 
 		bubbleSplash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, 0, 0, 32, 32, 2, 2, 0, 0);
 
-		activeBubble = new AnimatedSprite("activeBubble", activeBubbleTexture, 0, 0, 32, 32, 0, 0, 0, 0);
+		activeBubble = new AnimatedBubbleSprite("activeBubble", activeBubbleTexture, 0, 0, 32, 32, 0, 0, 0, 0);
 		activeBubble.setActive(false);
 		bubbleSplash.setActive(false);
 		// gameloop.setActiveBubble(activeBubble);
@@ -197,31 +198,31 @@ public class GameLoopRenderer {
 			if (!destroyed) {
 				if (collidingX == 0 && collidingY % 2 == 0) { // To avoid placing it out of bounds
 					System.out.println("Avoided out of bounds");
-					bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+					bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 				} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
 					System.out.println("Avoided out of bounds");
-					bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+					bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 				} else {
 					if (directions.size() == 1) {
 						if (directions.contains(Direction.W)) {
 							target = bubbleGrid.getGrid()[collidingY][collidingX + 1];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY][collidingX + 1].setOccupied(true);
+								bubbleGrid.getGrid()[collidingY][collidingX + 1].placeBubble(activeBubble.getBubbleTexture());
 							}
 						} else if (directions.contains(Direction.NW)) {
 							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+								bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 							}
 						} else if (directions.contains(Direction.NE)) {
 							target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+								bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 							}
 						} else if (directions.contains(Direction.E)) {
 							target = bubbleGrid.getGrid()[collidingY][collidingX - 1];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY][collidingX - 1].setOccupied(true);
+								bubbleGrid.getGrid()[collidingY][collidingX - 1].placeBubble(activeBubble.getBubbleTexture());
 							}
 						}
 					} else if (directions.size() == 2) {
@@ -229,12 +230,12 @@ public class GameLoopRenderer {
 							if (direction >= 0) {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 								}
 							} else {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 								}
 							}
 						} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
@@ -242,16 +243,16 @@ public class GameLoopRenderer {
 								System.out.println(collidingX);
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 								}
 							} else {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 								} else {
 									target = bubbleGrid.getGrid()[collidingY + 1][collidingX];
 									if (!target.isOccupied()) {
-										bubbleGrid.getGrid()[collidingY + 1][collidingX].setOccupied(true);
+										bubbleGrid.getGrid()[collidingY + 1][collidingX].placeBubble(activeBubble.getBubbleTexture());
 									}
 								}
 							}
@@ -259,12 +260,12 @@ public class GameLoopRenderer {
 							if (direction >= 0) {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].setOccupied(true);
+									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 								}
 							} else {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].setOccupied(true);
+									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
 								}
 							}
 						}
