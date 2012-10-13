@@ -246,8 +246,9 @@ public class GameLoopRenderer {
 					.println("CollidingColor: "
 							+ ((BubbleTexture) collissionObject.getCollidingBubble().getBubble()
 									.getTexture()).getColor());
+			return collissionObject.getCollidingBubble();
 		}
-		return collissionObject.getCollidingBubble();
+		return null;
 		// public boolean checkForCollission(Rectangle bounds) {
 		// return bubbleGrid.isColliding(bounds);
 	}
