@@ -2,7 +2,6 @@ package com.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
@@ -15,11 +14,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
 import com.gui.GameLoop;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
 import com.helpers.extensions.BubbleTexture;
-import com.helpers.extensions.BubbleTexture.BubbleColor;
+import com.model.CollissionObject;
+import com.model.CollissionObject.Direction;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
 
@@ -209,16 +208,19 @@ public class GameLoopRenderer {
 
 	public BubbleGridRectangle checkForCollission(float centerX, float centerY,
 			float radius) {
-		BubbleGridRectangle collidingBubble = bubbleGrid.isColliding(centerX,
+		CollissionObject collissionObject = bubbleGrid.isColliding(centerX,
 				centerY, radius);
-		if (collidingBubble != null) {
-			int coordinateX = collidingBubble.getCoordinateX();
-						BubbleGridRectangle target = bubbleGrid.getGrid()[collidingBubble
+		if (collissionObject != null) {
+			int coordinateX = collissionObject.getCollidingBubble().getCoordinateX();
+						BubbleGridRectangle target = bubbleGrid.getGrid()[collissionObject.getCollidingBubble()
 					.getCoordinateY() + 1][coordinateX % 2 == 0 ? coordinateX : coordinateX+1];
 			if (!target.isOccupied()) {
-				boolean destroyed = destroySameColorBubbles(collidingBubble);
+				boolean destroyed = destroySameColorBubbles(collissionObject.getCollidingBubble());
 				if (!destroyed) {
-					bubbleGrid.getGrid()[collidingBubble.getCoordinateY() + 1][collidingBubble
+//					if (collissionObject.getCollissionDirection() ANY == W && NW) {
+//						Change new bubbles X-coordinate
+//					}
+					bubbleGrid.getGrid()[collissionObject.getCollidingBubble().getCoordinateY() + 1][collissionObject.getCollidingBubble()
 							.getCoordinateX()].setOccupied(true);
 				}
 			} else {
@@ -235,17 +237,17 @@ public class GameLoopRenderer {
 			// .getCoordinateY()+1][collidingBubble
 			// .getCoordinateX()].getCoordinateY());
 
-			System.out.println("CollidingBubble X:" + collidingBubble.getX()
-					+ " Y: " + collidingBubble.getY());
+			System.out.println("CollidingBubble X:" + collissionObject.getCollidingBubble().getX()
+					+ " Y: " + collissionObject.getCollidingBubble().getY());
 			System.out.println("CollidingBubble Xindex:"
-					+ collidingBubble.getCoordinateX() + " Yindex: "
-					+ collidingBubble.getCoordinateY());
+					+ collissionObject.getCollidingBubble().getCoordinateX() + " Yindex: "
+					+ collissionObject.getCollidingBubble().getCoordinateY());
 			System.out
 					.println("CollidingColor: "
-							+ ((BubbleTexture) collidingBubble.getBubble()
+							+ ((BubbleTexture) collissionObject.getCollidingBubble().getBubble()
 									.getTexture()).getColor());
 		}
-		return collidingBubble;
+		return collissionObject.getCollidingBubble();
 		// public boolean checkForCollission(Rectangle bounds) {
 		// return bubbleGrid.isColliding(bounds);
 	}
