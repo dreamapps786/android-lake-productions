@@ -166,7 +166,6 @@ public class MainMenu implements Frame {
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		if (animatedSpriteIsTouched(this.playButton, x, y)) {
-			System.out.println("Touch Play");
 			this.playButton.isTouched();
 			renderButtonAnimation(this.playButton);
 		}
