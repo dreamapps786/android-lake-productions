@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.helpers.extensions.BubbleTexture;
+import com.model.CollissionObject;
+import com.model.CollissionObject.Direction;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
@@ -26,8 +28,8 @@ public class BubbleGrid {
 		int counter = bubbleTextures.length;
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32, yIndex * -27 + 800,
-						32, 32, xIndex, yIndex,
+				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32,
+						yIndex * -27 + 800, 32, 32, xIndex, yIndex,
 						bubbleTextures[(int) (Math.random() * counter)]);
 				if (yIndex < initialPopHeight) {
 					boxes[yIndex][xIndex].setOccupied(true);
@@ -36,9 +38,9 @@ public class BubbleGrid {
 		}
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
-				boxes[yIndex][xIndex] = new BubbleGridRectangle((xIndex * 32) + 16, yIndex * -27
-						+ 800, 32, 32, xIndex, yIndex,
-						bubbleTextures[(int) (Math.random() * counter)]);
+				boxes[yIndex][xIndex] = new BubbleGridRectangle(
+						(xIndex * 32) + 16, yIndex * -27 + 800, 32, 32, xIndex,
+						yIndex, bubbleTextures[(int) (Math.random() * counter)]);
 				if (yIndex < initialPopHeight) {
 					boxes[yIndex][xIndex].setOccupied(true);
 				}
@@ -50,23 +52,28 @@ public class BubbleGrid {
 		return boxes;
 	}
 
-	public BubbleGridRectangle isColliding(float centerX, float centerY,
-			float radius) {
+	public CollissionObject isColliding(float centerX, float centerY, float radius) {
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				if (boxes[yIndex][xIndex].isOccupied
-						&& checkFivePointCollission(boxes[yIndex][xIndex], centerX,
-								centerY, radius)) {
-					return boxes[yIndex][xIndex];
+				if (boxes[yIndex][xIndex].isOccupied) {
+					Direction[] collidingDirections = checkFivePointCollission(
+							boxes[yIndex][xIndex], centerX, centerY, radius);
+					if (collidingDirections.length == 2) {
+						return new CollissionObject(boxes[yIndex][xIndex],
+								collidingDirections[0], collidingDirections[1]);
+					}
+
 				}
 			}
 		}
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
-				if (boxes[yIndex][xIndex].isOccupied
-						&& checkFivePointCollission(boxes[yIndex][xIndex], centerX,
-								centerY, radius)) {
-					return boxes[yIndex][xIndex];
+				if (boxes[yIndex][xIndex].isOccupied){
+						Direction[] collidingDirection1 = checkFivePointCollission(boxes[yIndex][xIndex],
+								centerX, centerY, radius);
+						if (collidingDirection1.length == 2) {
+							return new CollissionObject(boxes[yIndex][xIndex], collidingDirection1[0], collidingDirection1[1]);
+						}
 				}
 			}
 		}
@@ -76,9 +83,10 @@ public class BubbleGrid {
 
 	private boolean isFirstIteration = true;
 
-	private boolean checkFivePointCollission(BubbleGridRectangle gridBubbleRect,
-			float activeBubbleCenterX, float activeBubbleCenterY, float radius) {
-
+	private Direction[] checkFivePointCollission(
+			BubbleGridRectangle gridBubbleRect, float activeBubbleCenterX,
+			float activeBubbleCenterY, float radius) {
+		Direction[] collidingDirections = new Direction[2];
 		float wX = activeBubbleCenterX - radius;
 		float wY = activeBubbleCenterY;
 		float nwX = activeBubbleCenterX + radius
@@ -93,7 +101,7 @@ public class BubbleGrid {
 				* (float) Math.sin(Math.toRadians(45));
 		float eX = activeBubbleCenterX + radius;
 		float eY = activeBubbleCenterY;
-		if (isFirstIteration) { //Kun til debugging
+		if (isFirstIteration) { // Kun til debugging
 			isFirstIteration = false;
 			System.out.println("west(" + wX + ", " + wY + ")");
 			System.out.println("northwest(" + nwX + ", " + nwY + ")");
@@ -101,15 +109,44 @@ public class BubbleGrid {
 			System.out.println("northeast(" + neX + ", " + neY + ")");
 			System.out.println("east(" + eX + ", " + eY + ")");
 		}
-		//.overlapsLowerHalf() har erstattet .contains()
-		if (gridBubbleRect.overlapsLowerHalf(wX, wY) || // west point
-				gridBubbleRect.overlapsLowerHalf(nwX, nwY) || // northwest point
-				gridBubbleRect.overlapsLowerHalf(nX, nY) || // north point
-				gridBubbleRect.overlapsLowerHalf(neX, neY) || // northeast point
-				gridBubbleRect.overlapsLowerHalf(eX, eY)) { // east point
-			return true;
+		// .overlapsLowerHalf() har erstattet .contains()
+		if (gridBubbleRect.overlapsLowerHalf(wX, wY)) {
+			if (collidingDirections.length == 0) {
+				collidingDirections[0] = Direction.W;
+			} else if (collidingDirections.length == 1) {
+				collidingDirections[1] = Direction.W;
+			}
 		}
-		return false;
+		if (gridBubbleRect.overlapsLowerHalf(nwX, nwY)) {
+			if (collidingDirections.length == 0) {
+				collidingDirections[0] = Direction.NW;
+			} else if (collidingDirections.length == 1) {
+				collidingDirections[1] = Direction.NW;
+			}
+		}
+		if (gridBubbleRect.overlapsLowerHalf(neX, neY)) {
+			if (collidingDirections.length == 0) {
+				collidingDirections[0] = Direction.NE;
+			} else if (collidingDirections.length == 1) {
+				collidingDirections[1] = Direction.NE;
+			}
+		}
+		if (gridBubbleRect.overlapsLowerHalf(eX, eY)) {
+			if (collidingDirections.length == 0) {
+				collidingDirections[0] = Direction.E;
+			} else if (collidingDirections.length == 1) {
+				collidingDirections[1] = Direction.E;
+			}
+		}
+		return collidingDirections;
+		// if (gridBubbleRect.overlapsLowerHalf(wX, wY) || // west point
+		// gridBubbleRect.overlapsLowerHalf(nwX, nwY) || // northwest point
+		// gridBubbleRect.overlapsLowerHalf(nX, nY) || // north point
+		// gridBubbleRect.overlapsLowerHalf(neX, neY) || // northeast point
+		// gridBubbleRect.overlapsLowerHalf(eX, eY)) { // east point
+		// return true;
+		// }
+		// return false;
 	}
 
 	public void setOccupied(float x) {
@@ -173,27 +210,31 @@ public class BubbleGrid {
 			isOccupied = false;
 			bubble.setPosition(x, y);
 		}
-		
+
 		public boolean overlapsLowerHalf(float x, float y) {
-			float topY = this.y + (this.height/2);
+			float topY = this.y + (this.height / 2);
 			float bottomY = this.y;
 			float leftX = this.x;
 			float rightX = this.x + this.width;
 			boolean insideX = x > leftX && x < rightX;
 			boolean insideY = y > bottomY && y < topY;
-//			if (insideX) {
-//				System.out.print("insideX - " + y + "y, " + bottomY + "bY, " + topY + "tY");
-//				//System.out.print("insideX - " + x + "x, " + leftX + "lX, " + rightX + "rX");
-//			}
-//			if (insideY) {
-//				System.out.print("\tinsideY - " + x + "x, " + leftX + "lX, " + rightX + "rX");
-//				//System.out.print("\tinsideY - " + y + "y, " + bottomY + "bY, " + topY + "tY");
-//			}
-//			if (insideX || insideY) {
-//				System.out.println();
-//			}
-//			boolean contains = x > leftX && x < rightX
-//					&& y > bottomY && y < topY;
+			// if (insideX) {
+			// System.out.print("insideX - " + y + "y, " + bottomY + "bY, " +
+			// topY + "tY");
+			// //System.out.print("insideX - " + x + "x, " + leftX + "lX, " +
+			// rightX + "rX");
+			// }
+			// if (insideY) {
+			// System.out.print("\tinsideY - " + x + "x, " + leftX + "lX, " +
+			// rightX + "rX");
+			// //System.out.print("\tinsideY - " + y + "y, " + bottomY + "bY, "
+			// + topY + "tY");
+			// }
+			// if (insideX || insideY) {
+			// System.out.println();
+			// }
+			// boolean contains = x > leftX && x < rightX
+			// && y > bottomY && y < topY;
 			return insideX && insideY;
 		}
 
