@@ -268,6 +268,10 @@ public class BubbleGrid {
 	public int getGridWidth() {
 		return gridWidth;
 	}
+	
+	public BubbleGridRectangle getBubbleAt(int coordinateX, int coordinateY){
+		return boxes[coordinateY][coordinateX];
+	}
 
 	@SuppressWarnings("serial")
 	public class BubbleGridRectangle extends Rectangle {
