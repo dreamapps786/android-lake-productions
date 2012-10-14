@@ -3,6 +3,8 @@ package com.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Renderer;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -320,8 +322,8 @@ public class GameLoopRenderer {
 			for (int i = 0; i < bubblesToExplode.size(); i++) { // Måske modsat
 																// rækkefølge i
 																// stedet
-				// bubblesToExplode.get(i).setSplashing(true); //TODO start
-				// splashing effekt
+				BubbleGridRectangle bubbleToExplode = bubblesToExplode.get(i);
+				addSplash(bubbleToExplode.getCoordinateX(),bubbleToExplode.getCoordinateY());
 				bubblesToExplode.get(i).setOccupied(false);
 			}
 		}
