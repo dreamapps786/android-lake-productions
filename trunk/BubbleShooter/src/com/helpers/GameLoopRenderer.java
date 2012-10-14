@@ -199,38 +199,43 @@ public class GameLoopRenderer {
 			List<Direction> directions = collissionObject.getCollissionDirections();
 			BubbleGridRectangle target = null;
 			int rowXOffset = (collidingY % 2 == 1 ? 1 : 0);
-			boolean destroyed = destroySameColorBubbles(collissionObject.getCollidingBubble());
-			if (!destroyed) {
+			int coordXOfBubbleToPlace = -1; //If these value are not set, it indicates an unhandled case
+			int coordYOfBubbleToPlace = -1;
 				if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
 																// placing it
 																// out of bounds
 					System.out.println("Avoided out of bounds");
-					bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
+					coordXOfBubbleToPlace = collidingX + rowXOffset;
+					coordYOfBubbleToPlace = collidingY + 1;
 				} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
 					System.out.println("Avoided out of bounds");
-					bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
+					coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+					coordYOfBubbleToPlace = collidingY + 1;
 				} else {
 					if (directions.size() == 1) {
 						if (directions.contains(Direction.W)) {
 							target = bubbleGrid.getGrid()[collidingY][collidingX + 1];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY][collidingX + 1].placeBubble(activeBubble.getBubbleTexture());
+								coordXOfBubbleToPlace = collidingX + 1;
+								coordYOfBubbleToPlace = collidingY;
 							}
 						} else if (directions.contains(Direction.NW)) {
 							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble.getBubbleTexture());
+								coordXOfBubbleToPlace = collidingX + rowXOffset;
+								coordYOfBubbleToPlace = collidingY + 1;
 							}
 						} else if (directions.contains(Direction.NE)) {
 							target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble
-										.getBubbleTexture());
+								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+								coordYOfBubbleToPlace = collidingY + 1;
 							}
 						} else if (directions.contains(Direction.E)) {
 							target = bubbleGrid.getGrid()[collidingY][collidingX - 1];
 							if (!target.isOccupied()) {
-								bubbleGrid.getGrid()[collidingY][collidingX - 1].placeBubble(activeBubble.getBubbleTexture());
+								coordXOfBubbleToPlace = collidingX - 1;
+								coordYOfBubbleToPlace = collidingY;
 							}
 						}
 					} else if (directions.size() == 2) {
@@ -238,14 +243,16 @@ public class GameLoopRenderer {
 							if (direction >= 0) {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble
-											.getBubbleTexture());
+
+									coordXOfBubbleToPlace = collidingX + rowXOffset;
+									coordYOfBubbleToPlace = collidingY + 1;
 								}
 							} else {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble
-											.getBubbleTexture());
+
+									coordXOfBubbleToPlace = collidingX + rowXOffset;
+									coordYOfBubbleToPlace = collidingY + 1;
 								}
 							}
 						} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
@@ -253,18 +260,21 @@ public class GameLoopRenderer {
 								System.out.println(collidingX);
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble
-											.getBubbleTexture());
+
+									coordXOfBubbleToPlace = collidingX + rowXOffset;
+									coordYOfBubbleToPlace = collidingY + 1;
 								}
 							} else {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble
-											.getBubbleTexture());
+
+									coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+									coordYOfBubbleToPlace = collidingY + 1;
 								} else {
 									target = bubbleGrid.getGrid()[collidingY + 1][collidingX];
 									if (!target.isOccupied()) {
-										bubbleGrid.getGrid()[collidingY + 1][collidingX].placeBubble(activeBubble.getBubbleTexture());
+										coordXOfBubbleToPlace = collidingX;
+										coordYOfBubbleToPlace = collidingY + 1;
 									}
 								}
 							}
@@ -272,24 +282,26 @@ public class GameLoopRenderer {
 							if (direction >= 0) {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset].placeBubble(activeBubble
-											.getBubbleTexture());
+									coordXOfBubbleToPlace = collidingX + rowXOffset;
+									coordYOfBubbleToPlace = collidingY + 1;
 								}
 							} else {
 								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 								if (!target.isOccupied()) {
-									bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset].placeBubble(activeBubble
-											.getBubbleTexture());
+									coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+									coordYOfBubbleToPlace = collidingY + 1;
 								}
 							}
 						}
 					}
-
 				}
+				BubbleGridRectangle bubbleToPlace = bubbleGrid.getGrid()[coordYOfBubbleToPlace][coordXOfBubbleToPlace];
+				bubbleToPlace.placeBubble(activeBubble.getBubbleTexture());
 				activeBubble.setActive(false);
 				PointService.Score();
+				destroySameColorBubbles(bubbleToPlace);
+				return collissionObject.getCollidingBubble();
 			}
-		}
 		return null;
 	}
 
@@ -299,7 +311,7 @@ public class GameLoopRenderer {
 		int noColorMatchesToExplode = 3;
 
 		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
-		checkNeighbours(bubble, bubblesToExplode, bubble.getColor());
+		checkNeighbours(bubble, bubblesToExplode, activeBubble.getBubbleTexture().getColor());
 
 		if (bubblesToExplode.size() >= noColorMatchesToExplode) {
 			System.out.println("Enough bubbles to explode (" + bubblesToExplode.size() + "): " + bubblesToExplode);
@@ -320,38 +332,23 @@ public class GameLoopRenderer {
 
 	// private int checkNeighbours(BubbleGridRectangle bubble) {
 	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor) {
-		bubblesToExplode.add(bubbleToCheck);
-
 		System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor());
-
-		BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
-		BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubbleToCheck);
-		BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubbleToCheck);
-		BubbleGridRectangle rightSibling = bubbleGrid.getRightSiblingOfBubble(bubbleToCheck);
-		BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
-		BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
-
-		if (leftParent != null && leftParent.isOccupied() && leftParent.getColor() == collidingColor
-				&& !bubblesToExplode.contains(leftParent)) {
+		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && bubbleToCheck.getColor() == collidingColor
+				&& !bubblesToExplode.contains(bubbleToCheck)) {
+			bubblesToExplode.add(bubbleToCheck);
+			
+			BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
+			BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubbleToCheck);
+			BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubbleToCheck);
+			BubbleGridRectangle rightSibling = bubbleGrid.getRightSiblingOfBubble(bubbleToCheck);
+			BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
+			BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
+			
 			checkNeighbours(leftParent, bubblesToExplode, collidingColor);
-		}
-		if (rightParent != null && rightParent.isOccupied() && rightParent.getColor() == collidingColor
-				&& !bubblesToExplode.contains(rightParent)) {
 			checkNeighbours(rightParent, bubblesToExplode, collidingColor);
-		}
-		if (leftSibling != null && leftSibling.isOccupied() && leftSibling.getColor() == collidingColor
-				&& !bubblesToExplode.contains(leftSibling)) {
 			checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
-		}
-		if (rightSibling != null && rightChild.isOccupied() && rightSibling.getColor() == collidingColor
-				&& !bubblesToExplode.contains(rightSibling)) {
 			checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
-		}
-		if (leftChild != null && leftChild.isOccupied() && leftChild.getColor() == collidingColor && !bubblesToExplode.contains(leftChild)) {
 			checkNeighbours(leftChild, bubblesToExplode, collidingColor);
-		}
-		if (rightChild != null && rightChild.isOccupied() && rightChild.getColor() == collidingColor
-				&& !bubblesToExplode.contains(rightChild)) {
 			checkNeighbours(rightChild, bubblesToExplode, collidingColor);
 		}
 	}
