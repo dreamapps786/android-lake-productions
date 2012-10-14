@@ -94,8 +94,7 @@ public class GameLoopRenderer {
 	public void populate() {
 		shooterTexture = new Texture(Gdx.files.internal("res/shooter.png"), true);
 		shooterTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		shooter = new AnimatedSprite("shooter", shooterTexture, 0, 0, 64, 64, 1, 1, 0, 0);
-		shooter.setPosition((480 - 64) / 2, 0);
+		shooter = new AnimatedSprite("shooter", shooterTexture, (480 - 64) / 2, 0, 64, 64, 1, 1, 0, 0);
 		gameloop.setShooter(shooter);
 
 		activeBubbleTexture = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleColor.green);
@@ -165,7 +164,7 @@ public class GameLoopRenderer {
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
 		for (AnimatedSprite bubble : bubbles) {
-			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - 800);
+			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - 800 - bubble.getHeight());
 		}
 		spriteBatch.disableBlending();
 		spriteBatch.end();
@@ -175,7 +174,7 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(bubbleToSplash, bubbleToSplash.getX(), bubbleToSplash.getY());
+		spriteBatch.draw(bubbleToSplash, bubbleToSplash.getX(), bubbleToSplash.getY()- bubbleToSplash.getHeight());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -375,11 +374,24 @@ public class GameLoopRenderer {
 	}
 
 	public void addSplash(int coordinateX, int coordinateY) {
-		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, 0, 0, 32, 32, 2, 2, 0, 0);
 		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
-		splash.setPosition(bubbleToSplash.getX(), bubbleToSplash.getY());
+		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(), bubbleToSplash.getY(), 32, 32, 2, 2, 0, 0);
+		System.out.println("Splash: "+bubbleToSplash.getX()+","+bubbleToSplash.getY());
+		splash.setAnimationRate(0.5f);
+		preventInitializeLag(splash);
 		splash.setActive(true);
+		splash.play();
 		this.splashesToRender.add(splash);
 
+	}
+	
+	private void preventInitializeLag(AnimatedSprite sprite) {
+		fakeRender(sprite);
+	}
+
+	public void fakeRender(AnimatedSprite animSprite) {
+		spriteBatch.begin();
+		spriteBatch.draw(animSprite, Gdx.graphics.getWidth(), 0);
+		spriteBatch.end();
 	}
 }
