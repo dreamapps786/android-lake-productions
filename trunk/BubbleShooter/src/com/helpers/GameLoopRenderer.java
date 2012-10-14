@@ -334,7 +334,7 @@ public class GameLoopRenderer {
 
 	// private int checkNeighbours(BubbleGridRectangle bubble) {
 	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor) {
-		System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor());
+		System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor() + " textColor: " + bubbleToCheck.getBubble().getBubbleTexture().getColor());
 		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && !bubblesToExplode.contains(bubbleToCheck)) {
 			bubblesToExplode.add(bubbleToCheck);
 			
@@ -345,22 +345,22 @@ public class GameLoopRenderer {
 			BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
 			BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
 			
-			if (leftParent.getColor() == collidingColor) {
+			if (leftParent != null && leftParent.getColor() == collidingColor) {
 				checkNeighbours(leftParent, bubblesToExplode, collidingColor);
 			}
-			if (rightParent.getColor() == collidingColor) {
+			if (rightParent != null && rightParent.getColor() == collidingColor) {
 				checkNeighbours(rightParent, bubblesToExplode, collidingColor);
 			}
-			if (leftSibling.getColor() == collidingColor) {
+			if (leftSibling != null && leftSibling.getColor() == collidingColor) {
 				checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
 			}
-			if (rightSibling.getColor() == collidingColor) {
+			if (rightSibling != null && rightSibling.getColor() == collidingColor) {
 				checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
 			}
-			if (leftChild.getColor() == collidingColor) {
+			if (leftChild != null && leftChild.getColor() == collidingColor) {
 				checkNeighbours(leftChild, bubblesToExplode, collidingColor);
 			}
-			if (rightChild.getColor() == collidingColor) {
+			if (rightChild != null && rightChild.getColor() == collidingColor) {
 				checkNeighbours(rightChild, bubblesToExplode, collidingColor);
 			}
 		}
