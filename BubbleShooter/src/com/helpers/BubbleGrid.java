@@ -8,6 +8,7 @@ import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
+import com.simulation.AnimatedBubbleSprite;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
@@ -276,7 +277,7 @@ public class BubbleGrid {
 	@SuppressWarnings("serial")
 	public class BubbleGridRectangle extends Rectangle {
 		// private Rectangle rectangle;
-		private AnimatedSprite bubble;
+		private AnimatedBubbleSprite bubble;
 		private BubbleColor color;
 		private boolean isOccupied;
 		private int coordinateX;
@@ -289,7 +290,7 @@ public class BubbleGrid {
 			y = gridPosY + y;
 			this.coordinateX = coordinateX;
 			this.coordinateY = coordinateY;
-			bubble = new AnimatedSprite("bubble" + x / 32 + "-" + y / 32,
+			bubble = new AnimatedBubbleSprite("bubble" + x / 32 + "-" + y / 32,
 					bubbleTexture, (int) x, (int) y, bubbleTexture.getWidth(),
 					bubbleTexture.getHeight(), 0, 0, 0f, 0f);
 			isOccupied = false;
@@ -315,7 +316,7 @@ public class BubbleGrid {
 			this.isOccupied = isOccupied;
 		}
 
-		public AnimatedSprite getBubble() {
+		public AnimatedBubbleSprite getBubble() {
 			return bubble;
 		}
 
@@ -341,7 +342,12 @@ public class BubbleGrid {
 		
 		public void placeBubble(BubbleTexture color){
 			setOccupied(true);
-			this.getBubble().setTexture(color);
+			setBubbleTexture(color);
+		}
+		
+		public void setBubbleTexture(BubbleTexture bt){
+			this.getBubble().setBubbleTexture(bt);
+			this.color = bt.getColor();
 		}
 
 		@Override
