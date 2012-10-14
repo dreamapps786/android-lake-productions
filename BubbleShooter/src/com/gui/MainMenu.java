@@ -219,14 +219,12 @@ public class MainMenu implements Frame {
 		float xRel2Screen = (Gdx.graphics.getWidth() - buttonWidth - playX)
 				/ Gdx.graphics.getWidth();
 
-		playButton = new AnimatedSprite("play", playAnimation, 0, 0,
+		playButton = new AnimatedSprite("play", playAnimation, playX, playY,
 				(int) buttonWidth, (int) buttonHeight, 6, 1, xRel2Screen,
 				GetYRel2Screen(playY, buttonHeight));
-		playButton.setPosition(playX, playY);
-		exitButton = new AnimatedSprite("exit", exitAnimation, 0, 0,
+		exitButton = new AnimatedSprite("exit", exitAnimation, (480 - 305) / 2, 316,
 				(int) buttonWidth, (int) buttonHeight, 6, 1, xRel2Screen,
 				GetYRel2Screen(exitY, buttonHeight));
-		exitButton.setPosition((480 - 305) / 2, 316);
 		preventInitializeLag(exitButton);
 		preventInitializeLag(playButton);
 

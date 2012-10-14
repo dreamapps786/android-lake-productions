@@ -13,8 +13,6 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	protected float animationRateInSeconds = 0.02f;
 	protected boolean isPlay = false;
 	protected int curFrameIndex = -1;
-	protected int startX;
-	protected int startY;
 	protected float frameTimeCounter;
 	private float xRel2Screen;
 	private float yRel2Screen;
@@ -22,28 +20,24 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	private boolean active = true;
 	private double direction;
 
-	public AnimatedSprite(String name, final Texture texture, final int srcX,
-			final int scrY, final int tileWidth, final int tileHeight,
-			final int rowCount, final int columnCount, float xRel2Screen,
-			float yRel2Screen) {
-		super(texture, srcX, scrY, tileWidth, tileHeight);
+	public AnimatedSprite(String name, final Texture texture, final float x, final float y, final int tileWidth, final int tileHeight,
+			final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
+		super(texture, 0, 0, tileWidth, tileHeight);
 		this.name = name;
-		this.frameRegions = new ArrayList<TextureRegion>(rowCount*columnCount);
+		this.frameRegions = new ArrayList<TextureRegion>(rowCount * columnCount);
 		this.rowCount = rowCount;
 		this.columnCount = columnCount;
-		this.startX = srcX;
-		this.startY = scrY;
 		this.xRel2Screen = xRel2Screen;
 		this.yRel2Screen = yRel2Screen;
+		setPosition(x, y);
 		addFrames(texture);
 	}
 
 	public void addFrames(Texture texture) {
-		for (int column = 0; column < columnCount; column++) {
-			for (int row = 0; row < rowCount; row++) {
-				frameRegions.add(new TextureRegion(texture, startX + column
-						* (int) getWidth(), startY + row * (int) getHeight(),
-						(int) getWidth(), (int) getHeight()));
+		for (int row = 0; row < rowCount; row++) {
+			for (int column = 0; column < columnCount; column++) {
+				frameRegions.add(new TextureRegion(texture, column * (int) getWidth(), row * (int) getHeight(), (int) getWidth(),
+						(int) getHeight()));
 			}
 		}
 	}
@@ -71,7 +65,12 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 			this.frameTimeCounter += secondsElapsed;
 			if (frameTimeCounter > animationRateInSeconds) {
 				frameTimeCounter = 0;
-				curFrameIndex = (curFrameIndex + 1) % (rowCount * columnCount); // Sørger for at animationen starter forfra
+				curFrameIndex = (curFrameIndex + 1) % (rowCount * columnCount); // Sørger
+																				// for
+																				// at
+																				// animationen
+																				// starter
+																				// forfra
 				goToFrame(curFrameIndex);
 
 				if (curFrameIndex == rowCount * columnCount - 1) {
@@ -94,8 +93,8 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	public float getYrel2Screen() {
 		return yRel2Screen;
 	}
-	
-	public void setYRel2Screen(float yRel2Screen){
+
+	public void setYRel2Screen(float yRel2Screen) {
 		this.yRel2Screen = yRel2Screen;
 	}
 
