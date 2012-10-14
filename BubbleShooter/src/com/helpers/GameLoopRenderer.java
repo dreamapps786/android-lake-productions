@@ -335,8 +335,7 @@ public class GameLoopRenderer {
 	// private int checkNeighbours(BubbleGridRectangle bubble) {
 	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor) {
 		System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor());
-		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && bubbleToCheck.getColor() == collidingColor
-				&& !bubblesToExplode.contains(bubbleToCheck)) {
+		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && !bubblesToExplode.contains(bubbleToCheck)) {
 			bubblesToExplode.add(bubbleToCheck);
 			
 			BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
@@ -346,12 +345,24 @@ public class GameLoopRenderer {
 			BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
 			BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
 			
-			checkNeighbours(leftParent, bubblesToExplode, collidingColor);
-			checkNeighbours(rightParent, bubblesToExplode, collidingColor);
-			checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
-			checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
-			checkNeighbours(leftChild, bubblesToExplode, collidingColor);
-			checkNeighbours(rightChild, bubblesToExplode, collidingColor);
+			if (leftParent.getColor() == collidingColor) {
+				checkNeighbours(leftParent, bubblesToExplode, collidingColor);
+			}
+			if (rightParent.getColor() == collidingColor) {
+				checkNeighbours(rightParent, bubblesToExplode, collidingColor);
+			}
+			if (leftSibling.getColor() == collidingColor) {
+				checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
+			}
+			if (rightSibling.getColor() == collidingColor) {
+				checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
+			}
+			if (leftChild.getColor() == collidingColor) {
+				checkNeighbours(leftChild, bubblesToExplode, collidingColor);
+			}
+			if (rightChild.getColor() == collidingColor) {
+				checkNeighbours(rightChild, bubblesToExplode, collidingColor);
+			}
 		}
 	}
 
