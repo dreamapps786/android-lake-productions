@@ -1,5 +1,6 @@
 package com.gui;
 
+import java.awt.SplashScreen;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class GameLoop implements Frame {
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
-	private AnimatedSprite bubbleSplash;
+//	private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
 
@@ -49,7 +50,9 @@ public class GameLoop implements Frame {
 	@Override
 	public void update(Application app) {
 		simulation.update(app.getGraphics().getDeltaTime());
-		bubbleSplash.update(app.getGraphics().getDeltaTime());
+		for (AnimatedSprite splash : renderer.getSplashesToRender()) {
+			splash.update(app.getGraphics().getDeltaTime());
+		}
 	}
 
 	@Override
@@ -63,9 +66,6 @@ public class GameLoop implements Frame {
 				+ lastInputClickY + "y)", 95, 300, Color.RED);
 		if (renderer.getActiveBubble().isActive()) {
 			animateActiveBubble();
-		}
-		if (bubbleSplash.isActive()) {
-			renderer.renderBubbleSplash();
 		}
 	}
 
@@ -86,14 +86,6 @@ public class GameLoop implements Frame {
 
 	public void setShooter(AnimatedSprite shooter) {
 		this.shooter = shooter;
-	}
-
-//	public void setActiveBubble(AnimatedSprite activeBubble) {
-//		this.activeBubble = activeBubble;
-//	}
-
-	public void setBubbleSplash(AnimatedSprite bubbleSplash) {
-		this.bubbleSplash = bubbleSplash;
 	}
 
 	@Override
@@ -168,16 +160,6 @@ public class GameLoop implements Frame {
 
 		}
 	}
-
-	// @Override
-	// public void addSprite(AnimatedSprite sprite) {
-	// // sprites.add(sprite);
-	// }
-	//
-	// @Override
-	// public void removeSprite(AnimatedSprite sprite) {
-	// // sprites.remove(sprite);
-	// }
 
 	@Override
 	public void setDisposable(boolean disposable) {
