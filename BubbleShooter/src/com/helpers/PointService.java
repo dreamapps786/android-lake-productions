@@ -11,6 +11,10 @@ public class PointService {
 	public static void Score() {
 		totalPoints++;
 	}
+	
+	public static void Score(int count){
+		
+	}
 
 	public static int getTotalPoints() {
 		return totalPoints;

@@ -1,9 +1,5 @@
 package com.gui;
 
-import java.awt.SplashScreen;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -24,14 +20,15 @@ public class GameLoop implements Frame {
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
-//	private AnimatedSprite bubbleSplash;
+	// private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
 
 	// For debugging
 	private int lastInputClickX = -1;
 	private int lastInputClickY = -1;
-	private List<AnimatedSprite> debugPoints;
+	private float lastShotPosX = 0;
+	private float lastShotPosY = 0;
 
 	public GameLoop(Application app) {
 		initialize();
@@ -43,7 +40,6 @@ public class GameLoop implements Frame {
 		simulation = new Simulation(this);
 		renderer = new GameLoopRenderer(this);
 		inputProcessor = new MainInputProcessor(this);
-		debugPoints = new ArrayList<AnimatedSprite>();
 		boundsCollisionBox = new Rectangle(0, 0, 460, 800);
 	}
 
@@ -59,11 +55,9 @@ public class GameLoop implements Frame {
 	public void render(Application app) {
 		app.getGraphics().getGL10().glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderer.render(app, simulation);
-		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(),
-				150, 150, Color.RED);
-		GameLoopRenderer.drawText("Total Score: "+PointService.getTotalPoints(), 300, 100, Color.BLUE);
-		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, "
-				+ lastInputClickY + "y)", 95, 300, Color.RED);
+		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(), 150, 150, Color.RED);
+		GameLoopRenderer.drawText("Total Score: " + PointService.getTotalPoints(), 300, 100, Color.BLUE);
+		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, " + lastInputClickY + "y)", 95, 300, Color.RED);
 		if (renderer.getActiveBubble().isActive()) {
 			animateActiveBubble();
 		}
@@ -90,7 +84,6 @@ public class GameLoop implements Frame {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-		renderer.changeActiveBubbleTexture();
 		renderer.getActiveBubble().setActive(true);
 		int cY = 800 - y; // y converted from input- to
 							// animatedSprite-coordinates
@@ -98,8 +91,7 @@ public class GameLoop implements Frame {
 		lastInputClickY = cY;
 
 		if (cY > shooter.getOriginY()) {
-			int newRotAngle = (int) -Math.toDegrees(Math.atan((x - (shooter
-					.getOriginX() + shooter.getX()))
+			int newRotAngle = (int) -Math.toDegrees(Math.atan((x - (shooter.getOriginX() + shooter.getX()))
 					/ (cY - (shooter.getOriginY() + shooter.getY()))));
 			if (newRotAngle > -60 && newRotAngle < 60) {
 				shooter.rotate(newRotAngle - shooterRotation);
@@ -115,37 +107,35 @@ public class GameLoop implements Frame {
 		int dist = 40;
 		double angle = renderer.getActiveBubble().getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
-		double a = -(dist * Math.toDegrees(Math.sin(Math.toRadians(angle))))
-				/ bC;
-		double b = (dist * Math.toDegrees(Math.sin(Math
-				.toRadians(180 - angle - 90)))) / bC;
+		double a = -(dist * Math.toDegrees(Math.sin(Math.toRadians(angle)))) / bC;
+		double b = (dist * Math.toDegrees(Math.sin(Math.toRadians(180 - angle - 90)))) / bC;
 		int x = (int) (a + shooter.getOriginX() + shooter.getX());
 		int y = (int) (b + shooter.getOriginY() + shooter.getY());
-		renderer.getActiveBubble().setPosition(x - renderer.getActiveBubble().getOriginX(), y
-				- renderer.getActiveBubble().getOriginY());
+		this.lastShotPosX = x - renderer.getActiveBubble().getOriginX();
+		this.lastShotPosY = y - renderer.getActiveBubble().getOriginY();
+		renderer.getActiveBubble().setPosition(this.lastShotPosX, this.lastShotPosY);
 	}
 
 	private void animateActiveBubble() {
-		double speed = 8; //default:8
+		double speed = 8; // default:8
 		double angle = renderer.getActiveBubble().getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
-		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle))))
-				/ bC;
-		double b = (speed * Math.toDegrees(Math.sin(Math
-				.toRadians(180 - angle - 90)))) / bC;
+		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle)))) / bC;
+		double b = (speed * Math.toDegrees(Math.sin(Math.toRadians(180 - angle - 90)))) / bC;
 		renderer.getActiveBubble().setPosition(renderer.getActiveBubble().getX() + (float) a,
 				renderer.getActiveBubble().getY() + (float) b);
 
 		if (!boundsCollisionBox.contains(renderer.getActiveBubble().getBoundingRectangle())) {
 			changeDirection(renderer.getActiveBubble().getX(), renderer.getActiveBubble().getY());
 		}
-		BubbleGridRectangle collidingBubble = renderer.handleCollision(
-				renderer.getActiveBubble().getX() + (renderer.getActiveBubble().getWidth() / 2),
-				renderer.getActiveBubble().getY() + renderer.getActiveBubble().getHeight() / 2,
-				renderer.getActiveBubble().getHeight() / 2,renderer.getActiveBubble().getDirection());
+		BubbleGridRectangle collidingBubble = renderer.handleCollision(renderer.getActiveBubble().getX()
+				+ (renderer.getActiveBubble().getWidth() / 2), renderer.getActiveBubble().getY()
+				+ renderer.getActiveBubble().getHeight() / 2, renderer.getActiveBubble().getHeight() / 2, renderer
+				.getActiveBubble().getDirection());
 		if (collidingBubble != null) { // The bubble has to be a square
-			System.out.println("ActiveBubble: "+renderer.getActiveBubble().getX() + "x, "
+			System.out.println("ActiveBubble: " + renderer.getActiveBubble().getX() + "x, "
 					+ renderer.getActiveBubble().getY() + "y");
+			renderer.resetActiveBubble(this.lastShotPosX, this.lastShotPosY);
 			Gdx.input.vibrate(50);
 		}
 	}

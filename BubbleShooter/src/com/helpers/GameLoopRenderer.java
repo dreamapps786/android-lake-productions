@@ -2,9 +2,6 @@ package com.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Renderer;
-
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -18,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.gui.GameLoop;
 import com.helpers.BubbleGrid.BubbleGridRectangle;
+import com.helpers.extensions.BubbleQueueList;
 import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.model.CollisionObject;
@@ -34,16 +32,13 @@ public class GameLoopRenderer {
 	private static BitmapFont font;
 	private AnimatedSprite shooter;
 	private AnimatedBubbleSprite activeBubble;
-	// private AnimatedSprite bubbleSplash;
 	private List<AnimatedSprite> splashesToRender;
 	private Texture shooterTexture;
-	private BubbleTexture activeBubbleTexture;
+	private BubbleQueueList upcomingBubbles;
 	private Texture bubbleSplashTexture;
 	private BubbleTexture[] bubbleTextures;
 	private GameLoop gameloop;
 	private BubbleGrid bubbleGrid;
-
-	private List<AnimatedSprite> debugPoints;
 
 	/**
 	 * Bruges til at adskille renderer metoderne fra GameLoop
@@ -79,6 +74,7 @@ public class GameLoopRenderer {
 		renderBackground();
 		renderShooter();
 		renderBubbles();
+		renderQueuedBubbles();
 
 		for (AnimatedSprite sprite : splashesToRender) {
 			if (sprite.isActive()) {
@@ -86,9 +82,9 @@ public class GameLoopRenderer {
 			}
 		}
 
-		if (activeBubble.isActive()) {
-			renderActiveBubble();
-		}
+		// if (activeBubble.isActive()) {
+		renderActiveBubble();
+		// }
 	}
 
 	public void populate() {
@@ -97,31 +93,30 @@ public class GameLoopRenderer {
 		shooter = new AnimatedSprite("shooter", shooterTexture, (480 - 64) / 2, 0, 64, 64, 1, 1, 0, 0);
 		gameloop.setShooter(shooter);
 
-//		activeBubbleTexture = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleColor.green);
-//		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-
 		bubbleSplashTexture = new Texture(Gdx.files.internal("res/bubble_splash.png"), true);
 		bubbleSplashTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 
-		bubbleTextures[0] = new BubbleTexture(Gdx.files.internal("res/bubble_blue.png"), true, BubbleTexture.BubbleColor.blue);
+		bubbleTextures[0] = new BubbleTexture(Gdx.files.internal("res/bubble_blue.png"), true,
+				BubbleTexture.BubbleColor.blue);
 		bubbleTextures[0].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		bubbleTextures[1] = new BubbleTexture(Gdx.files.internal("res/bubble_yellow.png"), true, BubbleTexture.BubbleColor.yellow);
+		bubbleTextures[1] = new BubbleTexture(Gdx.files.internal("res/bubble_yellow.png"), true,
+				BubbleTexture.BubbleColor.yellow);
 		bubbleTextures[1].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
-		bubbleTextures[2] = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleTexture.BubbleColor.green);
+		bubbleTextures[2] = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true,
+				BubbleTexture.BubbleColor.green);
 		bubbleTextures[2].setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-//		changeActiveBubbleTexture();
-		activeBubbleTexture = bubbleTextures[((int) (Math.random()*3))];
 
-		// bubbleSplash = new AnimatedSprite("bubbleSplash",
-		// bubbleSplashTexture, 0, 0, 32, 32, 2, 2, 0, 0);
+		upcomingBubbles = new BubbleQueueList();
 
-		activeBubble = new AnimatedBubbleSprite("activeBubble", activeBubbleTexture, 0, 0, 32, 32, 0, 0, 0, 0);
+		for (int i = 0; i < 2; i++) {
+			BubbleTexture randomBubbleTexture = getRandomBubbleTexture();
+			upcomingBubbles.addBubble(randomBubbleTexture);
+		}
+		BubbleTexture randomBubbleTexture = getRandomBubbleTexture();
+		activeBubble = new AnimatedBubbleSprite("activeBubble", randomBubbleTexture, 0, 0, 32, 32, 0, 0, 0, 0);
+		activeBubble.setPosition((480 - 64) / 2 + 16, 60);
+		setActiveBubbleTexture(randomBubbleTexture);
 		activeBubble.setActive(false);
-		// bubbleSplash.setActive(false);
-		// gameloop.setActiveBubble(activeBubble);
-		// gameloop.setBubbleSplash(bubbleSplash);
-
 	}
 
 	private void renderBackground() {
@@ -134,8 +129,8 @@ public class GameLoopRenderer {
 		int i = 0;
 		for (int row = 0; row < 4; row++) {
 			for (int col = 0; col < 2; col++) {
-				spriteBatch.draw(background.getRegions().get(i).getTexture(), 0 + col * 256, (800 - 256) - row * 256, 256, 256, 0, 0, 256,
-						256, false, false);
+				spriteBatch.draw(background.getRegions().get(i).getTexture(), 0 + col * 256, (800 - 256) - row * 256,
+						256, 256, 0, 0, 256, 256, false, false);
 				i++;
 			}
 		}
@@ -146,8 +141,8 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32, 32, shooter.getWidth(), shooter.getHeight(), 1, 1,
-				shooter.getRotation());
+		spriteBatch.draw(shooter, shooter.getX(), shooter.getY(), 32, 32, shooter.getWidth(), shooter.getHeight(), 1,
+				1, shooter.getRotation());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -173,11 +168,28 @@ public class GameLoopRenderer {
 		spriteBatch.end();
 	}
 
+	private void renderQueuedBubbles() {
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
+		ArrayList<AnimatedBubbleSprite> bubbles = upcomingBubbles;
+		
+//		for (AnimatedSprite bubble : bubbles) {
+//			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - bubble.getHeight());
+//		}
+		spriteBatch.draw(bubbles.get(0).getTexture(), bubbles.get(0).getX(), bubbles.get(0).getY() - bubbles.get(0).getHeight());
+		spriteBatch.draw(bubbles.get(1).getTexture(), bubbles.get(1).getX(), bubbles.get(1).getY() - bubbles.get(1).getHeight());
+		
+		
+		spriteBatch.disableBlending();
+		spriteBatch.end();
+	}
+
 	public void renderBubbleSplash(AnimatedSprite bubbleToSplash) {
 		spriteBatch.begin();
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(bubbleToSplash, bubbleToSplash.getX(), bubbleToSplash.getY()- bubbleToSplash.getHeight());
+		spriteBatch.draw(bubbleToSplash, bubbleToSplash.getX(), bubbleToSplash.getY() - bubbleToSplash.getHeight());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
@@ -203,109 +215,110 @@ public class GameLoopRenderer {
 			List<Direction> directions = collissionObject.getCollissionDirections();
 			BubbleGridRectangle target = null;
 			int rowXOffset = (collidingY % 2 == 1 ? 1 : 0);
-			int coordXOfBubbleToPlace = -1; //If these value are not set, it indicates an unhandled case
+			int coordXOfBubbleToPlace = -1; // If these value are not set, it
+											// indicates an unhandled case
 			int coordYOfBubbleToPlace = -1;
-				if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
-																// placing it
-																// out of bounds
-					System.out.println("Avoided out of bounds");
-					coordXOfBubbleToPlace = collidingX + rowXOffset;
-					coordYOfBubbleToPlace = collidingY + 1;
-				} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
-					System.out.println("Avoided out of bounds");
-					coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-					coordYOfBubbleToPlace = collidingY + 1;
-				} else {
-					if (directions.size() == 1) {
-						if (directions.contains(Direction.W)) {
-							target = bubbleGrid.getGrid()[collidingY][collidingX + 1];
+			if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
+															// placing it
+															// out of bounds
+				System.out.println("Avoided out of bounds");
+				coordXOfBubbleToPlace = collidingX + rowXOffset;
+				coordYOfBubbleToPlace = collidingY + 1;
+			} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
+				System.out.println("Avoided out of bounds");
+				coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+				coordYOfBubbleToPlace = collidingY + 1;
+			} else {
+				if (directions.size() == 1) {
+					if (directions.contains(Direction.W)) {
+						target = bubbleGrid.getGrid()[collidingY][collidingX + 1];
+						if (!target.isOccupied()) {
+							coordXOfBubbleToPlace = collidingX + 1;
+							coordYOfBubbleToPlace = collidingY;
+						}
+					} else if (directions.contains(Direction.NW)) {
+						target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+						if (!target.isOccupied()) {
+							coordXOfBubbleToPlace = collidingX + rowXOffset;
+							coordYOfBubbleToPlace = collidingY + 1;
+						}
+					} else if (directions.contains(Direction.NE)) {
+						target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
+						if (!target.isOccupied()) {
+							coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+							coordYOfBubbleToPlace = collidingY + 1;
+						}
+					} else if (directions.contains(Direction.E)) {
+						target = bubbleGrid.getGrid()[collidingY][collidingX - 1];
+						if (!target.isOccupied()) {
+							coordXOfBubbleToPlace = collidingX - 1;
+							coordYOfBubbleToPlace = collidingY;
+						}
+					}
+				} else if (directions.size() == 2) {
+					if (directions.contains(Direction.W) && directions.contains(Direction.NW)) {
+						if (direction >= 0) {
+							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 							if (!target.isOccupied()) {
-								coordXOfBubbleToPlace = collidingX + 1;
-								coordYOfBubbleToPlace = collidingY;
+
+								coordXOfBubbleToPlace = collidingX + rowXOffset;
+								coordYOfBubbleToPlace = collidingY + 1;
 							}
-						} else if (directions.contains(Direction.NW)) {
+						} else {
+							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+							if (!target.isOccupied()) {
+
+								coordXOfBubbleToPlace = collidingX + rowXOffset;
+								coordYOfBubbleToPlace = collidingY + 1;
+							}
+						}
+					} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
+						if (direction >= 0) {
+							System.out.println(collidingX);
+							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
+							if (!target.isOccupied()) {
+
+								coordXOfBubbleToPlace = collidingX + rowXOffset;
+								coordYOfBubbleToPlace = collidingY + 1;
+							}
+						} else {
+							target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
+							if (!target.isOccupied()) {
+
+								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+								coordYOfBubbleToPlace = collidingY + 1;
+							} else {
+								target = bubbleGrid.getGrid()[collidingY + 1][collidingX];
+								if (!target.isOccupied()) {
+									coordXOfBubbleToPlace = collidingX;
+									coordYOfBubbleToPlace = collidingY + 1;
+								}
+							}
+						}
+					} else if (directions.contains(Direction.NE) && directions.contains(Direction.E)) {
+						if (direction >= 0) {
 							target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
 							if (!target.isOccupied()) {
 								coordXOfBubbleToPlace = collidingX + rowXOffset;
 								coordYOfBubbleToPlace = collidingY + 1;
 							}
-						} else if (directions.contains(Direction.NE)) {
+						} else {
 							target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
 							if (!target.isOccupied()) {
 								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
 								coordYOfBubbleToPlace = collidingY + 1;
 							}
-						} else if (directions.contains(Direction.E)) {
-							target = bubbleGrid.getGrid()[collidingY][collidingX - 1];
-							if (!target.isOccupied()) {
-								coordXOfBubbleToPlace = collidingX - 1;
-								coordYOfBubbleToPlace = collidingY;
-							}
-						}
-					} else if (directions.size() == 2) {
-						if (directions.contains(Direction.W) && directions.contains(Direction.NW)) {
-							if (direction >= 0) {
-								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
-								if (!target.isOccupied()) {
-
-									coordXOfBubbleToPlace = collidingX + rowXOffset;
-									coordYOfBubbleToPlace = collidingY + 1;
-								}
-							} else {
-								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
-								if (!target.isOccupied()) {
-
-									coordXOfBubbleToPlace = collidingX + rowXOffset;
-									coordYOfBubbleToPlace = collidingY + 1;
-								}
-							}
-						} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
-							if (direction >= 0) {
-								System.out.println(collidingX);
-								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
-								if (!target.isOccupied()) {
-
-									coordXOfBubbleToPlace = collidingX + rowXOffset;
-									coordYOfBubbleToPlace = collidingY + 1;
-								}
-							} else {
-								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
-								if (!target.isOccupied()) {
-
-									coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-									coordYOfBubbleToPlace = collidingY + 1;
-								} else {
-									target = bubbleGrid.getGrid()[collidingY + 1][collidingX];
-									if (!target.isOccupied()) {
-										coordXOfBubbleToPlace = collidingX;
-										coordYOfBubbleToPlace = collidingY + 1;
-									}
-								}
-							}
-						} else if (directions.contains(Direction.NE) && directions.contains(Direction.E)) {
-							if (direction >= 0) {
-								target = bubbleGrid.getGrid()[collidingY + 1][collidingX + rowXOffset];
-								if (!target.isOccupied()) {
-									coordXOfBubbleToPlace = collidingX + rowXOffset;
-									coordYOfBubbleToPlace = collidingY + 1;
-								}
-							} else {
-								target = bubbleGrid.getGrid()[collidingY + 1][collidingX - 1 + rowXOffset];
-								if (!target.isOccupied()) {
-									coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-									coordYOfBubbleToPlace = collidingY + 1;
-								}
-							}
 						}
 					}
 				}
-				BubbleGridRectangle bubbleToPlace = bubbleGrid.getGrid()[coordYOfBubbleToPlace][coordXOfBubbleToPlace];
-				bubbleToPlace.placeBubble(activeBubble.getBubbleTexture());
-				activeBubble.setActive(false);
-				PointService.Score();
-				destroySameColorBubbles(bubbleToPlace);
-				return collissionObject.getCollidingBubble();
 			}
+			BubbleGridRectangle bubbleToPlace = bubbleGrid.getGrid()[coordYOfBubbleToPlace][coordXOfBubbleToPlace];
+			bubbleToPlace.placeBubble(activeBubble.getBubbleTexture());
+			activeBubble.setActive(false);
+			PointService.Score();
+			destroySameColorBubbles(bubbleToPlace);
+			return collissionObject.getCollidingBubble();
+		}
 		return null;
 	}
 
@@ -325,7 +338,7 @@ public class GameLoopRenderer {
 																// rækkefølge i
 																// stedet
 				BubbleGridRectangle bubbleToExplode = bubblesToExplode.get(i);
-				addSplash(bubbleToExplode.getCoordinateX(),bubbleToExplode.getCoordinateY());
+				addSplash(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
 				bubblesToExplode.get(i).setOccupied(false);
 			}
 		}
@@ -335,18 +348,20 @@ public class GameLoopRenderer {
 	}
 
 	// private int checkNeighbours(BubbleGridRectangle bubble) {
-	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor) {
+	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode,
+			BubbleColor collidingColor) {
 		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && !bubblesToExplode.contains(bubbleToCheck)) {
-			System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor() + " textColor: " + bubbleToCheck.getBubble().getBubbleTexture().getColor());
+			System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor() + " textColor: "
+					+ bubbleToCheck.getBubble().getBubbleTexture().getColor());
 			bubblesToExplode.add(bubbleToCheck);
-			
+
 			BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
 			BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubbleToCheck);
 			BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubbleToCheck);
 			BubbleGridRectangle rightSibling = bubbleGrid.getRightSiblingOfBubble(bubbleToCheck);
 			BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubbleToCheck);
 			BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
-			
+
 			if (leftParent != null && leftParent.getColor() == collidingColor) {
 				checkNeighbours(leftParent, bubblesToExplode, collidingColor);
 			}
@@ -378,16 +393,22 @@ public class GameLoopRenderer {
 
 	public void addSplash(int coordinateX, int coordinateY) {
 		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
-		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(), bubbleToSplash.getY(), 32, 32, 2, 2, 0, 0);
-		System.out.println("Splash: "+bubbleToSplash.getX()+","+bubbleToSplash.getY());
+		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(),
+				bubbleToSplash.getY(), 32, 32, 2, 2, 0, 0);
+		System.out.println("Splash: " + bubbleToSplash.getX() + "," + bubbleToSplash.getY());
 		splash.setAnimationRate(0.5f);
 		preventInitializeLag(splash);
 		splash.setActive(true);
 		splash.play();
 		this.splashesToRender.add(splash);
-
 	}
-	
+
+	public void resetActiveBubble(float x, float y) {
+		setActiveBubbleTexture(upcomingBubbles.takeBubble().getBubbleTexture());
+		this.activeBubble.setPosition(x, y);
+		upcomingBubbles.addBubble(getRandomBubbleTexture());
+	}
+
 	private void preventInitializeLag(AnimatedSprite sprite) {
 		fakeRender(sprite);
 	}
@@ -397,18 +418,12 @@ public class GameLoopRenderer {
 		spriteBatch.draw(animSprite, Gdx.graphics.getWidth(), 0);
 		spriteBatch.end();
 	}
-	
+
 	public BubbleTexture getRandomBubbleTexture() {
-		return bubbleTextures[((int) (Math.random()*bubbleTextures.length))];
+		return bubbleTextures[((int) (Math.random() * bubbleTextures.length))];
 	}
 
-	/** don't call this before */
-	public void changeActiveBubbleTexture() {
-		setActiveBubbleTexture(getRandomBubbleTexture());
-	}
-	
 	public void setActiveBubbleTexture(BubbleTexture bt) {
-		activeBubbleTexture = bt; //<-- XXX Hvad er pointen med activeBubbleTexture?
 		activeBubble.setBubbleTexture(bt);
 	}
 }
