@@ -323,22 +323,26 @@ public class GameLoopRenderer {
 	}
 
 	private boolean destroySameColorBubbles(BubbleGridRectangle bubble) {
-
-		// -------------PSEUDO KODE---------------
+		
 		int noColorMatchesToExplode = 3;
-
+		
+		int highestRow = Integer.MAX_VALUE;
 		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
-		checkNeighbours(bubble, bubblesToExplode, activeBubble.getBubbleTexture().getColor());
-
+		highestRow = checkNeighbours(bubble, bubblesToExplode, activeBubble.getBubbleTexture().getColor(), highestRow);
+		System.out.println("Matching bubbles: "+bubblesToExplode.size());
 		if (bubblesToExplode.size() >= noColorMatchesToExplode) {
 			System.out.println("Enough bubbles to explode (" + bubblesToExplode.size() + "): " + bubblesToExplode);
-			// checkForFallingFruit(bubblesToExplode); //TODO Tilføj dem der
-			// skal splashe pga. de ikke længere sidder fast på nogen ovenfra.
-			for (int i = 0; i < bubblesToExplode.size(); i++) { // Måske modsat
-																// rækkefølge i
-																// stedet
+			for (int i = 0; i < bubblesToExplode.size(); i++) {
 				BubbleGridRectangle bubbleToExplode = bubblesToExplode.get(i);
 				addSplash(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
+				bubblesToExplode.get(i).setOccupied(false);
+			}
+			System.out.println("HighestExplodingRow: " + highestRow);
+			List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(highestRow);
+			System.out.println("Hanging Fruit ("+hangingBubbles.size()+"bubbles): " + hangingBubbles);
+			for (int i = 0; i < hangingBubbles.size(); i++) {
+				BubbleGridRectangle hangingBubble = hangingBubbles.get(i);
+				addSplash(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
 				bubblesToExplode.get(i).setOccupied(false);
 			}
 		}
@@ -347,14 +351,15 @@ public class GameLoopRenderer {
 		return false;
 	}
 
-	// private int checkNeighbours(BubbleGridRectangle bubble) {
-	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode,
-			BubbleColor collidingColor) {
+	private int checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor, int highestExplodedRow) {
 		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && !bubblesToExplode.contains(bubbleToCheck)) {
 			System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor() + " textColor: "
 					+ bubbleToCheck.getBubble().getBubbleTexture().getColor());
 			bubblesToExplode.add(bubbleToCheck);
-
+			if (bubbleToCheck.getCoordinateY() < highestExplodedRow) {
+				highestExplodedRow = bubbleToCheck.getCoordinateY();
+			}
+			
 			BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
 			BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubbleToCheck);
 			BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubbleToCheck);
@@ -363,24 +368,25 @@ public class GameLoopRenderer {
 			BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubbleToCheck);
 
 			if (leftParent != null && leftParent.getColor() == collidingColor) {
-				checkNeighbours(leftParent, bubblesToExplode, collidingColor);
+				highestExplodedRow = checkNeighbours(leftParent, bubblesToExplode, collidingColor, highestExplodedRow);
 			}
 			if (rightParent != null && rightParent.getColor() == collidingColor) {
-				checkNeighbours(rightParent, bubblesToExplode, collidingColor);
+				highestExplodedRow = checkNeighbours(rightParent, bubblesToExplode, collidingColor, highestExplodedRow);
 			}
 			if (leftSibling != null && leftSibling.getColor() == collidingColor) {
-				checkNeighbours(leftSibling, bubblesToExplode, collidingColor);
+				highestExplodedRow = checkNeighbours(leftSibling, bubblesToExplode, collidingColor, highestExplodedRow);
 			}
 			if (rightSibling != null && rightSibling.getColor() == collidingColor) {
-				checkNeighbours(rightSibling, bubblesToExplode, collidingColor);
+				highestExplodedRow = checkNeighbours(rightSibling, bubblesToExplode, collidingColor, highestExplodedRow);
 			}
 			if (leftChild != null && leftChild.getColor() == collidingColor) {
-				checkNeighbours(leftChild, bubblesToExplode, collidingColor);
+				highestExplodedRow = checkNeighbours(leftChild, bubblesToExplode, collidingColor, highestExplodedRow);
 			}
 			if (rightChild != null && rightChild.getColor() == collidingColor) {
-				checkNeighbours(rightChild, bubblesToExplode, collidingColor);
+				highestExplodedRow = checkNeighbours(rightChild, bubblesToExplode, collidingColor, highestExplodedRow);
 			}
 		}
+		return highestExplodedRow;
 	}
 
 	public AnimatedSprite getActiveBubble() {
@@ -395,7 +401,6 @@ public class GameLoopRenderer {
 		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
 		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(),
 				bubbleToSplash.getY(), 32, 32, 2, 2, 0, 0);
-		System.out.println("Splash: " + bubbleToSplash.getX() + "," + bubbleToSplash.getY());
 		splash.setAnimationRate(0.5f);
 		preventInitializeLag(splash);
 		splash.setActive(true);
