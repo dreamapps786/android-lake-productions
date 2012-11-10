@@ -14,13 +14,14 @@ import com.simulation.MainInputProcessor;
 import com.simulation.Simulation;
 
 public class GameLoop implements Frame {
+	private final double speed = 8;
+	private final int queueLength = 3;
 	private Simulation simulation;
 	private GameLoopRenderer renderer;
 	private boolean isDisposable = false;
 	@SuppressWarnings("unused")
 	private MainInputProcessor inputProcessor;
 	private AnimatedSprite shooter;
-	// private AnimatedSprite bubbleSplash;
 	private Rectangle boundsCollisionBox;
 	private int shooterRotation = 0;
 
@@ -117,7 +118,6 @@ public class GameLoop implements Frame {
 	}
 
 	private void animateActiveBubble() {
-		double speed = 8; // default:8
 		double angle = renderer.getActiveBubble().getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
 		double a = -(speed * Math.toDegrees(Math.sin(Math.toRadians(angle)))) / bC;
@@ -133,8 +133,6 @@ public class GameLoop implements Frame {
 				+ renderer.getActiveBubble().getHeight() / 2, renderer.getActiveBubble().getHeight() / 2, renderer
 				.getActiveBubble().getDirection());
 		if (collidingBubble != null) { // The bubble has to be a square
-			System.out.println("ActiveBubble: " + renderer.getActiveBubble().getX() + "x, "
-					+ renderer.getActiveBubble().getY() + "y");
 			renderer.resetActiveBubble(this.lastShotPosX, this.lastShotPosY);
 			Gdx.input.vibrate(50);
 		}
@@ -149,6 +147,10 @@ public class GameLoop implements Frame {
 			renderer.getActiveBubble().setDirection(angle + angle * -1 * 2);
 
 		}
+	}
+	
+	public int getQueueLength() {
+		return queueLength;
 	}
 
 	@Override

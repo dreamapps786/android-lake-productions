@@ -108,7 +108,7 @@ public class GameLoopRenderer {
 
 		upcomingBubbles = new BubbleQueueList();
 
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < gameloop.getQueueLength(); i++) {
 			BubbleTexture randomBubbleTexture = getRandomBubbleTexture();
 			upcomingBubbles.addBubble(randomBubbleTexture);
 		}
@@ -173,14 +173,11 @@ public class GameLoopRenderer {
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedBubbleSprite> bubbles = upcomingBubbles;
-		
-//		for (AnimatedSprite bubble : bubbles) {
-//			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - bubble.getHeight());
-//		}
-		spriteBatch.draw(bubbles.get(0).getTexture(), bubbles.get(0).getX(), bubbles.get(0).getY() - bubbles.get(0).getHeight());
-		spriteBatch.draw(bubbles.get(1).getTexture(), bubbles.get(1).getX(), bubbles.get(1).getY() - bubbles.get(1).getHeight());
-		
-		
+
+		for (AnimatedSprite bubble : bubbles) {
+			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - bubble.getHeight());
+		}
+
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
