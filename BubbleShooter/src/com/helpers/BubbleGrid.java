@@ -139,9 +139,6 @@ public class BubbleGrid {
 		ArrayList<AnimatedSprite> results = new ArrayList<AnimatedSprite>(boxes.length * boxes[0].length);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				if (i == 7 && j == 8) {
-					System.out.println("HIT HIT");
-				}
 				if (boxes[i][j].isOccupied) {
 					results.add(boxes[i][j].getBubble());
 				}
@@ -156,6 +153,60 @@ public class BubbleGrid {
 			}
 		}
 		return results;
+	}
+	
+	public List<BubbleGridRectangle> getHangingBubbles(int fromRow) {
+		List<BubbleGridRectangle> hangingBubbles = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		int evenStartRow = (fromRow % 2 == 0? fromRow : fromRow + 1);
+		int oddStartRow = (fromRow % 2 == 1? fromRow : fromRow + 1);
+		
+		for (int i = evenStartRow; i < boxes.length; i += 2) {
+			for (int j = 0; j < boxes[i].length; j++) {
+				BubbleGridRectangle bubble = boxes[i][j];
+				if (bubble.isOccupied() && isHangingBubble(bubble)) {
+					hangingBubbles.add(bubble);
+				}
+			}
+		}
+		
+		for (int i = oddStartRow; i < boxes.length; i += 2) {
+			for (int j = 0; j < boxes[i].length - 1; j++) {
+				BubbleGridRectangle bubble = boxes[i][j];
+				if (bubble.isOccupied() && isHangingBubble(bubble)) {
+					hangingBubbles.add(bubble);
+				}
+			}
+		}
+		return hangingBubbles;
+	}
+	
+	private boolean isHangingBubble(BubbleGridRectangle bubble) {
+		BubbleGridRectangle leftParent = getLeftParentOfBubble(bubble);
+		BubbleGridRectangle rightParent = getRightParentOfBubble(bubble);
+		BubbleGridRectangle leftSibling = getLeftSiblingOfBubble(bubble);
+		BubbleGridRectangle rightSibling = getRightSiblingOfBubble(bubble);
+		BubbleGridRectangle leftChild = getLeftChildOfBubble(bubble);
+		BubbleGridRectangle rightChild = getRightChildOfBubble(bubble);
+		
+		if (leftParent != null && leftParent.isOccupied()) {
+			return false;
+		}
+		if (rightParent != null && rightParent.isOccupied()) {
+			return false;
+		}
+		if (leftSibling != null && leftSibling.isOccupied()) {
+			return false;
+		}
+		if (rightSibling != null && rightSibling.isOccupied()) {
+			return false;
+		}
+		if (leftChild != null && leftChild.isOccupied()) {
+			return false;
+		}
+		if (rightChild != null && rightChild.isOccupied()) {
+			return false;
+		}
+		return true;
 	}
 
 	public BubbleGridRectangle getLeftParentOfBubble(BubbleGridRectangle ofBubble) {
