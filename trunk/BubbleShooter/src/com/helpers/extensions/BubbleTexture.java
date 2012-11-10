@@ -23,6 +23,11 @@ public class BubbleTexture extends Texture {
 	public enum BubbleColor{
 		green, blue, yellow
 	}
+	
+	@Override
+	public String toString() {
+		return this.color+"";
+	}
 }
 
 
