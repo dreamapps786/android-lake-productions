@@ -397,9 +397,14 @@ public class GameLoopRenderer {
 		spriteBatch.draw(animSprite, Gdx.graphics.getWidth(), 0);
 		spriteBatch.end();
 	}
+	
+	public BubbleTexture getRandomBubbleTexture() {
+		return bubbleTextures[((int) (Math.random()*bubbleTextures.length))];
+	}
 
+	/** don't call this before */
 	public void changeActiveBubbleTexture() {
-		setActiveBubbleTexture(bubbleTextures[((int) (Math.random()*3))]);
+		setActiveBubbleTexture(getRandomBubbleTexture());
 	}
 	
 	public void setActiveBubbleTexture(BubbleTexture bt) {
