@@ -17,6 +17,6 @@ public class AnimatedBubbleSprite extends AnimatedSprite{
 
 	public void setBubbleTexture(BubbleTexture bubbleTexture) {
 		this.bubbleTexture = bubbleTexture;
-		
+		this.setTexture(bubbleTexture);
 	}
 }

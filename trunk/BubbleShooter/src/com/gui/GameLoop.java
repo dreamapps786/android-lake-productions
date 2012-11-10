@@ -90,7 +90,7 @@ public class GameLoop implements Frame {
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
-
+		renderer.changeActiveBubbleTexture();
 		renderer.getActiveBubble().setActive(true);
 		int cY = 800 - y; // y converted from input- to
 							// animatedSprite-coordinates

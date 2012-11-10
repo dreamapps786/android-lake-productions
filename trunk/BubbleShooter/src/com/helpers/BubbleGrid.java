@@ -348,6 +348,7 @@ public class BubbleGrid {
 		}
 
 		public void setBubbleTexture(BubbleTexture bt) {
+			System.out.println("setting bubbleTexture from "+this.getBubble().getBubbleTexture().getColor()+" to "+bt.getColor());
 			this.getBubble().setBubbleTexture(bt);
 			this.color = bt.getColor();
 		}

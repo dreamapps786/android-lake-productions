@@ -97,8 +97,8 @@ public class GameLoopRenderer {
 		shooter = new AnimatedSprite("shooter", shooterTexture, (480 - 64) / 2, 0, 64, 64, 1, 1, 0, 0);
 		gameloop.setShooter(shooter);
 
-		activeBubbleTexture = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleColor.green);
-		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+//		activeBubbleTexture = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleColor.green);
+//		activeBubbleTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 
 		bubbleSplashTexture = new Texture(Gdx.files.internal("res/bubble_splash.png"), true);
 		bubbleSplashTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
@@ -109,6 +109,9 @@ public class GameLoopRenderer {
 		bubbleTextures[1].setFilter(TextureFilter.MipMap, TextureFilter.Linear);
 		bubbleTextures[2] = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleTexture.BubbleColor.green);
 		bubbleTextures[2].setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		
+//		changeActiveBubbleTexture();
+		activeBubbleTexture = bubbleTextures[((int) (Math.random()*3))];
 
 		// bubbleSplash = new AnimatedSprite("bubbleSplash",
 		// bubbleSplashTexture, 0, 0, 32, 32, 2, 2, 0, 0);
@@ -333,8 +336,8 @@ public class GameLoopRenderer {
 
 	// private int checkNeighbours(BubbleGridRectangle bubble) {
 	private void checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor) {
-		System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor() + " textColor: " + bubbleToCheck.getBubble().getBubbleTexture().getColor());
 		if (bubbleToCheck != null && bubbleToCheck.isOccupied() && !bubblesToExplode.contains(bubbleToCheck)) {
+			System.out.println(bubbleToCheck + " color: " + bubbleToCheck.getColor() + " textColor: " + bubbleToCheck.getBubble().getBubbleTexture().getColor());
 			bubblesToExplode.add(bubbleToCheck);
 			
 			BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubbleToCheck);
@@ -393,5 +396,14 @@ public class GameLoopRenderer {
 		spriteBatch.begin();
 		spriteBatch.draw(animSprite, Gdx.graphics.getWidth(), 0);
 		spriteBatch.end();
+	}
+
+	public void changeActiveBubbleTexture() {
+		setActiveBubbleTexture(bubbleTextures[((int) (Math.random()*3))]);
+	}
+	
+	public void setActiveBubbleTexture(BubbleTexture bt) {
+		activeBubbleTexture = bt; //<-- XXX Hvad er pointen med activeBubbleTexture?
+		activeBubble.setBubbleTexture(bt);
 	}
 }
