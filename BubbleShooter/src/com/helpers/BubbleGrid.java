@@ -344,7 +344,7 @@ public class BubbleGrid {
 	}
 	
 	public void insertNewRow(){
-		GameRuler
+//		GameRuler
 	}
 
 	@SuppressWarnings("serial")
