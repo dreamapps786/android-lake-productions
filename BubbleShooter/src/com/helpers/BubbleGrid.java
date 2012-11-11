@@ -190,10 +190,10 @@ public class BubbleGrid {
 		BubbleGridRectangle leftChild = getLeftChildOfBubble(bubble);
 		BubbleGridRectangle rightChild = getRightChildOfBubble(bubble);
 		
-		if (leftParent != null && leftParent.isOccupied()) {
+		if (leftParent == null || leftParent.isOccupied()) { //Is attached to the top
 			return false;
 		}
-		if (rightParent != null && rightParent.isOccupied()) {
+		if (rightParent == null || rightParent.isOccupied()) { //Is attached to the top
 			return false;
 		}
 		if (leftSibling != null && leftSibling.isOccupied()) {
@@ -209,6 +209,17 @@ public class BubbleGrid {
 			return false;
 		}
 		return true;
+	}
+	
+	public List<BubbleGridRectangle> getNeighboursOfBubble(BubbleGridRectangle ofBubble) {
+		List<BubbleGridRectangle> res = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		res.add(getLeftParentOfBubble(ofBubble));
+		res.add(getRightParentOfBubble(ofBubble));
+		res.add(getLeftSiblingOfBubble(ofBubble));
+		res.add(getRightSiblingOfBubble(ofBubble));
+		res.add(getLeftChildOfBubble(ofBubble));
+		res.add(getRightChildOfBubble(ofBubble));
+		return res;
 	}
 
 	public BubbleGridRectangle getLeftParentOfBubble(BubbleGridRectangle ofBubble) {
