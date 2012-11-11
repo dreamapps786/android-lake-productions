@@ -20,8 +20,8 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	private boolean active = true;
 	private double direction;
 
-	public AnimatedSprite(String name, final Texture texture, final float x, final float y, final int tileWidth, final int tileHeight,
-			final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
+	public AnimatedSprite(String name, final Texture texture, final float x, final float y, final int tileWidth,
+			final int tileHeight, final int rowCount, final int columnCount, float xRel2Screen, float yRel2Screen) {
 		super(texture, 0, 0, tileWidth, tileHeight);
 		this.name = name;
 		this.frameRegions = new ArrayList<TextureRegion>(rowCount * columnCount);
@@ -36,8 +36,8 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 	public void addFrames(Texture texture) {
 		for (int row = 0; row < rowCount; row++) {
 			for (int column = 0; column < columnCount; column++) {
-				frameRegions.add(new TextureRegion(texture, column * (int) getWidth(), row * (int) getHeight(), (int) getWidth(),
-						(int) getHeight()));
+				frameRegions.add(new TextureRegion(texture, column * (int) getWidth(), row * (int) getHeight(),
+						(int) getWidth(), (int) getHeight()));
 			}
 		}
 	}

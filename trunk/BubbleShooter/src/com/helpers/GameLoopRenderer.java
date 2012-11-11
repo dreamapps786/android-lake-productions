@@ -146,14 +146,14 @@ public class GameLoopRenderer {
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
-
+	
 	public void renderActiveBubble() {
-		spriteBatch.begin();
-		spriteBatch.enableBlending();
-		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(), activeBubble.getY());
-		spriteBatch.disableBlending();
-		spriteBatch.end();
+			spriteBatch.begin();
+			spriteBatch.enableBlending();
+			spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+			spriteBatch.draw(activeBubble.getTexture(), activeBubble.getX(), activeBubble.getY());
+			spriteBatch.disableBlending();
+			spriteBatch.end();
 	}
 
 	private void renderBubbles() {
@@ -203,6 +203,20 @@ public class GameLoopRenderer {
 	public void dispose() {
 
 	}
+	
+	public BubbleGridRectangle handleCollision1(float startX, float startY, float endX, float endY, double direction){
+		float rectEdge1x;
+		float rectEdge1y;
+		float rectEdge2x;
+		float rectEdge2y;
+		float rectEdge3x;
+		float rectEdge3y;
+		float rectEdge4x;
+		float rectEdge4y;
+		
+		return null;
+	}
+	
 
 	public BubbleGridRectangle handleCollision(float centerX, float centerY, float radius, double direction) {
 		CollisionObject collissionObject = bubbleGrid.checkForCollision(centerX, centerY, radius);
@@ -309,11 +323,16 @@ public class GameLoopRenderer {
 					}
 				}
 			}
-			BubbleGridRectangle bubbleToPlace = bubbleGrid.getGrid()[coordYOfBubbleToPlace][coordXOfBubbleToPlace];
-			bubbleToPlace.placeBubble(activeBubble.getBubbleTexture());
-			activeBubble.setActive(false);
-			PointService.Score();
-			destroySameColorBubbles(bubbleToPlace);
+			try {
+				BubbleGridRectangle bubbleToPlace = bubbleGrid.getGrid()[coordYOfBubbleToPlace][coordXOfBubbleToPlace];
+				bubbleToPlace.placeBubble(activeBubble.getBubbleTexture());
+				activeBubble.setActive(false);
+				PointService.Score();
+				destroySameColorBubbles(bubbleToPlace);
+				
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 			return collissionObject.getCollidingBubble();
 		}
 		return null;

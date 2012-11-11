@@ -24,6 +24,8 @@ public class BubbleGrid {
 		this.gridPosX = x;
 		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
+		GameRuler.setTotalBubbleCount(this.gridHeight * this.gridWidth);
+		GameRuler.setMaxRowCount(gridHeight);
 		populate(bubbleTextures);
 	}
 
@@ -328,6 +330,10 @@ public class BubbleGrid {
 
 	public BubbleGridRectangle getBubbleAt(int coordinateX, int coordinateY) {
 		return boxes[coordinateY][coordinateX];
+	}
+	
+	public void insertNewRow(){
+		GameRuler
 	}
 
 	@SuppressWarnings("serial")
