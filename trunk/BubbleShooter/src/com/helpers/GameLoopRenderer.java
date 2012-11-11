@@ -353,18 +353,91 @@ public class GameLoopRenderer {
 				addSplash(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
 				bubblesToExplode.get(i).setOccupied(false);
 			}
-			System.out.println("HighestExplodingRow: " + highestRow);
-			List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(highestRow);
+//			System.out.println("HighestExplodingRow: " + highestRow);
+//			List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(highestRow);
+			List<BubbleGridRectangle> hangingBubbles = handleHangingBubbles(bubblesToExplode);
 			System.out.println("Hanging Fruit ("+hangingBubbles.size()+"bubbles): " + hangingBubbles);
 			for (int i = 0; i < hangingBubbles.size(); i++) {
 				BubbleGridRectangle hangingBubble = hangingBubbles.get(i);
 				addSplash(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
-				bubblesToExplode.get(i).setOccupied(false);
+				hangingBubble.setOccupied(false);
 			}
 		}
 
 		// totalCount += checkNeighbour(bubble);
 		return false;
+	}
+	
+	private List<BubbleGridRectangle> handleHangingBubbles(List<BubbleGridRectangle> bubblesToExplode) {
+		List<BubbleGridRectangle> hangingBubbles = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		for (BubbleGridRectangle bubble : bubblesToExplode) {
+			hangingBubbles.addAll(checkForHangingBubbles(bubble, newEmptyList(), newEmptyList()));
+//			BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubble);
+//			BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubble);
+//			BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubble);
+//			BubbleGridRectangle rightSibling = bubbleGrid.getRightSiblingOfBubble(bubble);
+//			BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubble);
+//			BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubble);
+//			
+//			if (leftParent != null && leftParent.isOccupied()) {
+//				hangingBubbles.addAll(checkForHangingBubbles(leftParent, newEmptyList(), newEmptyList()));
+//			}
+//			if (rightParent != null && rightParent.isOccupied()) {
+//				hangingBubbles.addAll(checkForHangingBubbles(rightParent, newEmptyList(), newEmptyList()));
+//			}
+//			if (leftSibling != null && leftSibling.isOccupied()) {
+//				hangingBubbles.addAll(checkForHangingBubbles(leftSibling, newEmptyList(), newEmptyList()));
+//			}
+//			if (rightSibling != null && rightSibling.isOccupied()) {
+//				hangingBubbles.addAll(checkForHangingBubbles(rightSibling, newEmptyList(), newEmptyList()));
+//			}
+//			if (leftChild != null && leftChild.isOccupied()) {
+//				hangingBubbles.addAll(checkForHangingBubbles(leftChild, newEmptyList(), newEmptyList()));
+//			}
+//			if (rightChild != null && rightChild.isOccupied()) {
+//				hangingBubbles.addAll(checkForHangingBubbles(rightChild, newEmptyList(), newEmptyList()));
+//			}
+		}
+		return hangingBubbles;
+	}
+	
+	private List<BubbleGridRectangle> newEmptyList() {
+		return new ArrayList<BubbleGridRectangle>();
+	}
+	
+	private List<BubbleGridRectangle> checkForHangingBubbles (BubbleGridRectangle bubble, List<BubbleGridRectangle> visited, List<BubbleGridRectangle> linkedBubbles) {
+		linkedBubbles.add(bubble);
+		visited.add(bubble);
+		
+		BubbleGridRectangle leftParent = bubbleGrid.getLeftParentOfBubble(bubble);
+		BubbleGridRectangle rightParent = bubbleGrid.getRightParentOfBubble(bubble);
+		BubbleGridRectangle leftSibling = bubbleGrid.getLeftSiblingOfBubble(bubble);
+		BubbleGridRectangle rightSibling = bubbleGrid.getRightSiblingOfBubble(bubble);
+		BubbleGridRectangle leftChild = bubbleGrid.getLeftChildOfBubble(bubble);
+		BubbleGridRectangle rightChild = bubbleGrid.getRightChildOfBubble(bubble);
+		
+		if (leftParent == null || rightParent == null) { //Is attached to the top
+			return new ArrayList<BubbleGridRectangle>(); //Return empty list (no hanging bubbles)
+		}
+		if (leftParent.isOccupied() && !visited.contains(leftParent)) {
+			return checkForHangingBubbles(leftParent, visited, linkedBubbles);
+		}
+		if (rightParent.isOccupied() && !visited.contains(rightParent)) {
+			return checkForHangingBubbles(rightParent, visited, linkedBubbles);
+		}
+		if (leftSibling != null && leftSibling.isOccupied() && !visited.contains(leftSibling)) {
+			return checkForHangingBubbles(leftSibling, visited, linkedBubbles);
+		}
+		if (rightSibling != null && rightSibling.isOccupied() && !visited.contains(rightSibling)) {
+			return checkForHangingBubbles(rightSibling, visited, linkedBubbles);
+		}
+		if (leftChild != null && leftChild.isOccupied() && !visited.contains(leftChild)) {
+			return checkForHangingBubbles(leftChild, visited, linkedBubbles);
+		}
+		if (rightChild != null && rightChild.isOccupied() && !visited.contains(rightChild)) {
+			return checkForHangingBubbles(rightChild, visited, linkedBubbles);
+		}
+		return linkedBubbles;
 	}
 
 	private int checkNeighbours(BubbleGridRectangle bubbleToCheck, List<BubbleGridRectangle> bubblesToExplode, BubbleColor collidingColor, int highestExplodedRow) {
