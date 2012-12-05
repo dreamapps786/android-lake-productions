@@ -2,6 +2,7 @@ package com.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import com.helpers.extensions.BubbleTexture;
 import com.model.BubbleGridRectangle;
@@ -42,7 +43,19 @@ public class BubbleGrid {
 		return boxes;
 	}
 
-	public CollisionObject checkForCollision(float centerX, float centerY, float radius) {
+	public CollisionObject checkForCollision(float centerX, float centerY, float radius, double direction, double distance) {
+		//TODO Calculate rectangle
+		double movingBubbleV1X;
+		double movingBubbleV1Y;
+		double movingBubbleV2X;
+		double movingBubbleV2Y;
+		double movingBubbleV3X;
+		double movingBubbleV3Y;
+		double movingBubbleV4X;
+		double movingBubbleV4Y;
+		
+		
+		
 		centerY += 32; // FIXME Constant to solve collision offset
 		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
