@@ -225,9 +225,19 @@ public class GameLoopRenderer {
 		return null;
 	}
 	
+	public void stuff() {
+		boolean collidedWithBubbles = false;
+		boolean overTheTop = false;
+		if(collidedWithBubbles) {
+			
+		} else if (overTheTop) {
+			
+		}
+	}
+	
 
-	public BubbleGridRectangle handleCollision(float centerX, float centerY, float radius, double direction) {
-		CollisionObject collissionObject = bubbleGrid.checkForCollision(centerX, centerY, radius);
+	public BubbleGridRectangle handleCollision(float centerX, float centerY, float radius, double direction, double distance) {
+		CollisionObject collissionObject = bubbleGrid.checkForCollision(centerX, centerY, radius, direction, distance);
 		if (collissionObject != null) {
 			int collidingX = collissionObject.getCollidingBubble().getCoordinateX();
 			int collidingY = collissionObject.getCollidingBubble().getCoordinateY();
