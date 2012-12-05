@@ -15,10 +15,11 @@ public class BubbleGrid {
 	private float gridPosX;
 	private float gridPosY;
 	private BubbleGridRectangle[][] boxes;
-	private final int gridWidth = 15;
+	private final int gridWidth = 14;
 	private final int gridHeight = 18;
 	private final int initialPopHeight = 8;
-	private final int marginY = -5;
+	private final int marginY = 6;
+	private final int marginX = 1;
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		this.gridPosX = x;
@@ -33,7 +34,7 @@ public class BubbleGrid {
 		int counter = bubbleTextures.length;
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32, yIndex * -32 + 800 - (yIndex * marginY), 32, 32, xIndex,
+				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32 + (xIndex * marginX), yIndex * -32 + 800 - (yIndex * -marginY), 32, 32, xIndex,
 						yIndex, bubbleTextures[(int) (Math.random() * counter)]);
 				if (yIndex < initialPopHeight) {
 					boxes[yIndex][xIndex].setOccupied(true);
@@ -41,8 +42,8 @@ public class BubbleGrid {
 			}
 		}
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
-			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
-				boxes[yIndex][xIndex] = new BubbleGridRectangle((xIndex * 32) + 16, yIndex * -32 + 800 - (yIndex * marginY), 32, 32,
+			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
+				boxes[yIndex][xIndex] = new BubbleGridRectangle((xIndex * 32 + (xIndex * marginX)) + 16, yIndex * -32 + 800 - (yIndex * -marginY), 32, 32,
 						xIndex, yIndex, bubbleTextures[(int) (Math.random() * counter)]);
 				if (yIndex < initialPopHeight) {
 					boxes[yIndex][xIndex].setOccupied(true);
@@ -71,7 +72,7 @@ public class BubbleGrid {
 			}
 		}
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
-			for (int xIndex = 0; xIndex < boxes[yIndex].length - 1; xIndex++) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
 				if (boxes[yIndex][xIndex].isOccupied) {
 					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
 					if (collidingDirections.size() >= 1) {
@@ -148,7 +149,7 @@ public class BubbleGrid {
 		}
 
 		for (int i = 1; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length - 1; j++) {
+			for (int j = 0; j < boxes[i].length; j++) {
 				if (boxes[i][j].isOccupied) {
 					results.add(boxes[i][j].getBubble());
 				}
@@ -172,7 +173,7 @@ public class BubbleGrid {
 		}
 		
 		for (int i = oddStartRow; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length - 1; j++) {
+			for (int j = 0; j < boxes[i].length; j++) {
 				BubbleGridRectangle bubble = boxes[i][j];
 				if (bubble.isOccupied() && isHangingBubble(bubble)) {
 					hangingBubbles.add(bubble);

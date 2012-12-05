@@ -364,6 +364,7 @@ public class GameLoopRenderer {
 		return false;
 	}
 	
+	//TODO Kig på isConnectedVertexes i Graph Traversal: Opg3App.java
 	private List<BubbleGridRectangle> handleHangingBubbles(List<BubbleGridRectangle> bubblesToExplode) {
 		List<BubbleGridRectangle> hangingBubbles = newEmptyList();
 		for (BubbleGridRectangle bubble : bubblesToExplode) {
