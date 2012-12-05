@@ -3,7 +3,7 @@ package com.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.helpers.BubbleGrid.BubbleGridRectangle;
+import com.model.BubbleGridRectangle;
 
 public class CollisionObject {
 	private BubbleGridRectangle collidingBubble;

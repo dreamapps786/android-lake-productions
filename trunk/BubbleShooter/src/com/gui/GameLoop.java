@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.helpers.BubbleGrid.BubbleGridRectangle;
+import com.model.BubbleGridRectangle;
 import com.helpers.GameLoopRenderer;
 import com.helpers.PointService;
 import com.simulation.AnimatedSprite;
