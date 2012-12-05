@@ -3,17 +3,13 @@ package com.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.helpers.extensions.BubbleTexture;
-import com.helpers.extensions.BubbleTexture.BubbleColor;
+import com.model.BubbleGridRectangle;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
-import com.simulation.AnimatedBubbleSprite;
 import com.simulation.AnimatedSprite;
 
 public class BubbleGrid {
-	private float gridPosX;
-	private float gridPosY;
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
 	private final int gridHeight = 18;
@@ -22,8 +18,6 @@ public class BubbleGrid {
 	private final int marginX = 1;
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
-		this.gridPosX = x;
-		this.gridPosY = y + 800 - bubbleTextures[0].getHeight();
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
 		GameRuler.setTotalBubbleCount(this.gridHeight * this.gridWidth);
 		GameRuler.setMaxRowCount(gridHeight);
@@ -60,7 +54,7 @@ public class BubbleGrid {
 		centerY += 32; // FIXME Constant to solve collision offset
 		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				if (boxes[yIndex][xIndex].isOccupied) {
+				if (boxes[yIndex][xIndex].isOccupied()) {
 					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
 					if (collidingDirections.size() >= 1) {
 						System.out.println("Hit " + collidingDirections.size() + " directions: " + collidingDirections + " Bubbles:"
@@ -73,7 +67,7 @@ public class BubbleGrid {
 		}
 		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				if (boxes[yIndex][xIndex].isOccupied) {
+				if (boxes[yIndex][xIndex].isOccupied()) {
 					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
 					if (collidingDirections.size() >= 1) {
 						System.out.println("Hit " + collidingDirections.size() + " directions: " + collidingDirections.get(0).toString()
@@ -142,7 +136,7 @@ public class BubbleGrid {
 		ArrayList<AnimatedSprite> results = new ArrayList<AnimatedSprite>(boxes.length * boxes[0].length);
 		for (int i = 0; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				if (boxes[i][j].isOccupied) {
+				if (boxes[i][j].isOccupied()) {
 					results.add(boxes[i][j].getBubble());
 				}
 			}
@@ -150,7 +144,7 @@ public class BubbleGrid {
 
 		for (int i = 1; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
-				if (boxes[i][j].isOccupied) {
+				if (boxes[i][j].isOccupied()) {
 					results.add(boxes[i][j].getBubble());
 				}
 			}
@@ -159,7 +153,7 @@ public class BubbleGrid {
 	}
 	
 	public List<BubbleGridRectangle> getHangingBubbles(int fromRow) {
-		List<BubbleGridRectangle> hangingBubbles = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		List<BubbleGridRectangle> hangingBubbles = new ArrayList<BubbleGridRectangle>();
 		int evenStartRow = (fromRow % 2 == 0? fromRow : fromRow + 1);
 		int oddStartRow = (fromRow % 2 == 1? fromRow : fromRow + 1);
 		
@@ -213,7 +207,7 @@ public class BubbleGrid {
 	}
 	
 	public List<BubbleGridRectangle> getNeighboursOfBubble(BubbleGridRectangle ofBubble) {
-		List<BubbleGridRectangle> res = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		List<BubbleGridRectangle> res = new ArrayList<BubbleGridRectangle>();
 		res.add(getLeftParentOfBubble(ofBubble));
 		res.add(getRightParentOfBubble(ofBubble));
 		res.add(getLeftSiblingOfBubble(ofBubble));
@@ -227,9 +221,9 @@ public class BubbleGrid {
 		if (!isValidBubble(ofBubble))
 			return null;
 
-		int bcX = ofBubble.coordinateX;
-		int bcY = ofBubble.coordinateY;
-
+		int bcX = ofBubble.getCoordinateX();
+		int bcY = ofBubble.getCoordinateY();
+		
 		int leftParentX = (bcY % 2 == 0 ? bcX - 1 : bcX);
 		int leftParentY = bcY - 1;
 
@@ -242,8 +236,8 @@ public class BubbleGrid {
 		if (!isValidBubble(ofBubble))
 			return null;
 
-		int bcX = ofBubble.coordinateX;
-		int bcY = ofBubble.coordinateY;
+		int bcX = ofBubble.getCoordinateX();
+		int bcY = ofBubble.getCoordinateY();
 
 		int rightParentX = (bcY % 2 == 0 ? bcX : bcX + 1);
 		int rightParentY = bcY - 1;
@@ -257,8 +251,8 @@ public class BubbleGrid {
 		if (!isValidBubble(ofBubble))
 			return null;
 
-		int bcX = ofBubble.coordinateX;
-		int bcY = ofBubble.coordinateY;
+		int bcX = ofBubble.getCoordinateX();
+		int bcY = ofBubble.getCoordinateY();
 
 		int leftSiblingX = bcX - 1;
 		int leftSiblingY = bcY;
@@ -272,8 +266,8 @@ public class BubbleGrid {
 		if (!isValidBubble(ofBubble))
 			return null;
 
-		int bcX = ofBubble.coordinateX;
-		int bcY = ofBubble.coordinateY;
+		int bcX = ofBubble.getCoordinateX();
+		int bcY = ofBubble.getCoordinateY();
 
 		int rightSiblingX = bcX + 1;
 		int rightSiblingY = bcY;
@@ -287,8 +281,8 @@ public class BubbleGrid {
 		if (!isValidBubble(ofBubble))
 			return null;
 
-		int bcX = ofBubble.coordinateX;
-		int bcY = ofBubble.coordinateY;
+		int bcX = ofBubble.getCoordinateX();
+		int bcY = ofBubble.getCoordinateY();
 
 		int leftChildX = (bcY % 2 == 0 ? bcX - 1 : bcX);
 		int leftChildY = bcY + 1;
@@ -302,8 +296,8 @@ public class BubbleGrid {
 		if (!isValidBubble(ofBubble))
 			return null;
 
-		int bcX = ofBubble.coordinateX;
-		int bcY = ofBubble.coordinateY;
+		int bcX = ofBubble.getCoordinateX();
+		int bcY = ofBubble.getCoordinateY();
 
 		int rightChildX = (bcY % 2 == 0 ? bcX : bcX + 1);
 		int rightChildY = bcY + 1;
@@ -316,7 +310,7 @@ public class BubbleGrid {
 	private boolean isValidBubble(BubbleGridRectangle bubble) {
 		if (bubble == null)
 			return false;
-		if (!isInsideGridCoordinates(bubble.coordinateX, bubble.coordinateY))
+		if (!isInsideGridCoordinates(bubble.getCoordinateX(), bubble.getCoordinateY()))
 			return false; // Bubble doesn't exist in grid
 		return true;
 	}
@@ -346,85 +340,5 @@ public class BubbleGrid {
 	
 	public void insertNewRow(){
 //		GameRuler
-	}
-
-	@SuppressWarnings("serial")
-	public class BubbleGridRectangle extends Rectangle {
-		// private Rectangle rectangle;
-		private AnimatedBubbleSprite bubble;
-		private BubbleColor color;
-		private boolean isOccupied;
-		private int coordinateX;
-		private int coordinateY;
-
-		public BubbleGridRectangle(float x, float y, float width, float height, int coordinateX, int coordinateY,
-				BubbleTexture bubbleTexture) {
-			super(x, y, width, height);
-			this.coordinateX = coordinateX;
-			this.coordinateY = coordinateY;
-			bubble = new AnimatedBubbleSprite("bubble" + x / 32 + "-" + y / 32, bubbleTexture, (int) (gridPosX + x),
-					(int) (gridPosY + y + height), bubbleTexture.getWidth(), bubbleTexture.getHeight(), 0, 0, 0f, 0f);
-			isOccupied = false;
-			// bubble.setPosition(gridPosX + x, gridPosY + y);
-			color = bubbleTexture.getColor();
-		}
-
-		public boolean overlapsLowerHalf(float x, float y) {
-			float topY = this.y + (this.height / 2);
-			float bottomY = this.y;
-			float leftX = this.x;
-			float rightX = this.x + this.width;
-			boolean insideX = x > leftX && x < rightX;
-			boolean insideY = y > bottomY && y < topY;
-			return insideX && insideY;
-		}
-
-		public boolean isOccupied() {
-			return isOccupied;
-		}
-
-		public void setOccupied(boolean isOccupied) {
-			this.isOccupied = isOccupied;
-		}
-
-		public AnimatedBubbleSprite getBubble() {
-			return bubble;
-		}
-
-		public BubbleColor getColor() {
-			return color;
-		}
-
-		public int getCoordinateX() {
-			return coordinateX;
-		}
-
-		public void setCoordinateX(int coordinateX) {
-			this.coordinateX = coordinateX;
-		}
-
-		public int getCoordinateY() {
-			return coordinateY;
-		}
-
-		public void setCoordinateY(int coordinateY) {
-			this.coordinateY = coordinateY;
-		}
-
-		public void placeBubble(BubbleTexture color) {
-			setOccupied(true);
-			setBubbleTexture(color);
-		}
-
-		public void setBubbleTexture(BubbleTexture bt) {
-			System.out.println("setting bubbleTexture from "+this.getBubble().getBubbleTexture().getColor()+" to "+bt.getColor());
-			this.getBubble().setBubbleTexture(bt);
-			this.color = bt.getColor();
-		}
-
-		@Override
-		public String toString() {
-			return "[X: " + this.x + " Y: " + this.y + "]" + " Coordinates[" + this.coordinateX + "," + this.coordinateY + "]";
-		}
 	}
 }

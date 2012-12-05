@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.gui.GameLoop;
-import com.helpers.BubbleGrid.BubbleGridRectangle;
+import com.model.BubbleGridRectangle;
 import com.helpers.extensions.BubbleQueueList;
 import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
@@ -342,7 +342,7 @@ public class GameLoopRenderer {
 		
 		int noColorMatchesToExplode = 3;
 		
-		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGrid.BubbleGridRectangle>();
+		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGridRectangle>();
 		checkNeighbours(bubble, bubblesToExplode, activeBubble.getBubbleTexture().getColor());
 		System.out.println("Matching bubbles: "+bubblesToExplode.size());
 		if (bubblesToExplode.size() >= noColorMatchesToExplode) {
@@ -364,7 +364,7 @@ public class GameLoopRenderer {
 		return false;
 	}
 	
-	//TODO Kig på isConnectedVertexes i Graph Traversal: Opg3App.java
+	//TODO Kig pï¿½ isConnectedVertexes i Graph Traversal: Opg3App.java
 	private List<BubbleGridRectangle> handleHangingBubbles(List<BubbleGridRectangle> bubblesToExplode) {
 		List<BubbleGridRectangle> hangingBubbles = newEmptyList();
 		for (BubbleGridRectangle bubble : bubblesToExplode) {
