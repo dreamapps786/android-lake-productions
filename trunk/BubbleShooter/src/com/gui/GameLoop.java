@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.model.BubbleGridRectangle;
 import com.helpers.GameLoopRenderer;
+import com.helpers.GameRuler;
 import com.helpers.PointService;
 import com.simulation.AnimatedSprite;
 import com.simulation.MainInputProcessor;
@@ -116,20 +117,20 @@ public class GameLoop implements Frame {
 		this.lastShotPosY = y - renderer.getActiveBubble().getOriginY();
 		renderer.getActiveBubble().setPosition(this.lastShotPosX, this.lastShotPosY);
 	}
-	
+
 	float oldX;
 	float oldY;
 	float currentX;
 	float currentY;
 
 	private void animateActiveBubble(float deltatime) {
-		
+
 		double angle = renderer.getActiveBubble().getDirection();
 		double bC = Math.toDegrees(Math.sin(90));
-		double a = -(deltatime*speed * Math.toDegrees(Math.sin(Math.toRadians(angle)))) / bC;
-		double b = (deltatime*speed * Math.toDegrees(Math.sin(Math.toRadians(180 - angle - 90)))) / bC;
-		renderer.getActiveBubble().setPosition(renderer.getActiveBubble().getX() + (float) a,
-				renderer.getActiveBubble().getY() + (float) b);
+		double a = -(deltatime * speed * Math.toDegrees(Math.sin(Math.toRadians(angle)))) / bC;
+		double b = (deltatime * speed * Math.toDegrees(Math.sin(Math.toRadians(180 - angle - 90)))) / bC;
+		renderer.getActiveBubble()
+				.setPosition(renderer.getActiveBubble().getX() + (float) a, renderer.getActiveBubble().getY() + (float) b);
 		oldX = currentX;
 		oldY = currentY;
 		currentX = renderer.getActiveBubble().getX() + (float) a;
@@ -138,17 +139,14 @@ public class GameLoop implements Frame {
 			changeDirection(renderer.getActiveBubble().getX(), renderer.getActiveBubble().getY());
 		}
 		BubbleGridRectangle collidingBubble = renderer.handleCollision(renderer.getActiveBubble().getX()
-				+ (renderer.getActiveBubble().getWidth() / 2), renderer.getActiveBubble().getY()
-				+ renderer.getActiveBubble().getHeight() / 2, renderer.getActiveBubble().getHeight() / 2, renderer
-				.getActiveBubble().getDirection());
-		
-		//NEW COLLISSION CHECK
-		BubbleGridRectangle handleCollision1 = renderer.handleCollision1(oldX+(renderer.getActiveBubble().getWidth() / 2), oldY+ renderer.getActiveBubble().getHeight() / 2, currentX
-				+ (renderer.getActiveBubble().getWidth() / 2), currentY
-				+ renderer.getActiveBubble().getHeight() / 2, renderer
-				.getActiveBubble().getDirection());
-				
-				
+				+ (renderer.getActiveBubble().getWidth() / 2), renderer.getActiveBubble().getY() + renderer.getActiveBubble().getHeight()
+				/ 2, renderer.getActiveBubble().getHeight() / 2, renderer.getActiveBubble().getDirection());
+
+		// NEW COLLISSION CHECK
+		BubbleGridRectangle handleCollision1 = renderer.handleCollision1(oldX + (renderer.getActiveBubble().getWidth() / 2), oldY
+				+ renderer.getActiveBubble().getHeight() / 2, currentX + (renderer.getActiveBubble().getWidth() / 2), currentY
+				+ renderer.getActiveBubble().getHeight() / 2, renderer.getActiveBubble().getDirection());
+
 		if (collidingBubble != null) { // The bubble has to be a square
 			renderer.resetActiveBubble(this.lastShotPosX, this.lastShotPosY);
 			Gdx.input.vibrate(50);
@@ -165,7 +163,7 @@ public class GameLoop implements Frame {
 
 		}
 	}
-	
+
 	public int getQueueLength() {
 		return queueLength;
 	}

@@ -12,7 +12,7 @@ import com.simulation.AnimatedSprite;
 public class BubbleGrid {
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
-	private final int gridHeight = 18;
+	private int gridHeight = 18;
 	private final int initialPopHeight = 8;
 	private final int marginY = 6;
 	private final int marginX = 1;
@@ -26,19 +26,11 @@ public class BubbleGrid {
 
 	private void populate(BubbleTexture[] bubbleTextures) {
 		int counter = bubbleTextures.length;
-		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
+		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32 + (xIndex * marginX), yIndex * -32 + 800 - (yIndex * -marginY), 32, 32, xIndex,
-						yIndex, bubbleTextures[(int) (Math.random() * counter)]);
-				if (yIndex < initialPopHeight) {
-					boxes[yIndex][xIndex].setOccupied(true);
-				}
-			}
-		}
-		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
-			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				boxes[yIndex][xIndex] = new BubbleGridRectangle((xIndex * 32 + (xIndex * marginX)) + 16, yIndex * -32 + 800 - (yIndex * -marginY), 32, 32,
-						xIndex, yIndex, bubbleTextures[(int) (Math.random() * counter)]);
+				int offSetX = yIndex % 2 == 0 ? 0 : 16;
+				boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32 + (xIndex * marginX) + offSetX, yIndex * -32 + 800
+						- (yIndex * -marginY), 32, 32, xIndex, yIndex, bubbleTextures[(int) (Math.random() * counter)]);
 				if (yIndex < initialPopHeight) {
 					boxes[yIndex][xIndex].setOccupied(true);
 				}
@@ -52,26 +44,13 @@ public class BubbleGrid {
 
 	public CollisionObject checkForCollision(float centerX, float centerY, float radius) {
 		centerY += 32; // FIXME Constant to solve collision offset
-		for (int yIndex = 0; yIndex < boxes.length; yIndex += 2) {
+		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
 				if (boxes[yIndex][xIndex].isOccupied()) {
 					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
 					if (collidingDirections.size() >= 1) {
 						System.out.println("Hit " + collidingDirections.size() + " directions: " + collidingDirections + " Bubbles:"
 								+ boxes[yIndex][xIndex].toString());
-						return new CollisionObject(boxes[yIndex][xIndex], collidingDirections);
-					}
-
-				}
-			}
-		}
-		for (int yIndex = 1; yIndex < boxes.length; yIndex += 2) {
-			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				if (boxes[yIndex][xIndex].isOccupied()) {
-					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
-					if (collidingDirections.size() >= 1) {
-						System.out.println("Hit " + collidingDirections.size() + " directions: " + collidingDirections.get(0).toString()
-								+ " Bubble:" + boxes[yIndex][xIndex].toString());
 						return new CollisionObject(boxes[yIndex][xIndex], collidingDirections);
 					}
 				}
@@ -134,15 +113,7 @@ public class BubbleGrid {
 
 	public ArrayList<AnimatedSprite> getBubbles() {
 		ArrayList<AnimatedSprite> results = new ArrayList<AnimatedSprite>(boxes.length * boxes[0].length);
-		for (int i = 0; i < boxes.length; i += 2) {
-			for (int j = 0; j < boxes[i].length; j++) {
-				if (boxes[i][j].isOccupied()) {
-					results.add(boxes[i][j].getBubble());
-				}
-			}
-		}
-
-		for (int i = 1; i < boxes.length; i += 2) {
+		for (int i = 0; i < boxes.length; i++) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				if (boxes[i][j].isOccupied()) {
 					results.add(boxes[i][j].getBubble());
@@ -151,12 +122,12 @@ public class BubbleGrid {
 		}
 		return results;
 	}
-	
+
 	public List<BubbleGridRectangle> getHangingBubbles(int fromRow) {
 		List<BubbleGridRectangle> hangingBubbles = new ArrayList<BubbleGridRectangle>();
-		int evenStartRow = (fromRow % 2 == 0? fromRow : fromRow + 1);
-		int oddStartRow = (fromRow % 2 == 1? fromRow : fromRow + 1);
-		
+		int evenStartRow = (fromRow % 2 == 0 ? fromRow : fromRow + 1);
+		int oddStartRow = (fromRow % 2 == 1 ? fromRow : fromRow + 1);
+
 		for (int i = evenStartRow; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				BubbleGridRectangle bubble = boxes[i][j];
@@ -165,7 +136,7 @@ public class BubbleGrid {
 				}
 			}
 		}
-		
+
 		for (int i = oddStartRow; i < boxes.length; i += 2) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				BubbleGridRectangle bubble = boxes[i][j];
@@ -176,7 +147,7 @@ public class BubbleGrid {
 		}
 		return hangingBubbles;
 	}
-	
+
 	private boolean isHangingBubble(BubbleGridRectangle bubble) {
 		BubbleGridRectangle leftParent = getLeftParentOfBubble(bubble);
 		BubbleGridRectangle rightParent = getRightParentOfBubble(bubble);
@@ -184,11 +155,13 @@ public class BubbleGrid {
 		BubbleGridRectangle rightSibling = getRightSiblingOfBubble(bubble);
 		BubbleGridRectangle leftChild = getLeftChildOfBubble(bubble);
 		BubbleGridRectangle rightChild = getRightChildOfBubble(bubble);
-		
-		if (leftParent == null || leftParent.isOccupied()) { //Is attached to the top
+
+		if (leftParent == null || leftParent.isOccupied()) { // Is attached to
+																// the top
 			return false;
 		}
-		if (rightParent == null || rightParent.isOccupied()) { //Is attached to the top
+		if (rightParent == null || rightParent.isOccupied()) { // Is attached to
+																// the top
 			return false;
 		}
 		if (leftSibling != null && leftSibling.isOccupied()) {
@@ -205,7 +178,7 @@ public class BubbleGrid {
 		}
 		return true;
 	}
-	
+
 	public List<BubbleGridRectangle> getNeighboursOfBubble(BubbleGridRectangle ofBubble) {
 		List<BubbleGridRectangle> res = new ArrayList<BubbleGridRectangle>();
 		res.add(getLeftParentOfBubble(ofBubble));
@@ -223,7 +196,7 @@ public class BubbleGrid {
 
 		int bcX = ofBubble.getCoordinateX();
 		int bcY = ofBubble.getCoordinateY();
-		
+
 		int leftParentX = (bcY % 2 == 0 ? bcX - 1 : bcX);
 		int leftParentY = bcY - 1;
 
@@ -337,8 +310,18 @@ public class BubbleGrid {
 	public BubbleGridRectangle getBubbleAt(int coordinateX, int coordinateY) {
 		return boxes[coordinateY][coordinateX];
 	}
-	
-	public void insertNewRow(){
-//		GameRuler
+
+	public void insertNewRow() {
+		moveRowsOneLine();
 	}
+
+	private void moveRowsOneLine() {
+		for (int yIndex = boxes.length-1; yIndex >= 0; yIndex--) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
+				BubbleGridRectangle bubble = getBubbleAt(xIndex, yIndex);				
+				bubble.setCoordinateY(bubble.getCoordinateY()+1);
+			}
+		}
+	}
+
 }
