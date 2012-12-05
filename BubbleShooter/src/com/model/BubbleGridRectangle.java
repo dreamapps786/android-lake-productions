@@ -1,6 +1,7 @@
 package com.model;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.helpers.GameRuler;
 import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.simulation.AnimatedBubbleSprite;
@@ -15,14 +16,13 @@ public class BubbleGridRectangle extends Rectangle {
 	private int coordinateY;
 	private float gridPosY;
 
-	public BubbleGridRectangle(float x, float y, float width, float height, int coordinateX, int coordinateY,
-			BubbleTexture bubbleTexture) {
+	public BubbleGridRectangle(float x, float y, float width, float height, int coordinateX, int coordinateY, BubbleTexture bubbleTexture) {
 		super(x, y, width, height);
-		this.gridPosY = 0 + 800 - bubbleTexture.getHeight();
+		this.gridPosY = 0 - bubbleTexture.getHeight();
 		this.coordinateX = coordinateX;
 		this.coordinateY = coordinateY;
-		bubble = new AnimatedBubbleSprite("bubble" + x / 32 + "-" + y / 32, bubbleTexture, (int) (x),
-				(int) (gridPosY + y + height), bubbleTexture.getWidth(), bubbleTexture.getHeight(), 0, 0, 0f, 0f);
+		bubble = new AnimatedBubbleSprite("bubble" + x / 32 + "-" + y / 32, bubbleTexture, (int) (x), (int) (gridPosY + y + height),
+				bubbleTexture.getWidth(), bubbleTexture.getHeight(), 0, 0, 0f, 0f);
 		isOccupied = false;
 		color = bubbleTexture.getColor();
 	}
@@ -67,15 +67,18 @@ public class BubbleGridRectangle extends Rectangle {
 
 	public void setCoordinateY(int coordinateY) {
 		this.coordinateY = coordinateY;
+		super.y = coordinateY * -32 + 800 - (coordinateY * -6);
+		this.bubble.setPosition(x, y);
 	}
 
 	public void placeBubble(BubbleTexture color) {
 		setOccupied(true);
 		setBubbleTexture(color);
+		GameRuler.bubbleShot();
 	}
 
 	public void setBubbleTexture(BubbleTexture bt) {
-		System.out.println("setting bubbleTexture from "+this.getBubble().getBubbleTexture().getColor()+" to "+bt.getColor());
+		System.out.println("setting bubbleTexture from " + this.getBubble().getBubbleTexture().getColor() + " to " + bt.getColor());
 		this.getBubble().setBubbleTexture(bt);
 		this.color = bt.getColor();
 	}

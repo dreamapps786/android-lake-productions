@@ -39,6 +39,7 @@ public class GameLoopRenderer {
 	private BubbleTexture[] bubbleTextures;
 	private GameLoop gameloop;
 	private BubbleGrid bubbleGrid;
+	private GameRuler gameruler;
 
 	/**
 	 * Bruges til at adskille renderer metoderne fra GameLoop
@@ -61,6 +62,7 @@ public class GameLoopRenderer {
 		bubbleTextures = new BubbleTexture[3];
 		populate();
 		bubbleGrid = new BubbleGrid(bubbleTextures, 0, 0);
+		gameruler = new GameRuler(bubbleGrid);
 		splashesToRender = new ArrayList<AnimatedSprite>();
 
 		// activeBubble.setActive(true);
@@ -161,8 +163,14 @@ public class GameLoopRenderer {
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
+		int counter = 0;
 		for (AnimatedSprite bubble : bubbles) {
-			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - 800 - bubble.getHeight());
+			if (counter == 0) {
+				System.out.println(bubble.getX()+" "+(bubble.getY() - 800 - bubble.getHeight()));
+				
+			}
+			counter++;
+			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - bubble.getHeight());
 		}
 		spriteBatch.disableBlending();
 		spriteBatch.end();
@@ -326,8 +334,7 @@ public class GameLoopRenderer {
 //			try {
 				BubbleGridRectangle bubbleToPlace = bubbleGrid.getGrid()[coordYOfBubbleToPlace][coordXOfBubbleToPlace];
 				bubbleToPlace.placeBubble(activeBubble.getBubbleTexture());
-				activeBubble.setActive(false);
-				PointService.Score();
+				activeBubble.setActive(false);				
 				destroySameColorBubbles(bubbleToPlace);
 				
 //			} catch (Exception e) {
@@ -512,5 +519,9 @@ public class GameLoopRenderer {
 
 	public void setActiveBubbleTexture(BubbleTexture bt) {
 		activeBubble.setBubbleTexture(bt);
+	}
+
+	public GameRuler getGameruler() {
+		return gameruler;
 	}
 }
