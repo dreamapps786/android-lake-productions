@@ -1,6 +1,7 @@
 package com.model;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.helpers.BubbleGrid;
 import com.helpers.GameRuler;
 import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
@@ -37,13 +38,13 @@ public class BubbleGridRectangle extends Rectangle {
 		return insideX && insideY;
 	}
 
-	public boolean isOccupied() {
-		return isOccupied;
-	}
-
-	public void setOccupied(boolean isOccupied) {
-		this.isOccupied = isOccupied;
-	}
+//	public boolean isOccupied() {
+//		return isOccupied;
+//	}
+//
+//	public void setOccupied(boolean isOccupied) {
+//		this.isOccupied = isOccupied;
+//	}
 
 	public AnimatedBubbleSprite getBubble() {
 		return bubble;
@@ -66,15 +67,19 @@ public class BubbleGridRectangle extends Rectangle {
 	}
 
 	public void setCoordinateY(int coordinateY) {
+		boolean oldEven = this.coordinateY % 2 == 0;
+		boolean newEven = coordinateY % 2 == 0;
 		this.coordinateY = coordinateY;
 		super.y = coordinateY * -32 + 800 - (coordinateY * -6);
-		this.bubble.setPosition(x, y);
-	}
-
-	public void placeBubble(BubbleTexture color) {
-		setOccupied(true);
-		setBubbleTexture(color);
-		GameRuler.bubbleShot();
+		if (oldEven == newEven) {
+			this.bubble.setPosition(x, y);
+		}
+		else if (oldEven && !newEven) {
+			this.bubble.setPosition(x + 16, y);
+		}
+		else if (!oldEven && newEven) {
+			this.bubble.setPosition(x - 16, y);
+		}
 	}
 
 	public void setBubbleTexture(BubbleTexture bt) {
