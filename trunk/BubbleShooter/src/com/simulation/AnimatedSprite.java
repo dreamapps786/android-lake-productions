@@ -53,6 +53,7 @@ public class AnimatedSprite extends Sprite implements ITouchable {
 
 	public void pause() {
 		isPlay = false;
+		active = false;
 		frameTimeCounter = 0;
 	}
 
