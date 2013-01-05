@@ -38,13 +38,13 @@ public class BubbleGridRectangle extends Rectangle {
 		return insideX && insideY;
 	}
 
-//	public boolean isOccupied() {
-//		return isOccupied;
-//	}
-//
-//	public void setOccupied(boolean isOccupied) {
-//		this.isOccupied = isOccupied;
-//	}
+	// public boolean isOccupied() {
+	// return isOccupied;
+	// }
+	//
+	// public void setOccupied(boolean isOccupied) {
+	// this.isOccupied = isOccupied;
+	// }
 
 	public AnimatedBubbleSprite getBubble() {
 		return bubble;
@@ -70,15 +70,18 @@ public class BubbleGridRectangle extends Rectangle {
 		boolean oldEven = this.coordinateY % 2 == 0;
 		boolean newEven = coordinateY % 2 == 0;
 		this.coordinateY = coordinateY;
-		super.y = coordinateY * -32 + 800 - (coordinateY * -6);
+		// super.y = coordinateY * -32 + 800 - (coordinateY * -6);
+		super.y = coordinateY * -32 + 800 - (coordinateY * -5);
 		if (oldEven == newEven) {
 			this.bubble.setPosition(x, y);
-		}
-		else if (oldEven && !newEven) {
+		} else if (oldEven && !newEven) {
+			System.out.println("oldEven && !newEven");
 			this.bubble.setPosition(x + 16, y);
-		}
-		else if (!oldEven && newEven) {
+			this.x = x + 16;
+		} else if (!oldEven && newEven) {
+			System.out.println("!oldEven && newEven");
 			this.bubble.setPosition(x - 16, y);
+			this.x = x - 16;
 		}
 	}
 

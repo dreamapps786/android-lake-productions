@@ -87,7 +87,6 @@ public class GameLoopRenderer {
 					splashesToRender.remove(i);
 				}
 			}
-			System.out.println("SplashesToRender: "+splashesToRender.size());
 			if (splashesToRender.size() == 0) {
 				GameRuler.bubbleShot();
 				isDestroyingBubbles = false;
@@ -526,6 +525,8 @@ public class GameLoopRenderer {
 
 	public void addSplash(int coordinateX, int coordinateY) {
 		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
+		System.out.println("BubbleToSplash CorX "+coordinateX);
+		System.out.println("BubbleToSplash X: "+bubbleToSplash.getX());
 		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(), bubbleToSplash.getY(), 32,
 				32, 2, 2, 0, 0);
 		splash.setAnimationRate(0.5f);
