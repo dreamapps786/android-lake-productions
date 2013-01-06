@@ -373,8 +373,13 @@ public class GameLoopRenderer {
 			System.out.println("Enough bubbles to explode (" + bubblesToExplode.size() + "): " + bubblesToExplode);
 			for (int i = 0; i < bubblesToExplode.size(); i++) {
 				BubbleGridRectangle bubbleToExplode = bubblesToExplode.get(i);
-				addSplash(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
+				addSplash(bubbleToExplode);
 				bubbleGrid.removeBubbleAt(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
+				List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(bubbleToExplode.getCoordinateY());
+				for (BubbleGridRectangle hangingBubble : hangingBubbles) {
+					addSplash(hangingBubble);
+					bubbleGrid.removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
+				}
 			}
 			// TODO HANGING BUBBLES
 			// List<BubbleGridRectangle> hangingBubbles =
@@ -523,10 +528,8 @@ public class GameLoopRenderer {
 		return splashesToRender;
 	}
 
-	public void addSplash(int coordinateX, int coordinateY) {
-		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
-		System.out.println("BubbleToSplash CorX "+coordinateX);
-		System.out.println("BubbleToSplash X: "+bubbleToSplash.getX());
+	public void addSplash(BubbleGridRectangle bubbleToSplash) {
+//		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
 		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(), bubbleToSplash.getY(), 32,
 				32, 2, 2, 0, 0);
 		splash.setAnimationRate(0.5f);
