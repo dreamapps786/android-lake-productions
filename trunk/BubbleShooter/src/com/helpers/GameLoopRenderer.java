@@ -90,6 +90,11 @@ public class GameLoopRenderer {
 			if (splashesToRender.size() == 0) {
 				GameRuler.bubbleShot();
 				isDestroyingBubbles = false;
+				List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(0);
+				for (BubbleGridRectangle hangingBubble : hangingBubbles) {
+					addSplash(hangingBubble);
+					bubbleGrid.removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
+				}
 			}
 		}
 		// if (activeBubble.isActive()) {
@@ -168,14 +173,7 @@ public class GameLoopRenderer {
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_MAX_ELEMENTS_INDICES);
 		ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
-		int counter = 0;
 		for (AnimatedSprite bubble : bubbles) {
-			if (counter == 0) {
-				// System.out.println(bubble.getX()+" "+(bubble.getY() - 800 -
-				// bubble.getHeight()));
-
-			}
-			counter++;
 			spriteBatch.draw(bubble.getTexture(), bubble.getX(), bubble.getY() - bubble.getHeight());
 		}
 		spriteBatch.disableBlending();
@@ -255,11 +253,9 @@ public class GameLoopRenderer {
 			if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
 															// placing it
 															// out of bounds
-				System.out.println("Avoided out of bounds");
 				coordXOfBubbleToPlace = collidingX + rowXOffset;
 				coordYOfBubbleToPlace = collidingY + 1;
 			} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
-				System.out.println("Avoided out of bounds");
 				coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
 				coordYOfBubbleToPlace = collidingY + 1;
 			} else {
@@ -351,7 +347,9 @@ public class GameLoopRenderer {
 					coordYOfBubbleToPlace);
 			activeBubble.setActive(false);
 			boolean destroyingBubbles = destroySameColorBubbles(placedBubble);
-			if (!destroyingBubbles) { //Bubbleshot bliver kaldt, når splashanimationen er færdig, ellers bliver den kaldt her.
+			if (!destroyingBubbles) { // Bubbleshot bliver kaldt, når
+										// splashanimationen er færdig, ellers
+										// bliver den kaldt her.
 				GameRuler.bubbleShot();
 			}
 			// } catch (Exception e) {
@@ -369,17 +367,19 @@ public class GameLoopRenderer {
 		List<BubbleGridRectangle> bubblesToExplode = new ArrayList<BubbleGridRectangle>();
 		checkNeighbours(bubble, bubblesToExplode, activeBubble.getBubbleTexture().getColor());
 		System.out.println("Matching bubbles: " + bubblesToExplode.size());
+
+		List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(0);
+		for (BubbleGridRectangle hangingBubble : hangingBubbles) {
+			addSplash(hangingBubble);
+			bubbleGrid.removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
+		}
+
 		if (bubblesToExplode.size() >= noColorMatchesToExplode) {
 			System.out.println("Enough bubbles to explode (" + bubblesToExplode.size() + "): " + bubblesToExplode);
 			for (int i = 0; i < bubblesToExplode.size(); i++) {
 				BubbleGridRectangle bubbleToExplode = bubblesToExplode.get(i);
 				addSplash(bubbleToExplode);
 				bubbleGrid.removeBubbleAt(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
-				List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(bubbleToExplode.getCoordinateY());
-				for (BubbleGridRectangle hangingBubble : hangingBubbles) {
-					addSplash(hangingBubble);
-					bubbleGrid.removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
-				}
 			}
 			// TODO HANGING BUBBLES
 			// List<BubbleGridRectangle> hangingBubbles =
@@ -397,6 +397,7 @@ public class GameLoopRenderer {
 		return false;
 	}
 
+	// TODO OBSOLETE?
 	// TODO Kig p� isConnectedVertexes i Graph Traversal: Opg3App.java
 	private List<BubbleGridRectangle> handleHangingBubbles(List<BubbleGridRectangle> bubblesToExplode) {
 		List<BubbleGridRectangle> hangingBubbles = newEmptyList();
@@ -447,6 +448,7 @@ public class GameLoopRenderer {
 		return new ArrayList<BubbleGridRectangle>();
 	}
 
+	// TODO OBSOLETE?
 	private List<BubbleGridRectangle> checkForHangingBubbles(BubbleGridRectangle bubble, List<BubbleGridRectangle> visited,
 			List<BubbleGridRectangle> hangingBubbles) {
 		hangingBubbles.add(bubble);
@@ -529,7 +531,6 @@ public class GameLoopRenderer {
 	}
 
 	public void addSplash(BubbleGridRectangle bubbleToSplash) {
-//		BubbleGridRectangle bubbleToSplash = bubbleGrid.getBubbleAt(coordinateX, coordinateY);
 		AnimatedSprite splash = new AnimatedSprite("bubbleSplash", bubbleSplashTexture, bubbleToSplash.getX(), bubbleToSplash.getY(), 32,
 				32, 2, 2, 0, 0);
 		splash.setAnimationRate(0.5f);
