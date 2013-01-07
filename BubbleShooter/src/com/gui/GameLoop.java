@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.model.BubbleGridRectangle;
 import com.helpers.GameLoopRenderer;
-import com.helpers.GameRuler;
 import com.helpers.PointService;
 import com.simulation.AnimatedSprite;
 import com.simulation.MainInputProcessor;

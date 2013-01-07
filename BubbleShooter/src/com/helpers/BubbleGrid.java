@@ -384,4 +384,13 @@ public class BubbleGrid {
 				+ (coordXOfBubbleToPlace * marginX) + offSetX, coordYOfBubbleToPlace * -32 + 800 - (coordYOfBubbleToPlace * -marginY), 32,
 				32, coordXOfBubbleToPlace, coordYOfBubbleToPlace, bubbleTexture);
 	}
+	
+	public List<BubbleGridRectangle> removeHangingBubbles(){
+		List<BubbleGridRectangle> hangingBubbles = getHangingBubbles(0);
+		for (BubbleGridRectangle hangingBubble : hangingBubbles) {
+//			addSplash(hangingBubble);
+			removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
+		}
+		return hangingBubbles;
+	}
 }
