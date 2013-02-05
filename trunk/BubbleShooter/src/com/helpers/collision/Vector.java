@@ -2,8 +2,8 @@ package com.helpers.collision;
 
 public class Vector {
 
-	public Float x;
-	public Float y;
+	private Float x;
+	private Float y;
 
 	public static Vector fromPoint(Point p) {
 		return Vector.fromPoint(p.getX(), p.getY());
@@ -23,7 +23,7 @@ public class Vector {
 	}
 
 	public float getMagnitude() {
-		return (float)Math.sqrt(x * x + y * y);
+		return (float) Math.sqrt(x * x + y * y);
 	}
 
 	public void normalize() {
@@ -43,7 +43,7 @@ public class Vector {
 	}
 
 	public float getDistanceTo(Vector vector) {
-		return (float)Math.sqrt(Math.pow(vector.x - this.x, 2) + Math.pow(vector.y - this.y, 2));
+		return (float) Math.sqrt(Math.pow(vector.x - this.x, 2) + Math.pow(vector.y - this.y, 2));
 	}
 //	public static implicit operator Point(Vector p) {
 //		return new Point((int)p.X, (int)p.Y);
@@ -85,7 +85,7 @@ public class Vector {
 	
 	@Override
 	public boolean equals(Object obj) {
-		Vector v = (Vector)obj;
+		Vector v = (Vector) obj;
 
 		return x == v.x && y == v.y;
 	}
@@ -113,7 +113,7 @@ public class Vector {
 	}
 	public String toString(boolean rounded) {
 		if (rounded) {
-			return (int)Math.round(x) + ", " + (int)Math.round(y);
+			return (int) Math.round(x) + ", " + (int) Math.round(y);
 		} else {
 			return toString();
 		}

@@ -7,6 +7,10 @@ public class Polygon {
 
 	private List<Vector> points = new ArrayList<Vector>();
 	private List<Vector> edges = new ArrayList<Vector>();
+	
+	public void addPoint(Vector vector) {
+		points.add(vector);
+	}
 
 	public void BuildEdges() {
 		Vector p1;

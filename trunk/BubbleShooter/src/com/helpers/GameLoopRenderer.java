@@ -2,6 +2,7 @@ package com.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -12,12 +13,18 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.gui.GameLoop;
-import com.model.BubbleGridRectangle;
+import com.helpers.collision.CollisionHelper;
+import com.helpers.collision.CollisionHelper.PolygonCollisionResult;
+import com.helpers.collision.Polygon;
+import com.helpers.collision.Vector;
 import com.helpers.extensions.BubbleQueueList;
 import com.helpers.extensions.BubbleTexture;
 import com.helpers.extensions.BubbleTexture.BubbleColor;
+import com.model.BubbleGridRectangle;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
 import com.simulation.AnimatedBubbleSprite;
@@ -231,21 +238,26 @@ public class GameLoopRenderer {
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
+	
+	public static void DrawCrossOnPoint(float x, float y) {
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		ShapeRenderer sr = new ShapeRenderer();
+		sr.setProjectionMatrix(spriteBatch.getProjectionMatrix());
+		sr.begin(ShapeType.Line);
+		int width = 5;
+		sr.line(x-width, y-width, x+width, y+width);
+		sr.line(x-width, y+width, x+width, y-width);
+		sr.end();
+		spriteBatch.disableBlending();
+		spriteBatch.end();
+	}
 
 	public void dispose() {
 
 	}
-
-	public BubbleGridRectangle handleCollision1(float startX, float startY, float endX, float endY, double direction) {
-		float rectEdge1x;
-		float rectEdge1y;
-		float rectEdge2x;
-		float rectEdge2y;
-		float rectEdge3x;
-		float rectEdge3y;
-		float rectEdge4x;
-		float rectEdge4y;
-
+	
+	public BubbleGridRectangle handleCollision1(Polygon polygonA, Polygon polygonB, Vector velocity){
 		return null;
 	}
 

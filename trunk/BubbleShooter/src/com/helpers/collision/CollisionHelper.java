@@ -2,8 +2,8 @@ package com.helpers.collision;
 
 public class CollisionHelper {
 	// Calculate the projection of a polygon on an axis
-	// and returns it as a [min, max) interval
-	public float[] projectPolygon(Vector axis, Polygon polygon) {
+	// and returns it as a [min, max] interval
+	public static float[] projectPolygon(Vector axis, Polygon polygon) {
 	    // To project a point on an axis use the dot product
 	    float d = axis.getDotProduct(polygon.getPoints().get(0));
 	    float min = d;
@@ -13,7 +13,7 @@ public class CollisionHelper {
 	        if (d < min) {
 	            min = d;
 	        } else {
-	            if (d> max) {
+	            if (d > max) {
 	                max = d;
 	            }
 	        }
@@ -21,9 +21,9 @@ public class CollisionHelper {
 	    return new float[] {min, max};
 	}
 	
-	// Calculate the distance between [minA, maxA) and [minB, maxB)
+	// Calculate the distance between [minA, maxA] and [minB, maxB]
 	// The distance will be negative if the intervals overlap
-	public float IntervalDistance(float minA, float maxA, float minB, float maxB) {
+	public static float intervalDistance(float minA, float maxA, float minB, float maxB) {
 	    if (minA < minB) {
 	        return minB - maxA;
 	    } else {
@@ -32,10 +32,10 @@ public class CollisionHelper {
 	}
 	
 	// Check if polygon A is going to collide with polygon B for the given velocity
-	public PolygonCollisionResult PolygonCollision(Polygon polygonA, Polygon polygonB, Vector velocity) {
+	public static PolygonCollisionResult polygonCollision(Polygon polygonA, Polygon polygonB, Vector velocity) {
 		PolygonCollisionResult result = new PolygonCollisionResult();
-		result.Intersect = true;
-		result.WillIntersect = true;
+		result.intersect = true;
+		result.willIntersect = true;
 
 		int edgeCountA = polygonA.getEdges().size();
 		int edgeCountB = polygonB.getEdges().size();
@@ -51,7 +51,7 @@ public class CollisionHelper {
 				edge = polygonB.getEdges().get(edgeIndex - edgeCountA);
 			}
 
-			// ===== 1. Find if the polygons are currently intersecting =====
+			// ===== 1. Find out if the polygons are currently intersecting =====
 
 			// Find the axis perpendicular to the current edge
 			Vector axis = new Vector(-edge.getY(), edge.getX());
@@ -66,9 +66,9 @@ public class CollisionHelper {
 			float maxB = minAndMaxB[1];
 
 			// Check if the polygon projections are currentlty intersecting
-			if (IntervalDistance(minA, maxA, minB, maxB) > 0) result.Intersect = false;
+			if (intervalDistance(minA, maxA, minB, maxB) > 0) result.intersect = false;
 
-			// ===== 2. Now find if the polygons *will* intersect =====
+			// ===== 2. Now find out if the polygons *will* intersect =====
 
 			// Project the velocity on the current axis
 			float velocityProjection = axis.getDotProduct(velocity);
@@ -81,11 +81,11 @@ public class CollisionHelper {
 			}
 
 			// Do the same test as above for the new projection
-			float intervalDistance = IntervalDistance(minA, maxA, minB, maxB);
-			if (intervalDistance > 0) result.WillIntersect = false;
+			float intervalDistance = intervalDistance(minA, maxA, minB, maxB);
+			if (intervalDistance > 0) result.willIntersect = false;
 
 			// If the polygons are not intersecting and won't intersect, exit the loop
-			if (!result.Intersect && !result.WillIntersect) break;
+			if (!result.intersect && !result.willIntersect) break;
 
 			// Check if the current interval distance is the minimum one. If so store
 			// the interval distance and the current distance.
@@ -96,35 +96,38 @@ public class CollisionHelper {
 				translationAxis = axis;
 
 				Vector d = Vector.subtract(polygonA.getCenter(), polygonB.getCenter());
-				if (d.getDotProduct(translationAxis) < 0) Vector.subtract(translationAxis, translationAxis);
+				if (d.getDotProduct(translationAxis) < 0) {
+//					translationAxis = //TODO Skal dette inkluderes?
+					Vector.subtract(translationAxis, translationAxis);
+				}
 			}
 		}
 
-		// The minimum translation vector can be used to push the polygons appart.
+		// The minimum translation vector can be used to push the polygons apart.
 		// First moves the polygons by their velocity
 		// then move polygonA by MinimumTranslationVector.
-		if (result.WillIntersect) result.MinimumTranslationVector = Vector.mutliply(translationAxis, minIntervalDistance);
+		if (result.willIntersect) result.minimumTranslationVector = Vector.mutliply(translationAxis, minIntervalDistance);
 		
 		return result;
 	}
 	
 	// Structure that stores the results of the PolygonCollision function
-	public class PolygonCollisionResult {
+	public static class PolygonCollisionResult {
 	    // Are the polygons going to intersect forward in time?
-	    private boolean WillIntersect;
+	    private boolean willIntersect;
 	    // Are the polygons currently intersecting?
-	    private boolean Intersect;
+	    private boolean intersect;
 	    // The translation to apply to the first polygon to push the polygons apart.
-	    private Vector MinimumTranslationVector;
+	    private Vector minimumTranslationVector;
 	    
 		public boolean willIntersect() {
-			return WillIntersect;
+			return willIntersect;
 		}
 		public boolean intersect() {
-			return Intersect;
+			return intersect;
 		}
 		public Vector getMinimumTranslationVector() {
-			return MinimumTranslationVector;
+			return minimumTranslationVector;
 		}
 	}
 }

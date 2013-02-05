@@ -30,6 +30,8 @@ public class GameLoop implements Frame {
 	private int lastInputClickY = -1;
 	private float lastShotPosX = 0;
 	private float lastShotPosY = 0;
+	
+	
 
 	public GameLoop(Application app) {
 		initialize();
@@ -59,6 +61,9 @@ public class GameLoop implements Frame {
 		GameLoopRenderer.drawText("FPS: " + Gdx.graphics.getFramesPerSecond(), 150, 150, Color.RED);
 		GameLoopRenderer.drawText("Total Score: " + PointService.getTotalPoints(), 300, 100, Color.BLUE);
 		GameLoopRenderer.drawText("Click (" + lastInputClickX + "x, " + lastInputClickY + "y)", 95, 300, Color.RED);
+		
+		GameLoopRenderer.DrawCrossOnPoint(200, 600);
+		
 		if (renderer.getActiveBubble().isActive()) {
 			animateActiveBubble(app.getGraphics().getDeltaTime());
 		}
@@ -143,10 +148,10 @@ public class GameLoop implements Frame {
 				.getActiveBubble().getDirection(), deltatime*speed);
 		
 		//NEW COLLISSION CHECK
-		BubbleGridRectangle handleCollision1 = renderer.handleCollision1(oldX+(renderer.getActiveBubble().getWidth() / 2), oldY+ renderer.getActiveBubble().getHeight() / 2, currentX
-				+ (renderer.getActiveBubble().getWidth() / 2), currentY
-				+ renderer.getActiveBubble().getHeight() / 2, renderer
-				.getActiveBubble().getDirection());
+//		BubbleGridRectangle handleCollision1 = renderer.handleCollision1(oldX+(renderer.getActiveBubble().getWidth() / 2), oldY+ renderer.getActiveBubble().getHeight() / 2, currentX
+//				+ (renderer.getActiveBubble().getWidth() / 2), currentY
+//				+ renderer.getActiveBubble().getHeight() / 2, renderer
+//				.getActiveBubble().getDirection());
 				
 				
 		if (collidingBubble != null) { // The bubble has to be a square
