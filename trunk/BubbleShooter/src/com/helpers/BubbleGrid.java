@@ -13,7 +13,7 @@ import com.simulation.AnimatedSprite;
 public class BubbleGrid {
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
-	private int gridHeight = 18;
+	private int gridHeight = 24;
 	private final int initialPopHeight = 8;
 	private final int marginY = 6;
 	private final int marginX = 1;

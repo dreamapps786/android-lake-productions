@@ -37,6 +37,8 @@ public class GameLoopRenderer {
 	private BubbleQueueList upcomingBubbles;
 	private Texture bubbleSplashTexture;
 	private BubbleTexture[] bubbleTextures;
+	private Texture victoryTexture;
+	private AnimatedSprite victory;
 	private GameLoop gameloop;
 	private BubbleGrid bubbleGrid;
 	private GameRuler gameruler;
@@ -78,6 +80,9 @@ public class GameLoopRenderer {
 		renderShooter();
 		renderBubbles();
 		renderQueuedBubbles();
+		if (GameRuler.isVictorious()) {
+			renderVictoryScreen();			
+		}
 		if (isDestroyingBubbles) {
 			for (int i = splashesToRender.size() - 1; i >= 0; i--) {
 				AnimatedSprite sprite = splashesToRender.get(i);
@@ -118,6 +123,10 @@ public class GameLoopRenderer {
 		bubbleTextures[2] = new BubbleTexture(Gdx.files.internal("res/bubble_green.png"), true, BubbleTexture.BubbleColor.green);
 		bubbleTextures[2].setFilter(TextureFilter.Linear, TextureFilter.Linear);
 
+		victoryTexture = new Texture(Gdx.files.internal("res/victory.png"), true);
+		victoryTexture.setFilter(TextureFilter.MipMap, TextureFilter.Linear);
+		victory = new AnimatedSprite("victory", victoryTexture, (480 - 512)/2, 800, 512, 512, 1, 1, 0, 0);
+		
 		upcomingBubbles = new BubbleQueueList();
 
 		for (int i = 0; i < gameloop.getQueueLength(); i++) {
@@ -199,6 +208,15 @@ public class GameLoopRenderer {
 		spriteBatch.enableBlending();
 		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
 		spriteBatch.draw(bubbleToSplash, bubbleToSplash.getX(), bubbleToSplash.getY() - bubbleToSplash.getHeight());
+		spriteBatch.disableBlending();
+		spriteBatch.end();
+	}
+	
+	public void renderVictoryScreen(){
+		spriteBatch.begin();
+		spriteBatch.enableBlending();
+		spriteBatch.setBlendFunction(GL10.GL_ONE, GL10.GL_ONE_MINUS_SRC_ALPHA);
+		spriteBatch.draw(victory, victory.getX(), victory.getY() - victory.getHeight());
 		spriteBatch.disableBlending();
 		spriteBatch.end();
 	}
