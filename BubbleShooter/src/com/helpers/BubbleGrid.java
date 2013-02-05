@@ -2,9 +2,13 @@ package com.helpers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.helpers.collision.CollisionHelper;
+import com.helpers.collision.CollisionHelper.PolygonCollisionResult;
+import com.helpers.collision.Polygon;
+import com.helpers.collision.PolygonFactory;
+import com.helpers.collision.Vector;
 import com.helpers.extensions.BubbleTexture;
 import com.model.BubbleGridRectangle;
 import com.model.CollisionObject;
@@ -19,6 +23,8 @@ public class BubbleGrid {
 	private final int marginY = 6;
 	private final int marginX = 1;
 	private final BubbleTexture[] bubbleTextures;
+	
+	private int sidesOfCollisionBubbles = 6;
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
@@ -45,18 +51,47 @@ public class BubbleGrid {
 	// public BubbleGridRectangle[][] getGrid() {
 	// return boxes;
 	// }
-
+	
+	//TODO Replace with the other method, when it's done
+	public CollisionObject newCheckForCollision(float centerX, float centerY, float radius, double direction, double distance) {
+		float xVel = (float) (distance * Math.cos(direction));
+		float yVel = (float) (distance * Math.sin(direction));
+		
+		Vector velocity = new Vector(xVel, yVel);
+		
+		Polygon polygonA = PolygonFactory.getPolygon(centerX, centerY, radius, direction, sidesOfCollisionBubbles);
+		Polygon polygonB;
+		
+		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
+			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
+				BubbleGridRectangle bubble = getBubbleAt(xIndex, yIndex);
+				if (bubble != null) {
+					polygonB = PolygonFactory.getPolygon(bubble.getX() + bubble.getWidth()/2,
+							bubble.getY() + bubble.getHeight()/2,
+							bubble.getHeight() / 2, 0, sidesOfCollisionBubbles);
+					PolygonCollisionResult polColRes = CollisionHelper.polygonCollision(polygonA, polygonB, velocity);
+					
+					List<Direction> directions = new ArrayList<Direction>();
+					directions.add(Direction.N);
+					directions.add(Direction.NE);
+					if (polColRes.intersect()) {
+						System.out.println("Intersected");
+						return new CollisionObject(bubble, directions);
+					}
+					else if (polColRes.willIntersect()) {
+						System.out.println("Is going to intersect, so do it now anyway");
+						return new CollisionObject(bubble, directions);
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	//TODO Replace this method with the new one above
 	public CollisionObject checkForCollision(float centerX, float centerY, float radius, double direction, double distance) {
-		// TODO Calculate rectangle
-		double movingBubbleV1X;
-		double movingBubbleV1Y;
-		double movingBubbleV2X;
-		double movingBubbleV2Y;
-		double movingBubbleV3X;
-		double movingBubbleV3Y;
-		double movingBubbleV4X;
-		double movingBubbleV4Y;
-
+		
+		
 		centerY += 32; // FIXME Constant to solve collision offset
 		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
