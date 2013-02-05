@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.helpers.extensions.BubbleTexture;
 import com.model.BubbleGridRectangle;
 import com.model.CollisionObject;
@@ -14,14 +15,14 @@ public class BubbleGrid {
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
 	private int gridHeight = 24;
-	private final int initialPopHeight = 8;
+	private final int initialPopHeight = 4;
 	private final int marginY = 6;
 	private final int marginX = 1;
 	private final BubbleTexture[] bubbleTextures;
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
-		GameRuler.setTotalBubbleCount(this.gridHeight * this.gridWidth);
+		GameRuler.setTotalBubbleCount(this.initialPopHeight * this.gridWidth);
 		GameRuler.setMaxRowCount(gridHeight);
 		this.bubbleTextures = bubbleTextures;
 		populate(bubbleTextures, false);
@@ -138,17 +139,24 @@ public class BubbleGrid {
 
 	public List<BubbleGridRectangle> getHangingBubbles(int fromRow) {
 		List<BubbleGridRectangle> hangingBubbles = new ArrayList<BubbleGridRectangle>();
+		List<BubbleGridRectangle> checkedBubbles = new ArrayList<BubbleGridRectangle>();
 		for (int i = 0; i < boxes.length; i++) {
 			for (int j = 0; j < boxes[i].length; j++) {
 				BubbleGridRectangle bubble = boxes[i][j];
 				ArrayList<BubbleGridRectangle> hangingCluster = new ArrayList<BubbleGridRectangle>();
 				if (bubble != null) {
-					 hangingCluster = isHangingBubble(bubble, new ArrayList<BubbleGridRectangle>());					
+					if (!checkedBubbles.contains(bubble)) {
+						hangingCluster = isHangingBubble(bubble, new ArrayList<BubbleGridRectangle>());
+						checkedBubbles.add(bubble);
+					}
 				}
-				
+
 				if (hangingCluster.size() > 0) {
-					System.out.println(hangingCluster);
-					hangingBubbles.addAll(hangingCluster);
+					for (BubbleGridRectangle bubbleGridRectangle : hangingCluster) {
+						if (!hangingBubbles.contains(bubbleGridRectangle)) {
+							hangingBubbles.add(bubbleGridRectangle);
+						}
+					}
 				}
 			}
 		}
@@ -163,28 +171,33 @@ public class BubbleGrid {
 		BubbleGridRectangle leftChild = getLeftChildOfBubble(bubble);
 		BubbleGridRectangle rightChild = getRightChildOfBubble(bubble);
 
-		if (bubble.getCoordinateY() == 2) {
-			System.out.println();
-		}
-		
 		if (bubble != null) {
-			bubblesChecked.add(bubble);			
+			bubblesChecked.add(bubble);
 		}
-		
-		System.out.println("Checking: X:"+bubble.getCoordinateX()+" Y:"+bubble.getCoordinateY());
-		if ((leftParent != null && leftParent.getCoordinateY() == 0) || (rightParent != null && rightParent.getCoordinateY() == 0) || (leftSibling != null && leftSibling.getCoordinateY() == 0)
-				|| (rightSibling != null && rightSibling.getCoordinateY() == 0) || (leftChild != null && leftChild.getCoordinateY() == 0) || (rightChild != null && rightChild.getCoordinateY() == 0) || bubble.getCoordinateY() == 0) {
+
+		if ((leftParent != null && leftParent.getCoordinateY() == 0) || (rightParent != null && rightParent.getCoordinateY() == 0)
+				|| (leftSibling != null && leftSibling.getCoordinateY() == 0)
+				|| (rightSibling != null && rightSibling.getCoordinateY() == 0) || (leftChild != null && leftChild.getCoordinateY() == 0)
+				|| (rightChild != null && rightChild.getCoordinateY() == 0) || bubble.getCoordinateY() == 0) {
 			return new ArrayList<BubbleGridRectangle>();
 		}
 
-		if (leftParent != null && !bubblesChecked.contains(leftParent)) { // Is attached to the top
+		if (leftParent != null && !bubblesChecked.contains(leftParent)) { // Is
+																			// attached
+																			// to
+																			// the
+																			// top
 			ArrayList<BubbleGridRectangle> hangingCluster = isHangingBubble(leftParent, bubblesChecked);
 			if (hangingCluster.size() == 0) {
 				return new ArrayList<BubbleGridRectangle>();
 			}
 		}
 
-		if (rightParent != null && !bubblesChecked.contains(rightParent)) { // Is attached to the top
+		if (rightParent != null && !bubblesChecked.contains(rightParent)) { // Is
+																			// attached
+																			// to
+																			// the
+																			// top
 			ArrayList<BubbleGridRectangle> hangingCluster = isHangingBubble(rightParent, bubblesChecked);
 			if (hangingCluster.size() == 0) {
 				return new ArrayList<BubbleGridRectangle>();
@@ -204,21 +217,21 @@ public class BubbleGrid {
 				return new ArrayList<BubbleGridRectangle>();
 			}
 		}
-		
+
 		if (leftChild != null && !bubblesChecked.contains(leftChild)) {
 			ArrayList<BubbleGridRectangle> hangingCluster = isHangingBubble(leftChild, bubblesChecked);
 			if (hangingCluster.size() == 0) {
 				return new ArrayList<BubbleGridRectangle>();
 			}
 		}
-		
+
 		if (rightChild != null && !bubblesChecked.contains(rightChild)) {
 			ArrayList<BubbleGridRectangle> hangingCluster = isHangingBubble(rightChild, bubblesChecked);
 			if (hangingCluster.size() == 0) {
 				return new ArrayList<BubbleGridRectangle>();
 			}
 		}
-		
+
 		return bubblesChecked;
 	}
 
@@ -360,6 +373,7 @@ public class BubbleGrid {
 
 	public void insertNewRow() {
 		moveRowsOneLine();
+		GameRuler.setTotalBubbleCount(gridWidth);
 	}
 
 	private void moveRowsOneLine() {
@@ -384,11 +398,11 @@ public class BubbleGrid {
 				+ (coordXOfBubbleToPlace * marginX) + offSetX, coordYOfBubbleToPlace * -32 + 800 - (coordYOfBubbleToPlace * -marginY), 32,
 				32, coordXOfBubbleToPlace, coordYOfBubbleToPlace, bubbleTexture);
 	}
-	
-	public List<BubbleGridRectangle> removeHangingBubbles(){
+
+	public List<BubbleGridRectangle> removeHangingBubbles() {
 		List<BubbleGridRectangle> hangingBubbles = getHangingBubbles(0);
 		for (BubbleGridRectangle hangingBubble : hangingBubbles) {
-//			addSplash(hangingBubble);
+			// addSplash(hangingBubble);
 			removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
 		}
 		return hangingBubbles;
