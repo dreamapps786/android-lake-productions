@@ -3,16 +3,18 @@ package com.helpers;
 public class GameRuler {
 	
 	private static int shotCount;
-	private static final int maxCount = 2;
+	private static final int maxCount = 100;
 	private static int totalBubbleCount;
 	private static int destroyCount;
 	private static int maxRowCount;
 	private static int currentRowCount;
 	private static BubbleGrid bubbleGrid;
+	private static boolean isVictorious;
 	
 	public GameRuler(BubbleGrid grid){
 		shotCount = 0;
 		bubbleGrid = grid;
+		isVictorious = false;
 	}
 	
 	public static void bubbleShot(){
@@ -36,7 +38,7 @@ public class GameRuler {
 	
 	private static void checkForVictory(){
 		if (destroyCount == totalBubbleCount) {
-			//renderer.Victory();
+			isVictorious = true;
 		}
 	}
 	
@@ -52,5 +54,9 @@ public class GameRuler {
 	
 	public static void setMaxRowCount(int maxRowCount){
 		GameRuler.maxRowCount = maxRowCount;
+	}
+
+	public static boolean isVictorious() {
+		return isVictorious;
 	}
 }
