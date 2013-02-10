@@ -28,7 +28,6 @@ public class BubbleGrid {
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
-		GameRuler.setTotalBubbleCount(this.initialPopHeight * this.gridWidth);
 		GameRuler.setMaxRowCount(gridHeight);
 		this.bubbleTextures = bubbleTextures;
 		populate(bubbleTextures, false);
@@ -43,7 +42,6 @@ public class BubbleGrid {
 				// boxes[yIndex][xIndex] = new BubbleGridRectangle(xIndex * 32 +
 				// (xIndex * marginX) + offSetX, yIndex * -32 + 800
 				// - (yIndex * -marginY), 32, 32, xIndex, yIndex, );
-				// TODO Use placeBubble()
 			}
 		}
 	}
@@ -398,6 +396,10 @@ public class BubbleGrid {
 		return gridWidth;
 	}
 
+    public BubbleTexture[] getBubbleTextures(){
+        return this.bubbleTextures;
+    }
+
 	public BubbleGridRectangle getBubbleAt(int coordinateX, int coordinateY) {
 		return boxes[coordinateY][coordinateX];
 	}
@@ -408,7 +410,6 @@ public class BubbleGrid {
 
 	public void insertNewRow() {
 		moveRowsOneLine();
-		GameRuler.setTotalBubbleCount(gridWidth);
 	}
 
 	private void moveRowsOneLine() {
@@ -434,12 +435,14 @@ public class BubbleGrid {
 				32, coordXOfBubbleToPlace, coordYOfBubbleToPlace, bubbleTexture);
 	}
 
-	public List<BubbleGridRectangle> removeHangingBubbles() {
-		List<BubbleGridRectangle> hangingBubbles = getHangingBubbles(0);
-		for (BubbleGridRectangle hangingBubble : hangingBubbles) {
-			// addSplash(hangingBubble);
-			removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
-		}
-		return hangingBubbles;
-	}
+    public void removeColor(BubbleTexture.BubbleColor color){
+        for (int i = 0; i < bubbleTextures.length; i++) {
+            BubbleTexture bubbleTexture = bubbleTextures[i];
+            if (bubbleTexture.getColor() == color){
+                System.out.println("Removing color: "+color.toString());
+                bubbleTextures[i] = null;
+            }
+
+        }
+    }
 }

@@ -51,11 +51,6 @@ public class GameLoopRenderer {
 	private GameRuler gameruler;
 	private boolean isDestroyingBubbles = false;
 
-	/**
-	 * Bruges til at adskille renderer metoderne fra GameLoop
-	 * 
-	 * @param app
-	 */
 	public GameLoopRenderer(GameLoop gameloop) {
 		this.gameloop = gameloop;
 		background = new TextureAtlas();
@@ -84,36 +79,36 @@ public class GameLoopRenderer {
 		// bruges igen
 		// gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		renderBackground();
-		renderShooter();
-		renderBubbles();
-		renderQueuedBubbles();
-		if (GameRuler.isVictorious()) {
-			renderVictoryScreen();			
-		}
-		if (isDestroyingBubbles) {
-			for (int i = splashesToRender.size() - 1; i >= 0; i--) {
-				AnimatedSprite sprite = splashesToRender.get(i);
-				if (sprite.isActive()) {
-					renderBubbleSplash(sprite);
-				} else {
-					splashesToRender.remove(i);
-				}
-			}
-			if (splashesToRender.size() == 0) {
-				isDestroyingBubbles = false;
-				List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(0);
-				System.out.println("HangingBubbles: "+hangingBubbles.size());
-				GameRuler.bubblesDestroyed(hangingBubbles.size(), true);
-				GameRuler.bubbleShot();
-				for (BubbleGridRectangle hangingBubble : hangingBubbles) {
-					addSplash(hangingBubble);
-					bubbleGrid.removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());					
-				}
-			}
-		}
-		// if (activeBubble.isActive()) {
-		renderActiveBubble();
-		// }
+        if (GameRuler.isVictorious()) {
+            renderVictoryScreen();
+        }
+        else{
+            renderShooter();
+            renderBubbles();
+            renderQueuedBubbles();
+            renderActiveBubble();
+            if (isDestroyingBubbles) {
+                for (int i = splashesToRender.size() - 1; i >= 0; i--) {
+                    AnimatedSprite sprite = splashesToRender.get(i);
+                    if (sprite.isActive()) {
+                        renderBubbleSplash(sprite);
+                    } else {
+                        splashesToRender.remove(i);
+                    }
+                }
+                if (splashesToRender.size() == 0) {
+                    isDestroyingBubbles = false;
+                    List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(0);
+                    System.out.println("HangingBubbles: "+hangingBubbles.size());
+                    GameRuler.bubblesDestroyed(hangingBubbles.size(), true);
+                    GameRuler.bubbleShot();
+                    for (BubbleGridRectangle hangingBubble : hangingBubbles) {
+                        addSplash(hangingBubble);
+                        bubbleGrid.removeBubbleAt(hangingBubble.getCoordinateX(), hangingBubble.getCoordinateY());
+                    }
+                }
+            }
+        }
 	}
 
 	public void populate() {
@@ -374,7 +369,6 @@ public class GameLoopRenderer {
 					}
 				}
 			}
-			// try {
 			BubbleGridRectangle placedBubble = bubbleGrid.placeBubble(activeBubble.getBubbleTexture(), coordXOfBubbleToPlace,
 					coordYOfBubbleToPlace);
 			activeBubble.setActive(false);
@@ -384,9 +378,6 @@ public class GameLoopRenderer {
 										// bliver den kaldt her.
 				GameRuler.bubbleShot();
 			}
-			// } catch (Exception e) {
-			// System.out.println("message" + e.getMessage());
-			// }
 			return collissionObject.getCollidingBubble();
 		}
 		return null;
@@ -412,21 +403,7 @@ public class GameLoopRenderer {
 				addSplash(bubbleToExplode);
 				bubbleGrid.removeBubbleAt(bubbleToExplode.getCoordinateX(), bubbleToExplode.getCoordinateY());
 			}
-			
-			System.out.println("BubblesToExplode: "+bubblesToExplode.size());
-			System.out.println("HangingBubbles: "+hangingBubbles.size());
 			GameRuler.bubblesDestroyed(bubblesToExplode.size()+hangingBubbles.size(), false);
-			// TODO HANGING BUBBLES
-			// List<BubbleGridRectangle> hangingBubbles =
-			// handleHangingBubbles(bubblesToExplode);
-			// System.out.println("Hanging Fruit ("+hangingBubbles.size()+"bubbles): "
-			// + hangingBubbles);
-			// for (int i = 0; i < hangingBubbles.size(); i++) {
-			// BubbleGridRectangle hangingBubble = hangingBubbles.get(i);
-			// addSplash(hangingBubble.getCoordinateX(),
-			// hangingBubble.getCoordinateY());
-			// hangingBubble.setOccupied(false);
-			// }
 			return true;
 		}
 		return false;
@@ -507,14 +484,17 @@ public class GameLoopRenderer {
 	}
 
 	public BubbleTexture getRandomBubbleTexture() {
-		return bubbleTextures[((int) (Math.random() * bubbleTextures.length))];
-	}
+        if (bubbleGrid != null)  {
+         return bubbleGrid.getBubbleTextures()[((int) (Math.random() * bubbleGrid.getBubbleTextures().length))];
+        }
+        else{
+            return bubbleTextures[((int) (Math.random() * bubbleTextures.length))];
+        }
+    }
 
 	public void setActiveBubbleTexture(BubbleTexture bt) {
 		activeBubble.setBubbleTexture(bt);
 	}
 
-	public GameRuler getGameruler() {
-		return gameruler;
-	}
+
 }
