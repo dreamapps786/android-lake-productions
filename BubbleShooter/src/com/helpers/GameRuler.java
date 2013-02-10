@@ -1,11 +1,14 @@
 package com.helpers;
 
+import com.helpers.extensions.BubbleTexture;
+import com.simulation.AnimatedSprite;
+
+import java.util.ArrayList;
+
 public class GameRuler {
 
 	private static int shotCount;
-	private static final int maxCount = 3;
-	private static int totalBubbleCount;
-	private static int destroyCount;
+	private static final int maxCount = 100;
 	private static int maxRowCount;
 	private static int currentRowCount;
 	private static BubbleGrid bubbleGrid;
@@ -19,16 +22,13 @@ public class GameRuler {
 	}
 
 	public static void bubbleShot() {
-		System.out.println("bubbleShot");
 		shotCount++;
-		totalBubbleCount++;
 		checkForMax();
 	}
 	
 
 	public static void bubblesDestroyed(int count, boolean hanging) {
 		currentBubblesDestroyed += count;
-		destroyCount += count;
 		checkForVictory();
 		if (hanging) {
 			clearCurrentBubblesDestroyed();			
@@ -46,27 +46,39 @@ public class GameRuler {
 
 	private static void checkForMax() {
 		if (shotCount == maxCount) {
-			System.out.println("Gameruler: Max Shot");
 			shotCount = 0;
 			bubbleGrid.insertNewRow();
 		}
 	}
 
 	private static void checkForVictory() {
-		System.out.println("destroyCount: " + destroyCount + " totalCount: " + totalBubbleCount);
-		if (destroyCount == totalBubbleCount) {
-			isVictorious = true;
-		}
-	}
+        ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
+//        BubbleTexture[] bubbleTextures = bubbleGrid.getBubbleTextures();
+//        for (BubbleTexture bubbleTexture : bubbleTextures) {
+//            boolean found = false;
+//            for (AnimatedSprite bubble : bubbles) {
+//                if (((BubbleTexture)bubble.getTexture()).getColor() == bubbleTexture.getColor()) {
+//                                  found = true;
+//                }
+//
+//            }
+//            if (!found){
+//                bubbleGrid.removeColor(bubbleTexture.getColor());
+//            }
+//
+//        }
+        if(bubbles.size() == 0){
+            isVictorious = true;}
+        else{
+            isVictorious = false;
+        }
+    }
 
-	private static void checkForLoss() {
+	public static void checkForLoss() {
 		if (currentRowCount == maxRowCount) {
 			// renderer.Loss();
+            System.out.println("YOU LOST!");
 		}
-	}
-
-	public static void setTotalBubbleCount(int totalBubbleCount) {
-		GameRuler.totalBubbleCount += totalBubbleCount;
 	}
 
 	public static void setMaxRowCount(int maxRowCount) {
