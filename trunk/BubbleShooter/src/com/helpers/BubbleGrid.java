@@ -1,6 +1,7 @@
 package com.helpers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
@@ -9,6 +10,7 @@ import com.helpers.collision.CollisionHelper.PolygonCollisionResult;
 import com.helpers.collision.Polygon;
 import com.helpers.collision.PolygonFactory;
 import com.helpers.collision.Vector;
+import com.helpers.extensions.BubbleQueueList;
 import com.helpers.extensions.BubbleTexture;
 import com.model.BubbleGridRectangle;
 import com.model.CollisionObject;
@@ -19,10 +21,12 @@ public class BubbleGrid {
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
 	private int gridHeight = 24;
-	private final int initialPopHeight = 4;
+	private final int initialPopHeight = 2;
 	private final int marginY = 6;
 	private final int marginX = 1;
 	private final BubbleTexture[] bubbleTextures;
+    private final List<BubbleTexture> allowedBubbleTextures;
+    private BubbleQueueList queuedBubbles;
 	
 	private int sidesOfCollisionBubbles = 6;
 
@@ -30,6 +34,7 @@ public class BubbleGrid {
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
 		GameRuler.setMaxRowCount(gridHeight);
 		this.bubbleTextures = bubbleTextures;
+        this.allowedBubbleTextures = new ArrayList<BubbleTexture>(Arrays.asList(bubbleTextures));
 		populate(bubbleTextures, false);
 	}
 
@@ -436,13 +441,25 @@ public class BubbleGrid {
 	}
 
     public void removeColor(BubbleTexture.BubbleColor color){
-        for (int i = 0; i < bubbleTextures.length; i++) {
-            BubbleTexture bubbleTexture = bubbleTextures[i];
+        for (int i = 0; i < allowedBubbleTextures.size(); i++) {
+            BubbleTexture bubbleTexture = allowedBubbleTextures.get(i);
             if (bubbleTexture.getColor() == color){
                 System.out.println("Removing color: "+color.toString());
-                bubbleTextures[i] = null;
+                allowedBubbleTextures.remove(i);
             }
 
         }
+    }
+
+    public BubbleQueueList getQueuedBubbles() {
+        return queuedBubbles;
+    }
+
+    public void setQueuedBubbles(BubbleQueueList queuedBubbles) {
+        this.queuedBubbles = queuedBubbles;
+    }
+
+    public List<BubbleTexture> getAllowedBubbleTextures() {
+        return allowedBubbleTextures;
     }
 }
