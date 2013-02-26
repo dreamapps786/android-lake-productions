@@ -3,6 +3,7 @@ package com.helpers;
 import com.helpers.extensions.BubbleTexture;
 import com.simulation.AnimatedSprite;
 
+import javax.xml.transform.sax.SAXSource;
 import java.util.ArrayList;
 
 public class GameRuler {
@@ -54,25 +55,24 @@ public class GameRuler {
 
     private static void checkForVictory() {
         ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
-//        BubbleTexture[] bubbleTextures = bubbleGrid.getBubbleTextures();
-//        for (BubbleTexture bubbleTexture : bubbleTextures) {
-//            boolean found = false;
-//            for (AnimatedSprite bubble : bubbles) {
-//                if (((BubbleTexture)bubble.getTexture()).getColor() == bubbleTexture.getColor()) {
-//                                  found = true;
-//                }
-//
-//            }
-//            if (!found){
-//                bubbleGrid.removeColor(bubbleTexture.getColor());
-//            }
-//
-//        }
-        if(bubbles.size() == 0){
+        bubbles.addAll(bubbleGrid.getQueuedBubbles());
+        BubbleTexture[] bubbleTextures = bubbleGrid.getBubbleTextures();
+        for (BubbleTexture bubbleTexture : bubbleTextures) {
+            boolean found = false;
+            for (AnimatedSprite bubble : bubbles) {
+                if (((BubbleTexture)bubble.getTexture()).getColor() == bubbleTexture.getColor()) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found){
+                bubbleGrid.removeColor(bubbleTexture.getColor());
+            }
+        }
+        if(bubbles.size()-bubbleGrid.getQueuedBubbles().size() == 0){
             isVictorious = true;}
         else{
             isVictorious = false;
-
         }
     }
 

@@ -67,6 +67,7 @@ public class GameLoopRenderer {
 		bubbleTextures = new BubbleTexture[3];
 		populate();
 		bubbleGrid = new BubbleGrid(bubbleTextures, 0, 0);
+        bubbleGrid.setQueuedBubbles(upcomingBubbles);
 		gameruler = new GameRuler(bubbleGrid);
 		splashesToRender = new ArrayList<AnimatedSprite>();
 
@@ -99,7 +100,6 @@ public class GameLoopRenderer {
                 if (splashesToRender.size() == 0) {
                     isDestroyingBubbles = false;
                     List<BubbleGridRectangle> hangingBubbles = bubbleGrid.getHangingBubbles(0);
-                    System.out.println("HangingBubbles: "+hangingBubbles.size());
                     GameRuler.bubblesDestroyed(hangingBubbles.size(), true);
                     GameRuler.bubbleShot();
                     for (BubbleGridRectangle hangingBubble : hangingBubbles) {
@@ -471,6 +471,7 @@ public class GameLoopRenderer {
 		setActiveBubbleTexture(upcomingBubbles.takeBubble().getBubbleTexture());
 		this.activeBubble.setPosition(x, y);
 		upcomingBubbles.addBubble(getRandomBubbleTexture());
+        bubbleGrid.setQueuedBubbles(upcomingBubbles);
 	}
 
 	private void preventInitializeLag(AnimatedSprite sprite) {
@@ -485,7 +486,7 @@ public class GameLoopRenderer {
 
 	public BubbleTexture getRandomBubbleTexture() {
         if (bubbleGrid != null)  {
-         return bubbleGrid.getBubbleTextures()[((int) (Math.random() * bubbleGrid.getBubbleTextures().length))];
+         return bubbleGrid.getAllowedBubbleTextures().get(((int) (Math.random() * bubbleGrid.getAllowedBubbleTextures().size())));
         }
         else{
             return bubbleTextures[((int) (Math.random() * bubbleTextures.length))];
