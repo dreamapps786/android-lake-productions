@@ -51,7 +51,8 @@ public class GameRuler {
 		}
 	}
 
-	private static void checkForVictory() {
+
+    private static void checkForVictory() {
         ArrayList<AnimatedSprite> bubbles = bubbleGrid.getBubbles();
 //        BubbleTexture[] bubbleTextures = bubbleGrid.getBubbleTextures();
 //        for (BubbleTexture bubbleTexture : bubbleTextures) {
@@ -71,6 +72,7 @@ public class GameRuler {
             isVictorious = true;}
         else{
             isVictorious = false;
+
         }
     }
 
