@@ -77,8 +77,9 @@ public class GameRuler {
     }
 
 	public static void checkForLoss() {
-		if (currentRowCount == maxRowCount) {
-			// renderer.Loss();
+        System.out.println("CurrentRowCount: "+currentRowCount+ " MaxRowCount: "+ maxRowCount);
+        if (currentRowCount >= maxRowCount) {
+            // renderer.Loss();
             System.out.println("YOU LOST!");
 		}
 	}
@@ -90,4 +91,9 @@ public class GameRuler {
 	public static boolean isVictorious() {
 		return isVictorious;
 	}
+
+    public static void setCurrentRowCount(int currentRowCount) {
+        GameRuler.currentRowCount = currentRowCount;
+        checkForLoss();
+    }
 }
