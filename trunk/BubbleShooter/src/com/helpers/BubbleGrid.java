@@ -20,8 +20,8 @@ import com.simulation.AnimatedSprite;
 public class BubbleGrid {
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
-	private int gridHeight = 24;
-	private final int initialPopHeight = 2;
+	private int gridHeight = 28;
+	private final int initialPopHeight = 24;
 	private final int marginY = 6;
 	private final int marginX = 1;
 	private final BubbleTexture[] bubbleTextures;
@@ -32,7 +32,7 @@ public class BubbleGrid {
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
-		GameRuler.setMaxRowCount(gridHeight);
+		GameRuler.setMaxRowCount(gridHeight-1);
 		this.bubbleTextures = bubbleTextures;
         this.allowedBubbleTextures = new ArrayList<BubbleTexture>(Arrays.asList(bubbleTextures));
 		populate(bubbleTextures, false);
@@ -435,6 +435,7 @@ public class BubbleGrid {
 
 	public BubbleGridRectangle placeBubble(BubbleTexture bubbleTexture, int coordXOfBubbleToPlace, int coordYOfBubbleToPlace) {
 		int offSetX = coordYOfBubbleToPlace % 2 == 0 ? 0 : 16;
+        GameRuler.setCurrentRowCount(coordYOfBubbleToPlace);
 		return boxes[coordYOfBubbleToPlace][coordXOfBubbleToPlace] = new BubbleGridRectangle(coordXOfBubbleToPlace * 32
 				+ (coordXOfBubbleToPlace * marginX) + offSetX, coordYOfBubbleToPlace * -32 + 800 - (coordYOfBubbleToPlace * -marginY), 32,
 				32, coordXOfBubbleToPlace, coordYOfBubbleToPlace, bubbleTexture);
