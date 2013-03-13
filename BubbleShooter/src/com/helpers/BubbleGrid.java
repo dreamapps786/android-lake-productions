@@ -28,7 +28,7 @@ public class BubbleGrid {
     private final List<BubbleTexture> allowedBubbleTextures;
     private BubbleQueueList queuedBubbles;
 	
-	private int sidesOfCollisionBubbles = 6;
+	public static final int sidesOfCollisionBubbles = 6;
 
 	public BubbleGrid(BubbleTexture[] bubbleTextures, float x, float y) {
 		boxes = new BubbleGridRectangle[gridHeight][gridWidth];
@@ -56,60 +56,51 @@ public class BubbleGrid {
 	// }
 	
 	//TODO Replace with the other method, when it's done
-	public CollisionObject newCheckForCollision(float centerX, float centerY, float radius, double direction, double distance) {
+	public PolygonCollisionResult checkForCollision(float centerX, float centerY, float radius, double direction, double distance) {
 		float xVel = (float) (distance * Math.cos(direction));
 		float yVel = (float) (distance * Math.sin(direction));
 		
 		Vector velocity = new Vector(xVel, yVel);
 		
 		Polygon polygonA = PolygonFactory.getPolygon(centerX, centerY, radius, direction, sidesOfCollisionBubbles);
-		Polygon polygonB;
+//		Polygon polygonB;
 		
 		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
 			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
 				BubbleGridRectangle bubble = getBubbleAt(xIndex, yIndex);
 				if (bubble != null) {
-					polygonB = PolygonFactory.getPolygon(bubble.getX() + bubble.getWidth()/2,
-							bubble.getY() + bubble.getHeight()/2,
-							bubble.getHeight() / 2, 0, sidesOfCollisionBubbles);
-					PolygonCollisionResult polColRes = CollisionHelper.polygonCollision(polygonA, polygonB, velocity);
-					
-					List<Direction> directions = new ArrayList<Direction>();
-					directions.add(Direction.N);
-					directions.add(Direction.NE);
-					if (polColRes.intersect()) {
-						System.out.println("Intersected");
-						return new CollisionObject(bubble, directions);
-					}
-					else if (polColRes.willIntersect()) {
-						System.out.println("Is going to intersect, so do it now anyway");
-						return new CollisionObject(bubble, directions);
-					}
+//					polygonB = PolygonFactory.getPolygon(bubble.getX() + bubble.getWidth()/2,
+//							bubble.getY() + bubble.getHeight()/2,
+//							bubble.getHeight() / 2, 0, sidesOfCollisionBubbles);
+					PolygonCollisionResult polColRes = CollisionHelper.bubbleCollision(polygonA, bubble, bubble.getWidth(), velocity);
+					if (polColRes != null && (polColRes.intersect() || polColRes.willIntersect())) {
+                        return polColRes;
+                    }
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	//TODO Replace this method with the new one above
-	public CollisionObject checkForCollision(float centerX, float centerY, float radius, double direction, double distance) {
-		
-		
-		centerY += 32; // FIXME Constant to solve collision offset
-		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
-			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
-				if (boxes[yIndex][xIndex] != null) {
-					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
-					if (collidingDirections.size() >= 1) {
-						System.out.println("Hit " + collidingDirections.size() + " directions: " + collidingDirections + " Bubbles:"
-								+ boxes[yIndex][xIndex].toString());
-						return new CollisionObject(boxes[yIndex][xIndex], collidingDirections);
-					}
-				}
-			}
-		}
-		return null;
-	}
+//	public CollisionObject checkForCollision(float centerX, float centerY, float radius, double direction, double distance) {
+//
+//
+//		centerY += 32; // FIXME Constant to solve collision offset
+//		for (int yIndex = 0; yIndex < boxes.length; yIndex++) {
+//			for (int xIndex = 0; xIndex < boxes[yIndex].length; xIndex++) {
+//				if (boxes[yIndex][xIndex] != null) {
+//					List<Direction> collidingDirections = checkFourPointCollision(boxes[yIndex][xIndex], centerX, centerY, radius);
+//					if (collidingDirections.size() >= 1) {
+//						System.out.println("Hit " + collidingDirections.size() + " directions: " + collidingDirections + " Bubbles:"
+//								+ boxes[yIndex][xIndex].toString());
+//						return new CollisionObject(boxes[yIndex][xIndex], collidingDirections);
+//					}
+//				}
+//			}
+//		}
+//		return null;
+//	}
 
 	private boolean isFirstIteration = true;
 
@@ -440,6 +431,13 @@ public class BubbleGrid {
 				+ (coordXOfBubbleToPlace * marginX) + offSetX, coordYOfBubbleToPlace * -32 + 800 - (coordYOfBubbleToPlace * -marginY), 32,
 				32, coordXOfBubbleToPlace, coordYOfBubbleToPlace, bubbleTexture);
 	}
+
+    public BubbleGridRectangle placeBubbleOnCeiling(BubbleTexture bubbleTexture, float x) {
+        float tmp = x/(32 + marginX);
+        int gridCoordinateX = (int) tmp;
+
+        return placeBubble(bubbleTexture, gridCoordinateX, 0);
+    }
 
     public void removeColor(BubbleTexture.BubbleColor color){
         for (int i = 0; i < allowedBubbleTextures.size(); i++) {

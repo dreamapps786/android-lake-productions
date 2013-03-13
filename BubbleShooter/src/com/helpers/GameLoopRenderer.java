@@ -27,6 +27,7 @@ import com.helpers.extensions.BubbleTexture.BubbleColor;
 import com.model.BubbleGridRectangle;
 import com.model.CollisionObject;
 import com.model.CollisionObject.Direction;
+import com.model.Program;
 import com.simulation.AnimatedBubbleSprite;
 import com.simulation.AnimatedSprite;
 import com.simulation.Simulation;
@@ -266,111 +267,55 @@ public class GameLoopRenderer {
 		}
 	}
 
-	public BubbleGridRectangle handleCollision(float centerX, float centerY, float radius, double direction, double distance) {
-		CollisionObject collissionObject = bubbleGrid.checkForCollision(centerX, centerY, radius, direction, distance);
-		if (collissionObject != null) {
-			int collidingX = collissionObject.getCollidingBubble().getCoordinateX();
-			int collidingY = collissionObject.getCollidingBubble().getCoordinateY();
-			List<Direction> directions = collissionObject.getCollissionDirections();
-			BubbleGridRectangle target = null;
-			int rowXOffset = (collidingY % 2 == 1 ? 1 : 0);
-			int coordXOfBubbleToPlace = -1; // If these value are not set, it
-											// indicates an unhandled case
-			int coordYOfBubbleToPlace = -1;
-			if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
-															// placing it
-															// out of bounds
-				coordXOfBubbleToPlace = collidingX + rowXOffset;
-				coordYOfBubbleToPlace = collidingY + 1;
-			} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
-				coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-				coordYOfBubbleToPlace = collidingY + 1;
-			} else {
-				if (directions.size() == 1) {
-					if (directions.contains(Direction.W)) {
-						target = bubbleGrid.getBubbleAt(collidingX + 1, collidingY);
-						if (target == null) {
-							coordXOfBubbleToPlace = collidingX + 1;
-							coordYOfBubbleToPlace = collidingY;
-						}
-					} else if (directions.contains(Direction.NW)) {
-						target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
-						if (target == null) {
-							coordXOfBubbleToPlace = collidingX + rowXOffset;
-							coordYOfBubbleToPlace = collidingY + 1;
-						}
-					} else if (directions.contains(Direction.NE)) {
-						target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
-						if (target == null) {
-							coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-							coordYOfBubbleToPlace = collidingY + 1;
-						}
-					} else if (directions.contains(Direction.E)) {
-						target = bubbleGrid.getBubbleAt(collidingX - 1, collidingY);
-						if (target == null) {
-							coordXOfBubbleToPlace = collidingX - 1;
-							coordYOfBubbleToPlace = collidingY;
-						}
-					}
-				} else if (directions.size() == 2) {
-					if (directions.contains(Direction.W) && directions.contains(Direction.NW)) {
-						if (direction >= 0) {
-							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
-							if (target == null) {
+    public boolean handleCollision(float centerX, float centerY, float radius, double direction, double distance) {
+        PolygonCollisionResult pcr = bubbleGrid.checkForCollision(centerX, centerY, radius, direction, distance);
+        if (pcr != null && (pcr.willIntersect() || pcr.intersect())) {
+            System.out.println("handleColl success");
+            int collidingX = pcr.getCollidingBubble().getCoordinateX();
+            int collidingY = pcr.getCollidingBubble().getCoordinateY();
 
-								coordXOfBubbleToPlace = collidingX + rowXOffset;
-								coordYOfBubbleToPlace = collidingY + 1;
-							}
-						} else {
-							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
-							if (target == null) {
-
-								coordXOfBubbleToPlace = collidingX + rowXOffset;
-								coordYOfBubbleToPlace = collidingY + 1;
-							}
-						}
-					} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
-						if (direction >= 0) {
-							System.out.println(collidingX);
-							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
-							if (target == null) {
-
-								coordXOfBubbleToPlace = collidingX + rowXOffset;
-								coordYOfBubbleToPlace = collidingY + 1;
-							}
-						} else {
-							target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
-							if (target == null) {
-
-								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-								coordYOfBubbleToPlace = collidingY + 1;
-							} else {
-								target = bubbleGrid.getBubbleAt(collidingX, collidingY + 1);
-								if (target == null) {
-									coordXOfBubbleToPlace = collidingX;
-									coordYOfBubbleToPlace = collidingY + 1;
-								}
-							}
-						}
-					} else if (directions.contains(Direction.NE) && directions.contains(Direction.E)) {
-						if (direction >= 0) {
-							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
-							if (target == null) {
-								coordXOfBubbleToPlace = collidingX + rowXOffset;
-								coordYOfBubbleToPlace = collidingY + 1;
-							}
-						} else {
-							target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
-							if (target == null) {
-								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
-								coordYOfBubbleToPlace = collidingY + 1;
-							}
-						}
-					}
-				}
-			}
-			BubbleGridRectangle placedBubble = bubbleGrid.placeBubble(activeBubble.getBubbleTexture(), coordXOfBubbleToPlace,
-					coordYOfBubbleToPlace);
+            BubbleGridRectangle target = null;
+            int rowXOffset = (collidingY % 2 == 1 ? 1 : 0);
+            int coordXOfBubbleToPlace = -1; // If these value are not set, it
+            // indicates an unhandled case
+            int coordYOfBubbleToPlace = -1;
+            if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
+                // placing it
+                // out of bounds
+                coordXOfBubbleToPlace = collidingX + rowXOffset;
+                coordYOfBubbleToPlace = collidingY + 1;
+            } else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
+                coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+                coordYOfBubbleToPlace = collidingY + 1;
+            } else {
+                if (pcr.getCollDirection() == CollisionHelper.Direction.W) {
+                    target = bubbleGrid.getBubbleAt(collidingX + 1, collidingY);
+                    if (target == null) {
+                        coordXOfBubbleToPlace = collidingX + 1;
+                        coordYOfBubbleToPlace = collidingY;
+                    }
+                } else if (pcr.getCollDirection() == CollisionHelper.Direction.NW) {
+                    target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
+                    if (target == null) {
+                        coordXOfBubbleToPlace = collidingX + rowXOffset;
+                        coordYOfBubbleToPlace = collidingY + 1;
+                    }
+                } else if (pcr.getCollDirection() == CollisionHelper.Direction.NE) {
+                    target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
+                    if (target == null) {
+                        coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+                        coordYOfBubbleToPlace = collidingY + 1;
+                    }
+                } else if (pcr.getCollDirection() == CollisionHelper.Direction.E) {
+                    target = bubbleGrid.getBubbleAt(collidingX - 1, collidingY);
+                    if (target == null) {
+                        coordXOfBubbleToPlace = collidingX - 1;
+                        coordYOfBubbleToPlace = collidingY;
+                    }
+                }
+            }
+            BubbleGridRectangle placedBubble = bubbleGrid.placeBubble(activeBubble.getBubbleTexture(), coordXOfBubbleToPlace,
+                    coordYOfBubbleToPlace);
 			activeBubble.setActive(false);
 			boolean destroyingBubbles = destroySameColorBubbles(placedBubble);
 			if (!destroyingBubbles) { // Bubbleshot bliver kaldt, når
@@ -378,10 +323,140 @@ public class GameLoopRenderer {
 										// bliver den kaldt her.
 				GameRuler.bubbleShot();
 			}
-			return collissionObject.getCollidingBubble();
-		}
-		return null;
-	}
+            return true;
+        }
+        else if (centerY > Program.HEIGHT) { //Hit the ceiling
+            System.out.println("Hit the ceiling");
+
+            BubbleGridRectangle placedBubble = bubbleGrid.placeBubbleOnCeiling(activeBubble.getBubbleTexture(), centerX);
+            activeBubble.setActive(false);
+            boolean destroyingBubbles = destroySameColorBubbles(placedBubble);
+            if (!destroyingBubbles) { // Bubbleshot bliver kaldt, når
+                // splashanimationen er færdig, ellers
+                // bliver den kaldt her.
+                GameRuler.bubbleShot();
+            }
+            return true;
+        }
+        return false;
+    }
+
+//	public BubbleGridRectangle handleCollision(float centerX, float centerY, float radius, double direction, double distance) {
+//		CollisionObject collissionObject = bubbleGrid.checkForCollision(centerX, centerY, radius, direction, distance);
+//		if (collissionObject != null) {
+//			int collidingX = collissionObject.getCollidingBubble().getCoordinateX();
+//			int collidingY = collissionObject.getCollidingBubble().getCoordinateY();
+//			List<Direction> directions = collissionObject.getCollissionDirections();
+//			BubbleGridRectangle target = null;
+//			int rowXOffset = (collidingY % 2 == 1 ? 1 : 0);
+//			int coordXOfBubbleToPlace = -1; // If these value are not set, it
+//											// indicates an unhandled case
+//			int coordYOfBubbleToPlace = -1;
+//			if (collidingX == 0 && collidingY % 2 == 0) { // To avoid
+//															// placing it
+//															// out of bounds
+//				coordXOfBubbleToPlace = collidingX + rowXOffset;
+//				coordYOfBubbleToPlace = collidingY + 1;
+//			} else if (collidingX == bubbleGrid.getGridWidth() - 1 && collidingY % 2 == 0) {
+//				coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+//				coordYOfBubbleToPlace = collidingY + 1;
+//			} else {
+//				if (directions.size() == 1) {
+//					if (directions.contains(Direction.W)) {
+//						target = bubbleGrid.getBubbleAt(collidingX + 1, collidingY);
+//						if (target == null) {
+//							coordXOfBubbleToPlace = collidingX + 1;
+//							coordYOfBubbleToPlace = collidingY;
+//						}
+//					} else if (directions.contains(Direction.NW)) {
+//						target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
+//						if (target == null) {
+//							coordXOfBubbleToPlace = collidingX + rowXOffset;
+//							coordYOfBubbleToPlace = collidingY + 1;
+//						}
+//					} else if (directions.contains(Direction.NE)) {
+//						target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
+//						if (target == null) {
+//							coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+//							coordYOfBubbleToPlace = collidingY + 1;
+//						}
+//					} else if (directions.contains(Direction.E)) {
+//						target = bubbleGrid.getBubbleAt(collidingX - 1, collidingY);
+//						if (target == null) {
+//							coordXOfBubbleToPlace = collidingX - 1;
+//							coordYOfBubbleToPlace = collidingY;
+//						}
+//					}
+//				} else if (directions.size() == 2) {
+//					if (directions.contains(Direction.W) && directions.contains(Direction.NW)) {
+//						if (direction >= 0) {
+//							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
+//							if (target == null) {
+//
+//								coordXOfBubbleToPlace = collidingX + rowXOffset;
+//								coordYOfBubbleToPlace = collidingY + 1;
+//							}
+//						} else {
+//							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
+//							if (target == null) {
+//
+//								coordXOfBubbleToPlace = collidingX + rowXOffset;
+//								coordYOfBubbleToPlace = collidingY + 1;
+//							}
+//						}
+//					} else if (directions.contains(Direction.NW) && directions.contains(Direction.NE)) {
+//						if (direction >= 0) {
+//							System.out.println(collidingX);
+//							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
+//							if (target == null) {
+//
+//								coordXOfBubbleToPlace = collidingX + rowXOffset;
+//								coordYOfBubbleToPlace = collidingY + 1;
+//							}
+//						} else {
+//							target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
+//							if (target == null) {
+//
+//								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+//								coordYOfBubbleToPlace = collidingY + 1;
+//							} else {
+//								target = bubbleGrid.getBubbleAt(collidingX, collidingY + 1);
+//								if (target == null) {
+//									coordXOfBubbleToPlace = collidingX;
+//									coordYOfBubbleToPlace = collidingY + 1;
+//								}
+//							}
+//						}
+//					} else if (directions.contains(Direction.NE) && directions.contains(Direction.E)) {
+//						if (direction >= 0) {
+//							target = bubbleGrid.getBubbleAt(collidingX + rowXOffset, collidingY + 1);
+//							if (target == null) {
+//								coordXOfBubbleToPlace = collidingX + rowXOffset;
+//								coordYOfBubbleToPlace = collidingY + 1;
+//							}
+//						} else {
+//							target = bubbleGrid.getBubbleAt(collidingX - 1 + rowXOffset, collidingY + 1);
+//							if (target == null) {
+//								coordXOfBubbleToPlace = collidingX - 1 + rowXOffset;
+//								coordYOfBubbleToPlace = collidingY + 1;
+//							}
+//						}
+//					}
+//				}
+//			}
+//			BubbleGridRectangle placedBubble = bubbleGrid.placeBubble(activeBubble.getBubbleTexture(), coordXOfBubbleToPlace,
+//					coordYOfBubbleToPlace);
+//			activeBubble.setActive(false);
+//			boolean destroyingBubbles = destroySameColorBubbles(placedBubble);
+//			if (!destroyingBubbles) { // Bubbleshot bliver kaldt, når
+//										// splashanimationen er færdig, ellers
+//										// bliver den kaldt her.
+//				GameRuler.bubbleShot();
+//			}
+//			return collissionObject.getCollidingBubble();
+//		}
+//		return null;
+//	}
 
 	private boolean destroySameColorBubbles(BubbleGridRectangle bubble) {
 
