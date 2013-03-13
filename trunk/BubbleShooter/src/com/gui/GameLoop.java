@@ -142,7 +142,7 @@ public class GameLoop implements Frame {
 		if (!boundsCollisionBox.contains(renderer.getActiveBubble().getBoundingRectangle())) {
 			changeDirection(renderer.getActiveBubble().getX(), renderer.getActiveBubble().getY());
 		}
-		BubbleGridRectangle collidingBubble = renderer.handleCollision(renderer.getActiveBubble().getX()
+		boolean collided = renderer.handleCollision(renderer.getActiveBubble().getX()
 				+ (renderer.getActiveBubble().getWidth() / 2), renderer.getActiveBubble().getY()
 				+ renderer.getActiveBubble().getHeight() / 2, renderer.getActiveBubble().getHeight() / 2, renderer
 				.getActiveBubble().getDirection(), deltatime*speed);
@@ -154,7 +154,7 @@ public class GameLoop implements Frame {
 //				.getActiveBubble().getDirection());
 				
 				
-		if (collidingBubble != null) { // The bubble has to be a square
+		if (collided) { // The bubble has to be a square
 			renderer.resetActiveBubble(this.lastShotPosX, this.lastShotPosY);
 			Gdx.input.vibrate(50);
 		}

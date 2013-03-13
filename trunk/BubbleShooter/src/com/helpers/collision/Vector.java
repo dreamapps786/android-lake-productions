@@ -56,6 +56,9 @@ public class Vector {
 //	public static Vector operator +(Vector a, Vector b) {
 //		return new Vector(a.X + b.X, a.Y + b.Y);
 //	}
+    public static Vector add(Vector v, Vector w) {
+		return new Vector(v.getX() + w.getX(), v.getY() + w.getY());
+	}
 //	//Inverting
 //	public static Vector operator -(Vector a) {
 //		return new Vector(-a.X, -a.Y);

@@ -1,5 +1,9 @@
 package com.helpers.collision;
 
+import com.helpers.BubbleGrid;
+import com.model.BubbleGridRectangle;
+import com.model.CollisionObject;
+
 public class CollisionHelper {
 	// Calculate the projection of a polygon on an axis
 	// and returns it as a [min, max] interval
@@ -65,13 +69,13 @@ public class CollisionHelper {
 			float minB = minAndMaxB[0];
 			float maxB = minAndMaxB[1];
 
-			// Check if the polygon projections are currentlty intersecting
+			// Check if the polygon projections are currently intersecting
 			if (intervalDistance(minA, maxA, minB, maxB) > 0) result.intersect = false;
 
 			// ===== 2. Now find out if the polygons *will* intersect =====
 
 			// Project the velocity on the current axis
-			float velocityProjection = axis.getDotProduct(velocity);
+			float velocityProjection = axis.getDotProduct(Vector.mutliply(velocity, 2));
 
 			// Get the projection of polygon A during the movement
 			if (velocityProjection < 0) {
@@ -106,11 +110,52 @@ public class CollisionHelper {
 		// The minimum translation vector can be used to push the polygons apart.
 		// First moves the polygons by their velocity
 		// then move polygonA by MinimumTranslationVector.
-		if (result.willIntersect) result.minimumTranslationVector = Vector.mutliply(translationAxis, minIntervalDistance);
-		
+		if (result.willIntersect) {
+            result.minimumTranslationVector = Vector.mutliply(translationAxis, minIntervalDistance);
+        }
+
 		return result;
 	}
-	
+
+    public static PolygonCollisionResult bubbleCollision(Polygon polygonA, BubbleGridRectangle bubble, float bubbleWidth, Vector velocity) {
+        Polygon polygonB = PolygonFactory.getPolygon(bubble.getX() + bubble.getWidth()/2,
+                bubble.getY() + bubble.getHeight()/2,
+                bubble.getHeight() / 2, 0, BubbleGrid.sidesOfCollisionBubbles);
+        PolygonCollisionResult res = polygonCollision(polygonA, polygonB, velocity);
+
+        if (res.intersect() || res.willIntersect()) {
+            res.collidingBubble = bubble;
+
+            Vector centerA = polygonA.getCenter();
+            Vector centerB = polygonB.getCenter();
+
+            Vector touchingBubbleCenter;
+            if (res.willIntersect()) {
+                System.out.println("willIntersect");
+                touchingBubbleCenter = Vector.add(centerA, res.minimumTranslationVector);
+            } else {
+                System.out.println("intersect");
+                touchingBubbleCenter = centerA;
+            }
+
+            Vector touchRelation = Vector.subtract(touchingBubbleCenter, centerB);
+
+            float x = touchRelation.getX();
+            float limit = (bubbleWidth * 2)/3f;
+            if (x < -limit) {
+                res.collDirection = Direction.E;
+            } else if (x < 0) {
+                res.collDirection = Direction.NE;
+            } else if (x < limit) {
+                res.collDirection = Direction.NW;
+            } else {
+                res.collDirection = Direction.W;
+            }
+            return res;
+        }
+
+        return null;
+    }
 	// Structure that stores the results of the PolygonCollision function
 	public static class PolygonCollisionResult {
 	    // Are the polygons going to intersect forward in time?
@@ -119,6 +164,10 @@ public class CollisionHelper {
 	    private boolean intersect;
 	    // The translation to apply to the first polygon to push the polygons apart.
 	    private Vector minimumTranslationVector;
+        //The direction the moving ball collided with the grid-ball.
+        private Direction collDirection = Direction.NONE;
+
+        private BubbleGridRectangle collidingBubble;
 	    
 		public boolean willIntersect() {
 			return willIntersect;
@@ -129,5 +178,22 @@ public class CollisionHelper {
 		public Vector getMinimumTranslationVector() {
 			return minimumTranslationVector;
 		}
-	}
+
+        public Direction getCollDirection() {
+            return collDirection;
+        }
+
+        public BubbleGridRectangle getCollidingBubble(){
+            return collidingBubble;
+        }
+
+        @Override
+        public String toString() {
+            return collidingBubble + " (" + collDirection + ") " + (intersect() ? "I" : (willIntersect() ? "wI" : ""));
+        }
+    }
+
+    public enum Direction {
+        NONE, W, NW, N, NE, E, SE, S, SW
+    }
 }
