@@ -1,6 +1,7 @@
 package com.model;
 
 import com.badlogic.gdx.backends.jogl.JoglApplication;
+import com.helpers.ActionResolver;
 
 public class Program {
     public static final int WIDTH = 480;
@@ -9,6 +10,6 @@ public class Program {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new JoglApplication(new BubbleShooter(), "Bubble Shooter", WIDTH, HEIGHT, false);
+		new JoglApplication(new BubbleShooter(new ActionResolver()), "Bubble Shooter", WIDTH, HEIGHT, false);
 	}
 }
