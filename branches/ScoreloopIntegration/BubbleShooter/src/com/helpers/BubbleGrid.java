@@ -21,7 +21,7 @@ public class BubbleGrid {
 	private BubbleGridRectangle[][] boxes;
 	private final int gridWidth = 14;
 	private int gridHeight = 28;
-	private final int initialPopHeight = 24;
+	private final int initialPopHeight = 12;
 	private final int marginY = 6;
 	private final int marginX = 1;
 	private final BubbleTexture[] bubbleTextures;

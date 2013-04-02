@@ -7,15 +7,21 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.gui.Frame;
 import com.gui.GameLoop;
 import com.gui.MainMenu;
+import com.helpers.IActionResolver;
 
 public class BubbleShooter implements ApplicationListener {
 	private boolean isInitialized = false;
 	private SpriteBatch spriteBatch;
+    private IActionResolver actionResolver;
 
 	/** the visible frame **/
 	private Frame frame;
-	
-	@Override
+
+    public BubbleShooter(IActionResolver actionResolver) {
+        this.actionResolver = actionResolver;
+    }
+
+    @Override
 	public void create() {
 		if (!isInitialized) {
 			spriteBatch = new SpriteBatch();
@@ -23,6 +29,7 @@ public class BubbleShooter implements ApplicationListener {
 			frame.initialize();
 			isInitialized = true;
 			Gdx.input.setCatchBackKey(true);
+            actionResolver.showScoreloop();
 		}
 	}
 
