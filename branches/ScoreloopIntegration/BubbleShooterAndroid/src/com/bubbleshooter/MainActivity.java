@@ -20,7 +20,7 @@ public class MainActivity extends Application {
     static void init(final Context android_game_context) {
         if (client == null) {
             client = new Client(android_game_context,
-                    "bpROao+wDpxM9Xy1b3aKk2Krr9WcEiM6nxSgQqvs7jrDX638FnPiIw==", null);
+                    "bpROao+wDpxM9Xy1b3aKk2Krr9WcEiM6nxSgQqvs7jrDX638FnPiIw==",null);
             _android_game_context = android_game_context;
         }
     }

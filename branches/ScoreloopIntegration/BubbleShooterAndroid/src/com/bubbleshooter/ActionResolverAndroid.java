@@ -36,7 +36,6 @@ public class ActionResolverAndroid implements IActionResolver {
         uiThread.post(new Runnable() {
             @Override
             public void run() {
-
                 handler.submitScore(score);
                 handler.getRankingForScore(score);
             }

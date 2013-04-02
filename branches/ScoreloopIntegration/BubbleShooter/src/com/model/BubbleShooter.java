@@ -29,7 +29,6 @@ public class BubbleShooter implements ApplicationListener {
 			frame.initialize();
 			isInitialized = true;
 			Gdx.input.setCatchBackKey(true);
-            actionResolver.showScoreloop();
 		}
 	}
 
